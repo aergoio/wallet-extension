@@ -1,0 +1,47 @@
+{
+	"manifest_version": 2,
+	"name": "{{prop-loader?title!../package.json}}",
+	"version": "{{prop-loader?version!../package.json}}",
+	"description": "{{prop-loader?description!../package.json}}",
+	"author": "{{prop-loader?author!../package.json}}",
+	"homepage_url": "{{prop-loader?homepage!../package.json}}",
+	"minimum_chrome_version": "64",
+	"minimum_opera_version": "51",
+	
+	"background": {
+		"scripts": [
+			"background.js"
+		],
+		"persistent": true
+	},
+
+	"browser_action": {
+		"default_icon": {
+		  "17": "{{./assets/img/icon-17.png}}",
+		  "34": "{{./assets/img/icon-34.png}}"
+		},
+		"default_title": "AERGO Wallet",
+		"default_popup": "popup.html"
+	},
+
+	"content_scripts": [{
+		"matches": [
+			"file://*/*",
+			"http://*/*",
+			"https://*/*"
+		],
+		"js": [
+			"content-script.js"
+		],
+		"run_at": "document_start",
+		"all_frames": true
+	}],
+
+	"permissions": [
+		"activeTab",
+		"storage",
+		"unlimitedStorage",
+		"clipboardWrite",
+		"notifications"
+	]
+}

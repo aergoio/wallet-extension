@@ -1,0 +1,50 @@
+{
+  "name": "wallet-extension",
+  "version": "0.0.1",
+  "title": "AERGO Wallet",
+  "description": "AERGO Wallet Browser Extension",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=development webpack --config config/webpack.config.js --watch",
+    "build": "webpack -p --config config/webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aergoio/wallet-extension.git"
+  },
+  "author": "Aergo team and contributors",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aergoio/wallet-extension/issues"
+  },
+  "homepage": "https://github.com/aergoio/wallet-extension#readme",
+  "dependencies": {
+    "vue": "^2.5.17"
+  },
+  "browserslist": "> 0.25%, not dead, not ie 11, not op_mini all",
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "autoprefixer": "^9.1.5",
+    "babel-loader": "^8.0.2",
+    "css-loader": "^1.0.0",
+    "entry-loader": "^0.2.0",
+    "extricate-loader": "^3.0.0",
+    "file-loader": "^2.0.0",
+    "html-webpack-plugin": "^3.2.0",
+    "interpolate-loader": "^2.0.0",
+    "mini-css-extract-plugin": "^0.4.2",
+    "node-sass": "^4.9.3",
+    "postcss-loader": "^3.0.0",
+    "prop-loader": "^1.0.0",
+    "sass-loader": "^7.1.0",
+    "url-loader": "^1.1.1",
+    "vue-loader": "^15.4.1",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.5.17",
+    "webpack": "^4.17.2",
+    "webpack-bundle-analyzer": "^2.13.1",
+    "webpack-chrome-extension-reloader": "^0.8.3",
+    "webpack-cli": "^3.1.0"
+  }
+}

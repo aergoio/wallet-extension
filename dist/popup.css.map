@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./src/assets/style/popup.scss"],"names":[],"mappings":"AAAA,KAAK,kCAAkC,eAAe","file":"popup.css","sourcesContent":["body{font-family:system-ui, sans-serif;font-size:100%;background:linear-gradient(90deg, #4B64FF, #F91162)}\n"],"sourceRoot":""}
