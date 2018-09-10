@@ -7,6 +7,13 @@
 	"homepage_url": "https://github.com/aergoio/wallet-extension#readme",
 	"minimum_chrome_version": "64",
 	"minimum_opera_version": "51",
+
+	"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+
+	"icons": {
+		"17": "47c549804dd70500108560cc24bca5f3.png",
+		"102": "0da81dee4755822e45e812c8ce30d733.png"
+	},
 	
 	"background": {
 		"scripts": [

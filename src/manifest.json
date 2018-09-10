@@ -7,6 +7,13 @@
 	"homepage_url": "{{prop-loader?homepage!../package.json}}",
 	"minimum_chrome_version": "64",
 	"minimum_opera_version": "51",
+
+	"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+
+	"icons": {
+		"17": "{{./assets/img/icon-17.png}}",
+		"102": "{{./assets/img/icon-102.png}}"
+	},
 	
 	"background": {
 		"scripts": [

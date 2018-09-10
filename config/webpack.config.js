@@ -1,7 +1,7 @@
 const path = require("path");
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const ChromeExtensionReloader  = require('webpack-chrome-extension-reloader');
@@ -10,9 +10,9 @@ module.exports = (env, argv) => {
   const devMode = argv.mode !== 'production';
 
   const plugins = [
-    // vue-loader
+    // vue-loader requirement
     new VueLoaderPlugin(),
-    // extract css
+    // extract css into files
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',
@@ -21,15 +21,17 @@ module.exports = (env, argv) => {
     new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /ko/),
     // analyze bundle
     //new BundleAnalyzerPlugin(),
+    // create HTML files
     new HtmlWebpackPlugin({filename: 'popup.html', template: 'src/assets/html/popup.html', chunks: ['popup', 'vendor']}),
   ];
 
   if (devMode) {
+    // hot-reload for development
     plugins.push(new ChromeExtensionReloader({reloadPage: false}));
   }
 
   return {
-    mode: 'development',
+    mode: devMode ? 'development' : 'production',
     entry: {
       'background': 'src/background.js',
       'content-script': 'src/content-script.js',
@@ -38,7 +40,7 @@ module.exports = (env, argv) => {
     output: {
       path: path.resolve(__dirname, '../dist'),
       filename: '[name].js',
-      chunkFilename: '[name].js'
+      chunkFilename: '[name].js',
     },
     plugins,
     module: {
@@ -98,7 +100,7 @@ module.exports = (env, argv) => {
         { test: /\.(svg)$/, loader: "url-loader?limit=10000"},
         { test: /\.(png)$/, loader: "url-loader?limit=1"},
         // Fonts, always external
-        { test: /\.(swf|eot|ttf|woff|woff2)$/, loader: "url-loader?limit=1"}
+        { test: /\.(otf|swf|eot|ttf|woff|woff2)$/, loader: "url-loader?limit=1"}
       ]
     },
     devtool: (() => {
@@ -109,6 +111,7 @@ module.exports = (env, argv) => {
       extensions: ['.js', '.vue', '.json'],
       alias: {
         '@': path.resolve(__dirname, '..'),
+        '@assets': path.resolve(__dirname, '..', 'src/assets'),
         'vue$': 'vue/dist/vue.runtime.esm.js'
       },
       modules: [

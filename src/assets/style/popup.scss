@@ -1,5 +1,45 @@
+@import 'normalize.scss';
+
+@font-face {
+    font-family: "DINPro";
+    src: url("../font/DINProBlack.otf") format("opentype");
+    font-style: normal;
+    font-weight: 900;
+}
+@font-face {
+    font-family: "DINPro";
+    src: url("../font/DINProBold.otf") format("opentype");
+    font-style: normal;
+    font-weight: 700;
+}
+@font-face {
+    font-family: "DINPro";
+    src: url("../font/DINProMedium.otf") format("opentype");
+    font-style: normal;
+    font-weight: 500;
+}
+@font-face {
+    font-family: "DINPro";
+    src: url("../font/DINProRegular.otf") format("opentype");
+    font-style: normal;
+    font-weight: 400;
+}
+@font-face {
+    font-family: "DINPro";
+    src: url("../font/DINProLight.otf") format("opentype");
+    font-style: normal;
+    font-weight: 300;
+}
+
 body {
-    font-family: system-ui, sans-serif;
-    font-size: 100%;
-    background: linear-gradient(90deg, #4B64FF, #F91162);
+    font-family: "DINPro", system-ui, sans-serif;
+    font-size: 75%;
+    margin: 0 auto;
+    padding: 0;
+    display: flex;
+    background-color: #f5f5f5;
+
+    #app {
+        flex: 1;
+    }
 }
