@@ -97,10 +97,10 @@ export default {
 }
 .add-account {
   color: #F81264;
-  background: url(~@assets/img/add.svg) 0 50%;
+  background: url(~@assets/img/add.svg) 4px 50%;
   background-size: 23px 23px;
   background-repeat: no-repeat;
-  padding-left: 32px;
+  padding-left: 38px;
   
   &.account-item {
     line-height: 23px;

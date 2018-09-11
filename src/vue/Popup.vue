@@ -118,14 +118,14 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px 0;
+  padding: 10px 0 0;
 }
 
 .text-input {
   border: 1px solid #C6C6C6;
   border-radius: 4px;
   line-height: 22px;
-  padding: 0 1em;
+  padding: 0 6px;
   font-weight: normal;
 }
 </style>

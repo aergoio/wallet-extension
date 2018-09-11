@@ -5,12 +5,12 @@
       <div class="account-list-header">Add Account</div>
 
       <div class="scroll-view">
-        <form class="form">
+        <form class="form" autocomplete="off">
           <div class="form-line">
             <label>
               Accout name
 
-              <input type="text" class="text-input" v-model="name">
+              <input type="text" class="text-input" v-model="name" ref="name">
             </label>
           </div>
 
@@ -18,7 +18,7 @@
             <label>
               Password
 
-              <input type="password" class="text-input" v-model="password">
+              <input type="password" class="text-input" v-model="password" autocomplete="new-password">
             </label>
           </div>
 
@@ -48,6 +48,11 @@ export default {
   beforeDestroy () {
   },
   computed: {
+  },
+  mounted () {
+    setTimeout(() => {
+      this.$refs.name.focus();
+    }, 400);
   },
   methods: {
     async create () {
