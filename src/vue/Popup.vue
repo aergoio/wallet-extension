@@ -92,6 +92,7 @@ export default {
 .scroll-view {
   flex: 1;
   overflow-y: auto;
+  position: relative;
 }
 
 .form {
@@ -128,4 +129,14 @@ export default {
   padding: 0 6px;
   font-weight: normal;
 }
+
+h2, strong {
+  font-weight: 500;
+  font-size: 1em;
+}
+
+p { 
+  line-height: 1.25;
+}
+
 </style>

@@ -41,7 +41,7 @@ module.exports = (env, argv) => {
       path: path.resolve(__dirname, '../dist'),
       filename: '[name].js',
       chunkFilename: '[name].js',
-      publicPath: '/dist'
+      publicPath: devMode ? '/dist' : ''
     },
     plugins,
     module: {
