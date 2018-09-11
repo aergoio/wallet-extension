@@ -94,4 +94,38 @@ export default {
   overflow-y: auto;
 }
 
+.form {
+  margin: 10px;
+
+  .form-line {
+    padding: 5px 3px;
+
+    border-bottom: 1px solid #DFDFDF;
+    &:last-of-type {
+      border-bottom: 0;
+    }
+  
+    label {
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.text-input {
+  border: 1px solid #C6C6C6;
+  border-radius: 4px;
+  line-height: 22px;
+  padding: 0 1em;
+  font-weight: normal;
+}
 </style>

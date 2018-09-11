@@ -70,6 +70,7 @@ export default {
       
       span {
         border-bottom: 1px solid transparent;
+        padding-bottom: 2px;
       }
       &.router-link-exact-active  span {
         border-color: #F8105F;

@@ -16,6 +16,13 @@
               </div>
             </router-link>
           </li>
+          <li>
+            <router-link :to="`/add-account/`">
+              <div class="account-item add-account">
+                Add Account
+              </div>
+            </router-link>
+          </li>
         </ul>
       </div>
       
@@ -24,9 +31,7 @@
 </template>
 
 <script>
-import AergoClient from 'herajs/src/platforms/web';
-
-const aergo = new AergoClient();
+import controller from '../../controller';
 
 import Identicon from '../components/Identicon';
 
@@ -40,7 +45,7 @@ export default {
     }
   },
   created () {
-    aergo.accounts.get().then(accounts => {
+    controller.accounts.get().then(accounts => {
       this.$data.accounts = accounts.map(address => ({address}));
     });
   },
@@ -88,6 +93,17 @@ export default {
       background-color: #f7f7f7;
     }
 
+  }
+}
+.add-account {
+  color: #F81264;
+  background: url(~@assets/img/add.svg) 0 50%;
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  padding-left: 32px;
+  
+  &.account-item {
+    line-height: 23px;
   }
 }
 </style>
