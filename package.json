@@ -20,10 +20,11 @@
   },
   "homepage": "https://github.com/aergoio/wallet-extension#readme",
   "dependencies": {
+    "herajs": "git+https://github.com/aergoio/herajs.git",
     "jdenticon": "^2.1.0",
+    "qrcode": "^1.2.2",
     "vue": "^2.5.17",
-    "vue-router": "^3.0.1",
-    "herajs": "git+https://github.com/aergoio/herajs.git"
+    "vue-router": "^3.0.1"
   },
   "browserslist": "> 0.25%, not dead, not ie 11, not op_mini all",
   "devDependencies": {
@@ -41,6 +42,7 @@
     "node-sass": "^4.9.3",
     "postcss-loader": "^3.0.0",
     "prop-loader": "^1.0.0",
+    "regenerator-runtime": "^0.12.1",
     "sass-loader": "^7.1.0",
     "url-loader": "^1.1.1",
     "vue-loader": "^15.4.1",

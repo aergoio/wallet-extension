@@ -1,3 +1,5 @@
+import "regenerator-runtime/runtime";
+
 require('./assets/style/popup.scss');
 
 import Vue from 'vue';

@@ -296,6 +296,34 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./src/vue/components/QRCode.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--1-0!./node_modules/vue-loader/lib??vue-loader-options!./src/vue/components/QRCode.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var qrcode__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! qrcode */ "./node_modules/qrcode/lib/browser.js");
+/* harmony import */ var qrcode__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(qrcode__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['data'],
+  data: function data() {
+    return {};
+  },
+  mounted: function mounted() {
+    qrcode__WEBPACK_IMPORTED_MODULE_0___default.a.toCanvas(this.$el, this.$props.data);
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./src/vue/components/TransitionPage.vue?vue&type=script&lang=js&":
 /*!********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--1-0!./node_modules/vue-loader/lib??vue-loader-options!./src/vue/components/TransitionPage.vue?vue&type=script&lang=js& ***!
@@ -438,6 +466,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -539,12 +569,15 @@ var aergo = new herajs_src_platforms_web__WEBPACK_IMPORTED_MODULE_0__["default"]
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_QRCode__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/QRCode */ "./src/vue/components/QRCode.vue");
 //
 //
 //
 //
 //
 //
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {};
@@ -552,7 +585,10 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {},
   beforeDestroy: function beforeDestroy() {},
   computed: {},
-  methods: {}
+  methods: {},
+  components: {
+    QRCode: _components_QRCode__WEBPACK_IMPORTED_MODULE_0__["default"]
+  }
 });
 
 /***/ }),
@@ -643,7 +679,7 @@ exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader
 
 
 // module
-exports.push([module.i, "\n#app {\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n}\n#app > div {\n    flex: 1;\n}\n#app > div:last-child {\n      flex: unset;\n}\n.sep {\n  background: linear-gradient(90deg, #4B64FF, #F91162);\n  height: 1px;\n}\n.sep.top {\n    height: 4px;\n}\n.box {\n  background-color: #fff;\n}\n.page {\n  background-color: #fff;\n  height: 100%;\n}\n", ""]);
+exports.push([module.i, "\n#app {\n  display: flex;\n  flex-direction: column;\n  overflow: hidden;\n}\n#app > div {\n    flex: 1;\n}\n#app > div:last-child {\n      flex: unset;\n}\n.sep {\n  background: linear-gradient(90deg, #4B64FF, #F91162);\n  height: 1px;\n}\n.sep.top {\n    height: 4px;\n}\n.box {\n  background-color: #fff;\n}\n.page {\n  background-color: #fff;\n  height: 100%;\n  overflow: auto;\n}\n", ""]);
 
 // exports
 
@@ -708,6 +744,25 @@ exports.push([module.i, "\n.network-selector {\n  font-size: 75%;\n  text-transf
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/index.js?!./src/vue/components/QRCode.vue?vue&type=style&index=0&lang=scss&":
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--2-2!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib??vue-loader-options!./src/vue/components/QRCode.vue?vue&type=style&index=0&lang=scss& ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/index.js?!./src/vue/components/TransitionPage.vue?vue&type=style&index=0&lang=scss&":
 /*!***********************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--2-2!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib??vue-loader-options!./src/vue/components/TransitionPage.vue?vue&type=style&index=0&lang=scss& ***!
@@ -740,7 +795,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.account-nav {\n  font-size: 1.08333em;\n  display: flex;\n  list-style: none;\n  margin: 10px 0;\n  padding: 0;\n  justify-content: stretch;\n}\n.account-nav li {\n    flex: 1;\n}\n.account-nav li a {\n      display: block;\n      text-align: center;\n      text-decoration: none;\n      color: inherit;\n      text-transform: uppercase;\n}\n.account-nav li a span {\n        border-bottom: 1px solid transparent;\n}\n.account-nav li a.router-link-exact-active span {\n        border-color: #F8105F;\n}\n.account-header {\n  overflow: auto;\n  padding: 12px 15px;\n  display: flex;\n  align-items: center;\n}\n.account-header .account-item {\n    flex: 1;\n}\n.menu-link {\n  width: 24px;\n  height: 24px;\n  background: url(" + escape(__webpack_require__(/*! @assets/img/list.svg */ "./src/assets/img/list.svg")) + ");\n  background-size: 16px 14px;\n  background-repeat: no-repeat;\n  background-position: center center;\n}\n.account-name {\n  font-weight: 500;\n}\n.account-item {\n  line-height: 15px;\n}\n.account-item .identicon {\n    float: left;\n    padding: 2px;\n    border: 1px solid #979797;\n    border-radius: 11px;\n    margin-right: 7px;\n}\n.account-item .identicon svg {\n      display: block;\n      width: 26px;\n      height: 26px;\n}\n", ""]);
+exports.push([module.i, "\n.account-nav {\n  font-size: 1.08333em;\n  display: flex;\n  list-style: none;\n  margin: 10px 0;\n  padding: 0;\n  justify-content: stretch;\n}\n.account-nav li {\n    flex: 1;\n}\n.account-nav li a {\n      display: block;\n      text-align: center;\n      text-decoration: none;\n      color: inherit;\n      text-transform: uppercase;\n}\n.account-nav li a span {\n        border-bottom: 1px solid transparent;\n}\n.account-nav li a.router-link-exact-active span {\n        border-color: #F8105F;\n}\n.account-header {\n  overflow: auto;\n  padding: 12px 15px;\n  display: flex;\n  align-items: center;\n}\n.account-header .account-item {\n    flex: 1;\n}\n.menu-link {\n  width: 24px;\n  height: 24px;\n  background: url(" + escape(__webpack_require__(/*! @assets/img/list.svg */ "./src/assets/img/list.svg")) + ");\n  background-size: 16px 14px;\n  background-repeat: no-repeat;\n  background-position: center center;\n}\n.account-name {\n  font-weight: 500;\n}\n.account-item {\n  line-height: 15px;\n}\n.account-item .identicon {\n    float: left;\n    padding: 2px;\n    border: 1px solid #979797;\n    border-radius: 11px;\n    margin-right: 7px;\n}\n.account-item .identicon svg {\n      display: block;\n      width: 26px;\n      height: 26px;\n}\n.account-subpage {\n  overflow: hidden;\n}\n", ""]);
 
 // exports
 
@@ -955,6 +1010,30 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./src/vue/components/QRCode.vue?vue&type=template&id=186d1916&":
+/*!****************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./src/vue/components/QRCode.vue?vue&type=template&id=186d1916& ***!
+  \****************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("canvas", { staticClass: "qrcode" })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./src/vue/components/TransitionPage.vue?vue&type=template&id=48cf136b&":
 /*!************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./src/vue/components/TransitionPage.vue?vue&type=template&id=48cf136b& ***!
@@ -1010,72 +1089,72 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "page" },
-    [
-      _c("div", { staticClass: "sep top" }),
-      _vm._v(" "),
+  return _c("div", { staticClass: "page" }, [
+    _c("div", { staticClass: "sep top" }),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "account-header" },
+      [
+        _c(
+          "div",
+          { staticClass: "account-item" },
+          [
+            _c("Identicon", { attrs: { text: _vm.$route.params.address } }),
+            _vm._v(" "),
+            _c("span", { staticClass: "account-name" }, [_vm._v("Account")]),
+            _c("br"),
+            _vm._v("\n      " + _vm._s(_vm.$route.params.address) + "\n    ")
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("router-link", { staticClass: "menu-link", attrs: { to: "/" } })
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "sep" }),
+    _vm._v(" "),
+    _c("ul", { staticClass: "account-nav" }, [
       _c(
-        "div",
-        { staticClass: "account-header" },
+        "li",
         [
-          _c(
-            "div",
-            { staticClass: "account-item" },
-            [
-              _c("Identicon", { attrs: { text: _vm.$route.params.address } }),
-              _vm._v(" "),
-              _c("span", { staticClass: "account-name" }, [_vm._v("Account")]),
-              _c("br"),
-              _vm._v("\n      " + _vm._s(_vm.$route.params.address) + "\n    ")
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("router-link", { staticClass: "menu-link", attrs: { to: "/" } })
+          _c("router-link", { attrs: { to: "./" } }, [
+            _c("span", [_vm._v("Deposit")])
+          ])
         ],
         1
       ),
       _vm._v(" "),
-      _c("div", { staticClass: "sep" }),
+      _c(
+        "li",
+        [
+          _c("router-link", { attrs: { to: "send" } }, [
+            _c("span", [_vm._v("Send")])
+          ])
+        ],
+        1
+      ),
       _vm._v(" "),
-      _c("ul", { staticClass: "account-nav" }, [
-        _c(
-          "li",
-          [
-            _c("router-link", { attrs: { to: "./" } }, [
-              _c("span", [_vm._v("Deposit")])
-            ])
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "li",
-          [
-            _c("router-link", { attrs: { to: "send" } }, [
-              _c("span", [_vm._v("Send")])
-            ])
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "li",
-          [
-            _c("router-link", { attrs: { to: "history" } }, [
-              _c("span", [_vm._v("History")])
-            ])
-          ],
-          1
-        )
-      ]),
-      _vm._v(" "),
-      _c("TransitionPage", [_c("router-view")], 1)
-    ],
-    1
-  )
+      _c(
+        "li",
+        [
+          _c("router-link", { attrs: { to: "history" } }, [
+            _c("span", [_vm._v("History")])
+          ])
+        ],
+        1
+      )
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "account-subpage" },
+      [_c("TransitionPage", [_c("router-view")], 1)],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -1169,7 +1248,14 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("\n  deposit\n")])
+  return _c(
+    "div",
+    [
+      _vm._v("\n  deposit\n  "),
+      _c("QRCode", { attrs: { data: _vm.$route.params.address } })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -1305,6 +1391,27 @@ if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
 var add = __webpack_require__(/*! ../../../node_modules/vue-style-loader/lib/addStylesClient.js */ "./node_modules/vue-style-loader/lib/addStylesClient.js").default
 var update = add("fe03489c", content, false, {});
+// Hot Module Replacement
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/index.js?!./src/vue/components/QRCode.vue?vue&type=style&index=0&lang=scss&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-style-loader!./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--2-2!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib??vue-loader-options!./src/vue/components/QRCode.vue?vue&type=style&index=0&lang=scss& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(/*! !../../../node_modules/css-loader!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--2-2!../../../node_modules/sass-loader/lib/loader.js!../../../node_modules/vue-loader/lib??vue-loader-options!./QRCode.vue?vue&type=style&index=0&lang=scss& */ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/index.js?!./src/vue/components/QRCode.vue?vue&type=style&index=0&lang=scss&");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var add = __webpack_require__(/*! ../../../node_modules/vue-style-loader/lib/addStylesClient.js */ "./node_modules/vue-style-loader/lib/addStylesClient.js").default
+var update = add("488789a6", content, false, {});
 // Hot Module Replacement
 if(false) {}
 
@@ -1967,6 +2074,93 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NetworkSelector_vue_vue_type_template_id_702470d6___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NetworkSelector_vue_vue_type_template_id_702470d6___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./src/vue/components/QRCode.vue":
+/*!***************************************!*\
+  !*** ./src/vue/components/QRCode.vue ***!
+  \***************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _QRCode_vue_vue_type_template_id_186d1916___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./QRCode.vue?vue&type=template&id=186d1916& */ "./src/vue/components/QRCode.vue?vue&type=template&id=186d1916&");
+/* harmony import */ var _QRCode_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./QRCode.vue?vue&type=script&lang=js& */ "./src/vue/components/QRCode.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _QRCode_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./QRCode.vue?vue&type=style&index=0&lang=scss& */ "./src/vue/components/QRCode.vue?vue&type=style&index=0&lang=scss&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _QRCode_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _QRCode_vue_vue_type_template_id_186d1916___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _QRCode_vue_vue_type_template_id_186d1916___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "src/vue/components/QRCode.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./src/vue/components/QRCode.vue?vue&type=script&lang=js&":
+/*!****************************************************************!*\
+  !*** ./src/vue/components/QRCode.vue?vue&type=script&lang=js& ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_QRCode_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--1-0!../../../node_modules/vue-loader/lib??vue-loader-options!./QRCode.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./src/vue/components/QRCode.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_QRCode_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./src/vue/components/QRCode.vue?vue&type=style&index=0&lang=scss&":
+/*!*************************************************************************!*\
+  !*** ./src/vue/components/QRCode.vue?vue&type=style&index=0&lang=scss& ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_2_2_node_modules_sass_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_QRCode_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-style-loader!../../../node_modules/css-loader!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--2-2!../../../node_modules/sass-loader/lib/loader.js!../../../node_modules/vue-loader/lib??vue-loader-options!./QRCode.vue?vue&type=style&index=0&lang=scss& */ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/index.js?!./src/vue/components/QRCode.vue?vue&type=style&index=0&lang=scss&");
+/* harmony import */ var _node_modules_vue_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_2_2_node_modules_sass_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_QRCode_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_vue_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_2_2_node_modules_sass_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_QRCode_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_vue_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_2_2_node_modules_sass_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_QRCode_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_vue_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_2_2_node_modules_sass_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_QRCode_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_vue_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_2_2_node_modules_sass_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_QRCode_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./src/vue/components/QRCode.vue?vue&type=template&id=186d1916&":
+/*!**********************************************************************!*\
+  !*** ./src/vue/components/QRCode.vue?vue&type=template&id=186d1916& ***!
+  \**********************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QRCode_vue_vue_type_template_id_186d1916___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./QRCode.vue?vue&type=template&id=186d1916& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./src/vue/components/QRCode.vue?vue&type=template&id=186d1916&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QRCode_vue_vue_type_template_id_186d1916___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QRCode_vue_vue_type_template_id_186d1916___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

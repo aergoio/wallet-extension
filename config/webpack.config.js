@@ -27,7 +27,7 @@ module.exports = (env, argv) => {
 
   if (devMode) {
     // hot-reload for development
-    plugins.push(new ChromeExtensionReloader({reloadPage: false}));
+    //plugins.push(new ChromeExtensionReloader({reloadPage: false}));
   }
 
   return {
@@ -41,6 +41,7 @@ module.exports = (env, argv) => {
       path: path.resolve(__dirname, '../dist'),
       filename: '[name].js',
       chunkFilename: '[name].js',
+      publicPath: '/dist'
     },
     plugins,
     module: {

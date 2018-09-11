@@ -4,18 +4,20 @@
       <div class="sep top"></div>
       <div class="account-list-header">Select Active Account</div>
       <!--<button v-on:click="openPopup()">Expand</button>-->
-      
-      <ul class="account-list">
-        <li v-for="account in accounts" :key="account.address">
-          <router-link :to="`/account/${account.address}/`">
-            <div class="account-item">
-              <Identicon :text="account.address" />
-              <span class="account-name">Account</span><br />
-              {{account.address}}
-            </div>
-          </router-link>
-        </li>
-      </ul>
+
+      <div class="scroll-view">
+        <ul class="account-list">
+          <li v-for="account in accounts" :key="account.address">
+            <router-link :to="`/account/${account.address}/`">
+              <div class="account-item">
+                <Identicon :text="account.address" />
+                <span class="account-name">Account</span><br />
+                {{account.address}}
+              </div>
+            </router-link>
+          </li>
+        </ul>
+      </div>
       
     </div>
   </transition>
@@ -63,16 +65,16 @@ export default {
   color: #F81264;
   font-size: (11/12)*1em;
   line-height: 22px;
+  border-bottom: 1px solid #DFDFDF;
 }
 .account-list {
   margin: 0;
   padding: 0;
-  border-bottom: 1px solid #DFDFDF;
   list-style: none;
 
   li {
     
-    border-top: 1px solid #DFDFDF;
+    border-bottom: 1px solid #DFDFDF;
 
     a {
       display: block;

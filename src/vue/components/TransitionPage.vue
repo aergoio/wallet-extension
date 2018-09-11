@@ -39,7 +39,7 @@ export default {
       }
 
       if (transitionName === `slide`) {
-        transitionName = indexDiff > 0 || depthDiff > 0 ? `slide-right` : `slide-left`;
+        transitionName = indexDiff < 0 || depthDiff > 0 ? `slide-right` : `slide-left`;
         //this.transitionMode = ``;
       }
       if (transitionName === `slide-vertical`) {
@@ -122,7 +122,7 @@ export default {
 .slide-vertical-up-leave-active,
 .slide-vertical-down-enter-active,
 .slide-vertical-down-leave-active {
-  transition-duration: .4s;
+  transition-duration: .35s;
   transition-property: height, opacity, transform;
   transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
   overflow: hidden;

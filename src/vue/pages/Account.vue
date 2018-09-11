@@ -17,9 +17,11 @@
       <li><router-link :to="`send`"><span>Send</span></router-link></li>
       <li><router-link :to="`history`"><span>History</span></router-link></li>
     </ul>
-    <TransitionPage>
-      <router-view></router-view>
-    </TransitionPage>
+    <div class="account-subpage">
+      <TransitionPage>
+        <router-view></router-view>
+      </TransitionPage>
+    </div>
   </div>
 </template>
 
