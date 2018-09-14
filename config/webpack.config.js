@@ -95,7 +95,8 @@ module.exports = (env, argv) => {
         {
           test: /package\.json$/,
           use: [],
-          type: 'javascript/auto'
+          type: 'javascript/auto',
+          exclude: /node_modules/
         },
         // Images, inline up to a certain size
         { test: /\.(svg)$/, loader: "url-loader?limit=10000"},
@@ -113,7 +114,8 @@ module.exports = (env, argv) => {
       alias: {
         '@': path.resolve(__dirname, '..'),
         '@assets': path.resolve(__dirname, '..', 'src/assets'),
-        'vue$': 'vue/dist/vue.runtime.esm.js'
+        'vue$': 'vue/dist/vue.runtime.esm.js',
+        'herajs$': 'herajs/src/platforms/web'
       },
       modules: [
         path.resolve(__dirname, '..', 'node_modules'),

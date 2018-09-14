@@ -5,7 +5,7 @@
       <div class="account-item">
         <Identicon :text="$route.params.address" />
         <span class="account-name">Account</span><br />
-        {{ $route.params.address }}
+        {{ shortenAddress($route.params.address) }}
       </div>
 
       <router-link :to="`/`" class="menu-link"></router-link>
@@ -41,6 +41,9 @@ export default {
   computed: {
   },
   methods: {
+    shortenAddress(addr) {
+      return addr.substr(0, 8) + '...' + addr.substr(addr.length-4);
+    }
   },
   components: {
     TransitionPage,

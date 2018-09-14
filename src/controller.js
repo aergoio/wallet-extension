@@ -1,4 +1,4 @@
-import AergoClient from 'herajs/src/platforms/web';
+import AergoClient from 'herajs';
 
 const aergo = new AergoClient();
 

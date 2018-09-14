@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/aergoio/wallet-extension#readme",
   "dependencies": {
+    "bs58check": "^2.1.2",
     "herajs": "git+https://github.com/aergoio/herajs.git",
     "jdenticon": "^2.1.0",
     "qrcode": "^1.2.2",
@@ -33,7 +34,6 @@
     "autoprefixer": "^9.1.5",
     "babel-loader": "^8.0.2",
     "css-loader": "^1.0.0",
-    "entry-loader": "^0.2.0",
     "extricate-loader": "^3.0.0",
     "file-loader": "^2.0.0",
     "html-webpack-plugin": "^3.2.0",

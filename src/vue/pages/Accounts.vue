@@ -12,7 +12,7 @@
               <div class="account-item">
                 <Identicon :text="account.address" />
                 <span class="account-name">Account</span><br />
-                {{account.address}}
+                {{ shortenAddress(account.address) }}
               </div>
             </router-link>
           </li>
@@ -56,6 +56,9 @@ export default {
   methods: {
     openPopup() {
       chrome.tabs.create({url : "popup.html"});
+    },
+    shortenAddress(addr) {
+      return addr.substr(0, 8) + '...' + addr.substr(addr.length-4);
     }
   },
   components: {
