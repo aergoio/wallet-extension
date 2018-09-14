@@ -6,8 +6,8 @@ This is the source code for the official AERGO Wallet browser extension. It work
 
 1. `git clone https://github.com/aergoio/wallet-extension`
 2. Go to [chrome://extensions/](chrome://extensions/).
-3. Click "Load Unpacked"
-4. Navigate to the `dist` directory and click OK. 
+3. Enable "Developer mode". Click "Load Unpacked".
+4. Navigate to the `dist` directory and click OK.
 
 ## Develop
 
