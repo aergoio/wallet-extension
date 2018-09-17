@@ -23,11 +23,12 @@ module.exports = (env, argv) => {
     //new BundleAnalyzerPlugin(),
     // create HTML files
     new HtmlWebpackPlugin({filename: 'popup.html', template: 'src/assets/html/popup.html', chunks: ['popup', 'vendor']}),
+    new HtmlWebpackPlugin({filename: 'background.html', template: 'src/assets/html/background.html', chunks: ['background', 'vendor']}),
   ];
 
   if (devMode) {
     // hot-reload for development
-    //plugins.push(new ChromeExtensionReloader({reloadPage: false}));
+    plugins.push(new ChromeExtensionReloader({reloadPage: false}));
   }
 
   return {
@@ -41,7 +42,7 @@ module.exports = (env, argv) => {
       path: path.resolve(__dirname, '../dist'),
       filename: '[name].js',
       chunkFilename: '[name].js',
-      publicPath: devMode ? '/dist' : ''
+      publicPath: devMode && 0 ? '/dist' : ''
     },
     plugins,
     module: {

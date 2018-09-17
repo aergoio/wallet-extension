@@ -21,8 +21,14 @@
   "homepage": "https://github.com/aergoio/wallet-extension#readme",
   "dependencies": {
     "bs58check": "^2.1.2",
+    "dnode": "^1.2.2",
+    "end-of-stream": "^1.4.1",
+    "extension-port-stream": "^1.0.0",
+    "extensionizer": "^1.0.1",
     "herajs": "git+https://github.com/aergoio/herajs.git",
     "jdenticon": "^2.1.0",
+    "obj-multiplex": "^1.0.0",
+    "pump": "^3.0.0",
     "qrcode": "^1.2.2",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1"

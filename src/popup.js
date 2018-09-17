@@ -1,23 +1,22 @@
 import "regenerator-runtime/runtime";
-
 require('./assets/style/popup.scss');
 
-import Vue from 'vue';
-import Popup from './vue/Popup';
-import VueRouter from 'vue-router';
-import routes from './config/routes';
-import Button from './vue/components/Button';
+import extension from 'extensionizer';
+import PortStream from 'extension-port-stream';
 
-Vue.use(VueRouter);
+import setupVue from './vue/setup';
+import connectToBackground from './utils/connect-background';
 
-const router = new VueRouter({
-    routes
-})
+import { promisifySimple } from './utils/promisify';
 
-Vue.component('Button', Button);
+init();
+async function init() {
+    const extensionPort = extension.runtime.connect({ name: 'popup' });
+    const connectionStream = new PortStream(extensionPort);
+    const background = await connectToBackground(connectionStream);
+    setupVue({ background });
 
-new Vue({
-    el: "#app",
-    render: createElement => createElement(Popup),
-    router
-})
+    console.log('connected to bg', background);
+    const result = await promisifySimple(background.foo)('bar');
+    console.log('bg result', result);
+}
