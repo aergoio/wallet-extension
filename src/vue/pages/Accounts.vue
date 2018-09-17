@@ -12,7 +12,7 @@
               <div class="account-item">
                 <Identicon :text="account.address" />
                 <span class="account-name">Account</span><br />
-                {{ shortenAddress(account.address) }}
+                {{ account.address | shortAddress }}
               </div>
             </router-link>
           </li>
@@ -31,35 +31,27 @@
 </template>
 
 <script>
-import controller from '../../controller';
+import { mapState, mapActions } from 'vuex'
 
 import Identicon from '../components/Identicon';
 
 export default {
   data () {
     return {
-      accounts: [
-        {address: 'foo'},
-        {address: 'bar'}
-      ]
     }
   },
   created () {
-    controller.accounts.get().then(accounts => {
-      this.$data.accounts = accounts.map(address => ({address}));
-    });
+    this.$store.dispatch('accounts/getAccounts');
   },
   beforeDestroy () {
   },
-  computed: {
-  },
+  computed: mapState({
+    accounts: state => state.accounts.accounts
+  }),
   methods: {
     openPopup() {
       chrome.tabs.create({url : "popup.html"});
     },
-    shortenAddress(addr) {
-      return addr.substr(0, 8) + '...' + addr.substr(addr.length-4);
-    }
   },
   components: {
     Identicon

@@ -27,11 +27,11 @@
     "extensionizer": "^1.0.1",
     "herajs": "git+https://github.com/aergoio/herajs.git",
     "jdenticon": "^2.1.0",
-    "obj-multiplex": "^1.0.0",
     "pump": "^3.0.0",
     "qrcode": "^1.2.2",
     "vue": "^2.5.17",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1"
   },
   "browserslist": "> 0.25%, not dead, not ie 11, not op_mini all",
   "devDependencies": {

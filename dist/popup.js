@@ -570,11 +570,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {},
   beforeDestroy: function beforeDestroy() {},
   computed: {},
-  methods: {
-    shortenAddress: function shortenAddress(addr) {
-      return addr.substr(0, 8) + '...' + addr.substr(addr.length - 4);
-    }
-  },
+  methods: {},
   components: {
     TransitionPage: _components_TransitionPage__WEBPACK_IMPORTED_MODULE_0__["default"],
     Identicon: _components_Identicon__WEBPACK_IMPORTED_MODULE_1__["default"]
@@ -592,7 +588,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _controller__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../controller */ "./src/controller.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _components_Identicon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Identicon */ "./src/vue/components/Identicon.vue");
 //
 //
@@ -630,35 +626,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    return {
-      accounts: [{
-        address: 'foo'
-      }, {
-        address: 'bar'
-      }]
-    };
+    return {};
   },
   created: function created() {
-    var _this = this;
-
-    _controller__WEBPACK_IMPORTED_MODULE_0__["default"].accounts.get().then(function (accounts) {
-      _this.$data.accounts = accounts.map(function (address) {
-        return {
-          address: address
-        };
-      });
-    });
+    this.$store.dispatch('accounts/getAccounts');
   },
   beforeDestroy: function beforeDestroy() {},
-  computed: {},
+  computed: Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
+    accounts: function accounts(state) {
+      return state.accounts.accounts;
+    }
+  }),
   methods: {
     openPopup: function openPopup() {
       chrome.tabs.create({
         url: "popup.html"
       });
-    },
-    shortenAddress: function shortenAddress(addr) {
-      return addr.substr(0, 8) + '...' + addr.substr(addr.length - 4);
     }
   },
   components: {
@@ -1615,7 +1598,7 @@ var render = function() {
             _c("br"),
             _vm._v(
               "\n      " +
-                _vm._s(_vm.shortenAddress(_vm.$route.params.address)) +
+                _vm._s(_vm._f("shortAddress")(_vm.$route.params.address)) +
                 "\n    "
             )
           ],
@@ -1725,7 +1708,7 @@ var render = function() {
                           _c("br"),
                           _vm._v(
                             "\n              " +
-                              _vm._s(_vm.shortenAddress(account.address)) +
+                              _vm._s(_vm._f("shortAddress")(account.address)) +
                               "\n            "
                           )
                         ],
@@ -3492,6 +3475,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/vue/filters/address.js":
+/*!************************************!*\
+  !*** ./src/vue/filters/address.js ***!
+  \************************************/
+/*! exports provided: shortAddress */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "shortAddress", function() { return shortAddress; });
+function shortAddress(addr) {
+  return addr.substr(0, 8) + '...' + addr.substr(addr.length - 4);
+}
+
+/***/ }),
+
 /***/ "./src/vue/pages/Account.vue":
 /*!***********************************!*\
   !*** ./src/vue/pages/Account.vue ***!
@@ -4029,9 +4028,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var _config_routes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config/routes */ "./src/config/routes.js");
 /* harmony import */ var _components_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/Button */ "./src/vue/components/Button.vue");
+/* harmony import */ var _store_index__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./store/index */ "./src/vue/store/index.js");
+/* harmony import */ var _filters_address__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./filters/address */ "./src/vue/filters/address.js");
+/* harmony import */ var _utils_background_connector__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./utils/background-connector */ "./src/vue/utils/background-connector.js");
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+
 
 
 
@@ -4046,30 +4051,34 @@ function _setup() {
   _setup = _asyncToGenerator(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee(opts) {
-    var router;
+    var router, vue;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]);
+            vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(_utils_background_connector__WEBPACK_IMPORTED_MODULE_7__["default"], {
+              background: opts.background
+            });
             router = new vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]({
               routes: _config_routes__WEBPACK_IMPORTED_MODULE_3__["default"]
             });
             vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('Button', _components_Button__WEBPACK_IMPORTED_MODULE_4__["default"]);
-            new vue__WEBPACK_IMPORTED_MODULE_0__["default"]({
+            vue__WEBPACK_IMPORTED_MODULE_0__["default"].filter('shortAddress', _filters_address__WEBPACK_IMPORTED_MODULE_6__["shortAddress"]);
+            vue = new vue__WEBPACK_IMPORTED_MODULE_0__["default"]({
               el: "#app",
               render: function render(createElement) {
                 return createElement(_Popup__WEBPACK_IMPORTED_MODULE_1__["default"]);
               },
-              router: router
+              router: router,
+              store: _store_index__WEBPACK_IMPORTED_MODULE_5__["default"]
             });
-            console.log('Configure Vue with opts', opts);
-            opts.background.on('update', function (foo) {
+            vue.$background.on('update', function (foo) {
               console.log('there is an update from the background');
               console.log(foo);
             });
 
-          case 6:
+          case 7:
           case "end":
             return _context.stop();
         }
@@ -4078,6 +4087,144 @@ function _setup() {
   }));
   return _setup.apply(this, arguments);
 }
+
+/***/ }),
+
+/***/ "./src/vue/store/accounts.js":
+/*!***********************************!*\
+  !*** ./src/vue/store/accounts.js ***!
+  \***********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _utils_promisify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/promisify */ "./src/utils/promisify.js");
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+var state = {
+  accounts: []
+};
+var getters = {};
+var actions = {
+  getAccounts: function () {
+    var _getAccounts = _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee(_ref) {
+      var commit, accounts;
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              commit = _ref.commit;
+              _context.next = 3;
+              return Object(_utils_promisify__WEBPACK_IMPORTED_MODULE_0__["promisifySimple"])(this._vm.$background.getAccounts)();
+
+            case 3:
+              accounts = _context.sent;
+              console.log(accounts);
+              commit('setAccounts', accounts);
+
+            case 6:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this);
+    }));
+
+    return function getAccounts(_x) {
+      return _getAccounts.apply(this, arguments);
+    };
+  }()
+};
+var mutations = {
+  setAccounts: function setAccounts(state, accounts) {
+    state.accounts = accounts;
+  }
+  /*
+  pushProductToCart (state, { id }) {
+  state.items.push({
+    id,
+    quantity: 1
+  })
+  },*/
+
+};
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: state,
+  getters: getters,
+  actions: actions,
+  mutations: mutations
+});
+
+/***/ }),
+
+/***/ "./src/vue/store/index.js":
+/*!********************************!*\
+  !*** ./src/vue/store/index.js ***!
+  \********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.runtime.esm.js");
+/* harmony import */ var _accounts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./accounts */ "./src/vue/store/accounts.js");
+
+
+
+var debug = "development" !== 'production';
+vue__WEBPACK_IMPORTED_MODULE_1__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_0__["default"]);
+/* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_0__["default"].Store({
+  modules: {
+    accounts: _accounts__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  strict: debug
+}));
+
+/***/ }),
+
+/***/ "./src/vue/utils/background-connector.js":
+/*!***********************************************!*\
+  !*** ./src/vue/utils/background-connector.js ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return BackgroundConnector; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var BackgroundConnector =
+/*#__PURE__*/
+function () {
+  function BackgroundConnector() {
+    _classCallCheck(this, BackgroundConnector);
+  }
+
+  _createClass(BackgroundConnector, null, [{
+    key: "install",
+    value: function install(Vue, options) {
+      Vue.prototype.$background = options.background;
+      console.log('Configure Vue with $background', options.background);
+    }
+  }]);
+
+  return BackgroundConnector;
+}();
+
+
 
 /***/ })
 

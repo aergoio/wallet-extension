@@ -340,6 +340,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var pump__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pump__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var dnode_browser_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! dnode/browser.js */ "./node_modules/dnode/browser.js");
 /* harmony import */ var dnode_browser_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(dnode_browser_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var herajs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! herajs */ "./node_modules/herajs/dist/herajs.js");
+/* harmony import */ var herajs__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(herajs__WEBPACK_IMPORTED_MODULE_3__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -362,6 +364,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var BackgroundController =
 /*#__PURE__*/
 function (_EventEmitter) {
@@ -376,6 +379,7 @@ function (_EventEmitter) {
     _this.uiState = {
       popupOpen: false
     };
+    _this.aergo = new herajs__WEBPACK_IMPORTED_MODULE_3___default.a();
     return _this;
   }
 
@@ -395,6 +399,16 @@ function (_EventEmitter) {
           send({
             msg: 'bar',
             param: param
+          });
+        },
+        getAccounts: function getAccounts(send) {
+          _this2.aergo.accounts.get().then(function (addresses) {
+            var accounts = addresses.map(function (address) {
+              return {
+                address: address
+              };
+            });
+            send(accounts);
           });
         }
       });

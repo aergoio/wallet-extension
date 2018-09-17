@@ -1,6 +1,7 @@
 import {EventEmitter} from 'events';
 import pump from 'pump';
 import Dnode from 'dnode/browser.js';
+import AergoClient from 'herajs';
 
 class BackgroundController extends EventEmitter {
     constructor() {
@@ -8,6 +9,7 @@ class BackgroundController extends EventEmitter {
         this.uiState = {
             popupOpen: false
         }
+        this.aergo = new AergoClient();
     }
 
     isUiOpen() {
@@ -19,6 +21,12 @@ class BackgroundController extends EventEmitter {
         const dnode = Dnode({
             foo: (param, send) => {
                 send({msg: 'bar', param});
+            },
+            getAccounts: (send) => {
+                this.aergo.accounts.get().then(addresses => {
+                    const accounts = addresses.map(address => ({address}));
+                    send(accounts);
+                });
             }
         })
         pump(
