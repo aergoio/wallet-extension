@@ -67,7 +67,6 @@
 </template>
 
 <script>
-import controller from '../../controller';
 import { CommitStatus } from 'herajs/src/client';
 import { promisifySimple } from '../../utils/promisify';
 

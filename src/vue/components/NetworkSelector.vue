@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import controller from '../../controller';
+import { promisifySimple } from '../../utils/promisify';
 
 export default {
   data () {
@@ -39,9 +39,9 @@ export default {
   },
   methods: {
     updateStatus () {
-      controller.blockchain().then(status => {
+      promisifySimple(this.$background.getBlockchainStatus)().then(status => {
         this.$data.isConnected = true;
-        this.$data.blockHeight = status.getBestHeight();
+        this.$data.blockHeight = status.blockHeight;
 
         setTimeout(() => {
           this.updateStatus();

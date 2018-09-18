@@ -19,9 +19,19 @@ class BackgroundController extends EventEmitter {
     setupCommunication (outStream) {
         // Setup simple async rpc stream to popup
         const dnode = Dnode({
+            getBlockchainStatus: async (send) => {
+                const status = await this.aergo.blockchain();
+                send({
+                    blockHeight: status.getBestHeight()
+                });
+            },
             getAccounts: async (send) => {
                 const addresses = await this.aergo.accounts.get();
-                const accounts = addresses.map(address => ({address}));
+                const accounts = await Promise.all(addresses.map(async (address) => {
+                    const state = await this.aergo.getState(address);
+                    return { address, balance: state.getBalance() };
+                }));
+                console.log(accounts);
                 send(accounts);
             },
             createAccount: async ({ name, password }, send) => {

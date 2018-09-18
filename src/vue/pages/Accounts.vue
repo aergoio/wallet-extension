@@ -11,7 +11,8 @@
             <router-link :to="`/account/${account.address}/`">
               <div class="account-item">
                 <Identicon :text="account.address" />
-                <span class="account-name">Account</span><br />
+                <span class="account-name">Account</span>
+                <span class="account-balance">{{account.balance}} AER</span><br />
                 {{ account.address | shortAddress }}
               </div>
             </router-link>
