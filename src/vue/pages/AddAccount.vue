@@ -34,8 +34,6 @@
 </template>
 
 <script>
-import controller from '../../controller';
-
 export default {
   data () {
     return {
@@ -56,8 +54,11 @@ export default {
   },
   methods: {
     async create () {
-      const createdAddress = await controller.accounts.create(this.password);
-      console.log('created account', createdAddress, this.password);
+      const account = await this.$store.dispatch('accounts/createAccount', {
+        name: this.$data.name,
+        password: this.$data.password
+      });
+      console.log('created account', account);
       this.$router.push('/');
     },
     cancel () {
@@ -71,6 +72,5 @@ export default {
 </script>
 
 <style lang="scss">
-
 
 </style>

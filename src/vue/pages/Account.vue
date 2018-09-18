@@ -4,8 +4,9 @@
     <div class="account-header">
       <div class="account-item">
         <Identicon :text="$route.params.address" />
-        <span class="account-name">Account</span><br />
-        {{ shortenAddress($route.params.address) }}
+        <span class="account-name">Account</span>
+        <span class="account-balance">{{account.balance}} AER</span><br />
+        {{ $route.params.address | shortAddress}}
       </div>
 
       <router-link :to="`/`" class="menu-link"></router-link>
@@ -39,11 +40,11 @@ export default {
   beforeDestroy () {
   },
   computed: {
+    account() {
+      return this.$store.state.accounts.accounts.find(account => account.address == this.$route.params.address);
+    }
   },
   methods: {
-    shortenAddress(addr) {
-      return addr.substr(0, 8) + '...' + addr.substr(addr.length-4);
-    }
   },
   components: {
     TransitionPage,

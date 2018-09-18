@@ -9,6 +9,12 @@ This is the source code for the official AERGO Wallet browser extension. It work
 3. Enable "Developer mode". Click "Load Unpacked".
 4. Navigate to the `dist` directory and click OK.
 
+### Update
+
+1. `git pull`
+2. Go to [chrome://extensions/](chrome://extensions/).
+3. Click the "Reload" button.
+
 ## Develop
 
 `npm run start` starts webpack in watch mode and also reloads the Chrome extension after every build.
