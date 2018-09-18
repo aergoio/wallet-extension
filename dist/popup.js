@@ -660,7 +660,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _controller__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../controller */ "./src/controller.js");
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -700,7 +699,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -723,17 +721,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _create = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
-        var createdAddress;
+        var account;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return _controller__WEBPACK_IMPORTED_MODULE_0__["default"].accounts.create(this.password);
+                return this.$store.dispatch('accounts/createAccount', {
+                  name: this.$data.name,
+                  password: this.$data.password
+                });
 
               case 2:
-                createdAddress = _context.sent;
-                console.log('created account', createdAddress, this.password);
+                account = _context.sent;
+                console.log('created account', account);
                 this.$router.push('/');
 
               case 5:
@@ -767,6 +768,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_QRCode__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/QRCode */ "./src/vue/components/QRCode.vue");
+//
 //
 //
 //
@@ -833,6 +835,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _controller__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../controller */ "./src/controller.js");
 /* harmony import */ var herajs_src_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! herajs/src/client */ "./node_modules/herajs/src/client/index.js");
+/* harmony import */ var _utils_promisify__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/promisify */ "./src/utils/promisify.js");
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -909,16 +912,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 
 
 var defaultData = {
@@ -944,52 +938,29 @@ var defaultData = {
       var _startConfirm = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
-        var from, tx, errorReason;
+        var from, tx;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 this.error = '';
                 from = this.$route.params.address;
-                _context.next = 4;
-                return _controller__WEBPACK_IMPORTED_MODULE_0__["default"].accounts.unlock(from, 'testpass');
-
-              case 4:
                 tx = {
-                  nonce: parseInt(this.transaction.nonce),
+                  //nonce: parseInt(this.transaction.nonce),
                   from: from,
                   to: this.transaction.to,
                   amount: parseInt(this.transaction.amount),
                   payload: null
                 };
-                _context.prev = 5;
-                _context.next = 8;
-                return _controller__WEBPACK_IMPORTED_MODULE_0__["default"].accounts.signTransaction(tx);
-
-              case 8:
-                this.signedTx = _context.sent;
+                this.signedTx = tx;
                 this.status = 'confirm';
-                _context.next = 18;
-                break;
 
-              case 12:
-                _context.prev = 12;
-                _context.t0 = _context["catch"](5);
-                errorReason = 'Undefined error';
-
-                if (_context.t0.code && _context.t0.code < Object.values(herajs_src_client__WEBPACK_IMPORTED_MODULE_1__["CommitStatus"]).length) {
-                  errorReason = Object.keys(herajs_src_client__WEBPACK_IMPORTED_MODULE_1__["CommitStatus"])[Object.values(herajs_src_client__WEBPACK_IMPORTED_MODULE_1__["CommitStatus"]).indexOf(_context.t0.code)];
-                }
-
-                this.error = errorReason;
-                console.log('failed to sign tx', errorReason, _context.t0);
-
-              case 18:
+              case 5:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[5, 12]]);
+        }, _callee, this);
       }));
 
       return function startConfirm() {
@@ -1007,18 +978,17 @@ var defaultData = {
               case 0:
                 _context2.prev = 0;
                 _context2.next = 3;
-                return _controller__WEBPACK_IMPORTED_MODULE_0__["default"].sendTransaction(this.signedTx);
+                return Object(_utils_promisify__WEBPACK_IMPORTED_MODULE_2__["promisifySimple"])(this.$background.sendTransaction)(this.signedTx);
 
               case 3:
                 this.lastTxHash = _context2.sent;
-                this.transaction.nonce = this.signedTx.nonce + 1;
                 console.log('tx sent', this.lastTxHash, this.signedTx);
                 this.status = 'success';
-                _context2.next = 15;
+                _context2.next = 14;
                 break;
 
-              case 9:
-                _context2.prev = 9;
+              case 8:
+                _context2.prev = 8;
                 _context2.t0 = _context2["catch"](0);
                 errorReason = 'Undefined error';
 
@@ -1029,12 +999,12 @@ var defaultData = {
                 this.error = errorReason;
                 console.log('failed to send tx', errorReason, _context2.t0);
 
-              case 15:
+              case 14:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[0, 9]]);
+        }, _callee2, this, [[0, 8]]);
       }));
 
       return function confirm() {
@@ -1888,6 +1858,10 @@ var render = function() {
     _vm._v(" "),
     _c("p", { staticClass: "instruction" }, [
       _vm._v("\n    You can directly deposit to this address.\n  ")
+    ]),
+    _vm._v(" "),
+    _c("p", { staticClass: "instruction" }, [
+      _vm._v(_vm._s(_vm.$route.params.address))
     ])
   ])
 }
@@ -1949,15 +1923,15 @@ var render = function() {
         _vm._v(" "),
         _vm.signedTx
           ? _c("p", [
-              _c("strong", [_vm._v("Hash: " + _vm._s(_vm.signedTx.hash))]),
+              _c("strong", [_vm._v("Hash: " + _vm._s(_vm.lastTxHash))]),
               _c("br"),
               _vm._v("\n      From: " + _vm._s(_vm.signedTx.from)),
               _c("br"),
               _vm._v("\n      To: " + _vm._s(_vm.signedTx.to)),
               _c("br"),
-              _vm._v("\n      Amount: " + _vm._s(_vm.signedTx.amount)),
-              _c("br"),
-              _vm._v("\n      Nonce: " + _vm._s(_vm.signedTx.nonce) + "\n    ")
+              _vm._v(
+                "\n      Amount: " + _vm._s(_vm.signedTx.amount) + "\n    "
+              )
             ])
           : _vm._e(),
         _vm._v(" "),
@@ -1994,9 +1968,9 @@ var render = function() {
               _c("br"),
               _vm._v("\n      To: " + _vm._s(_vm.signedTx.to)),
               _c("br"),
-              _vm._v("\n      Amount: " + _vm._s(_vm.signedTx.amount)),
-              _c("br"),
-              _vm._v("\n      Nonce: " + _vm._s(_vm.signedTx.nonce) + "\n    ")
+              _vm._v(
+                "\n      Amount: " + _vm._s(_vm.signedTx.amount) + "\n    "
+              )
             ])
           : _vm._e(),
         _vm._v(" "),
@@ -2082,33 +2056,6 @@ var render = function() {
                   return
                 }
                 _vm.$set(_vm.transaction, "amount", $event.target.value)
-              }
-            }
-          })
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-line" }, [
-        _c("label", [
-          _vm._v("\n        Nonce\n\n        "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.transaction.nonce,
-                expression: "transaction.nonce"
-              }
-            ],
-            staticClass: "text-input",
-            attrs: { type: "number" },
-            domProps: { value: _vm.transaction.nonce },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.transaction, "nonce", $event.target.value)
               }
             }
           })
@@ -2645,10 +2592,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var herajs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! herajs */ "./node_modules/herajs/dist/herajs.js");
-/* harmony import */ var herajs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(herajs__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var herajs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! herajs */ "./node_modules/herajs/src/platforms/web/index.js");
 
-var aergo = new herajs__WEBPACK_IMPORTED_MODULE_0___default.a();
+var aergo = new herajs__WEBPACK_IMPORTED_MODULE_0__["default"]();
 /* harmony default export */ __webpack_exports__["default"] = (aergo);
 
 /***/ }),
@@ -2664,20 +2610,18 @@ var aergo = new herajs__WEBPACK_IMPORTED_MODULE_0___default.a();
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! regenerator-runtime/runtime */ "./node_modules/regenerator-runtime/runtime.js");
 /* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var extensionizer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! extensionizer */ "./node_modules/extensionizer/index.js");
-/* harmony import */ var extensionizer__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(extensionizer__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var extension_port_stream__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! extension-port-stream */ "./node_modules/extension-port-stream/index.js");
-/* harmony import */ var extension_port_stream__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(extension_port_stream__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _vue_setup__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./vue/setup */ "./src/vue/setup.js");
+/* harmony import */ var _assets_style_popup_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./assets/style/popup.scss */ "./src/assets/style/popup.scss");
+/* harmony import */ var _assets_style_popup_scss__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_assets_style_popup_scss__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var extensionizer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! extensionizer */ "./node_modules/extensionizer/index.js");
+/* harmony import */ var extensionizer__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(extensionizer__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var extension_port_stream__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! extension-port-stream */ "./node_modules/extension-port-stream/index.js");
+/* harmony import */ var extension_port_stream__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(extension_port_stream__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _utils_connect_background__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils/connect-background */ "./src/utils/connect-background.js");
-/* harmony import */ var _utils_promisify__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./utils/promisify */ "./src/utils/promisify.js");
+/* harmony import */ var _vue_setup__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./vue/setup */ "./src/vue/setup.js");
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-
-
-__webpack_require__(/*! ./assets/style/popup.scss */ "./src/assets/style/popup.scss");
 
 
 
@@ -2694,32 +2638,25 @@ function _init() {
   _init = _asyncToGenerator(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee() {
-    var extensionPort, connectionStream, background, result;
+    var extensionPort, connectionStream, background;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            extensionPort = extensionizer__WEBPACK_IMPORTED_MODULE_1___default.a.runtime.connect({
+            extensionPort = extensionizer__WEBPACK_IMPORTED_MODULE_2___default.a.runtime.connect({
               name: 'popup'
             });
-            connectionStream = new extension_port_stream__WEBPACK_IMPORTED_MODULE_2___default.a(extensionPort);
+            connectionStream = new extension_port_stream__WEBPACK_IMPORTED_MODULE_3___default.a(extensionPort);
             _context.next = 4;
             return Object(_utils_connect_background__WEBPACK_IMPORTED_MODULE_4__["default"])(connectionStream);
 
           case 4:
             background = _context.sent;
-            Object(_vue_setup__WEBPACK_IMPORTED_MODULE_3__["default"])({
+            Object(_vue_setup__WEBPACK_IMPORTED_MODULE_5__["default"])({
               background: background
             });
-            console.log('connected to bg', background);
-            _context.next = 9;
-            return Object(_utils_promisify__WEBPACK_IMPORTED_MODULE_5__["promisifySimple"])(background.foo)('bar');
 
-          case 9:
-            result = _context.sent;
-            console.log('bg result', result);
-
-          case 11:
+          case 6:
           case "end":
             return _context.stop();
         }
@@ -4125,10 +4062,9 @@ var actions = {
 
             case 3:
               accounts = _context.sent;
-              console.log(accounts);
               commit('setAccounts', accounts);
 
-            case 6:
+            case 5:
             case "end":
               return _context.stop();
           }
@@ -4139,11 +4075,44 @@ var actions = {
     return function getAccounts(_x) {
       return _getAccounts.apply(this, arguments);
     };
+  }(),
+  createAccount: function () {
+    var _createAccount = _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee2(_ref2, options) {
+      var commit, account;
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              commit = _ref2.commit;
+              _context2.next = 3;
+              return Object(_utils_promisify__WEBPACK_IMPORTED_MODULE_0__["promisifySimple"])(this._vm.$background.createAccount)(options);
+
+            case 3:
+              account = _context2.sent;
+              commit('addAccount', account);
+              return _context2.abrupt("return", account);
+
+            case 6:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, this);
+    }));
+
+    return function createAccount(_x2, _x3) {
+      return _createAccount.apply(this, arguments);
+    };
   }()
 };
 var mutations = {
   setAccounts: function setAccounts(state, accounts) {
     state.accounts = accounts;
+  },
+  addAccount: function addAccount(state, account) {
+    state.accounts.push(account);
   }
   /*
   pushProductToCart (state, { id }) {
@@ -4217,7 +4186,6 @@ function () {
     key: "install",
     value: function install(Vue, options) {
       Vue.prototype.$background = options.background;
-      console.log('Configure Vue with $background', options.background);
     }
   }]);
 

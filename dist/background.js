@@ -340,9 +340,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var pump__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pump__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var dnode_browser_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! dnode/browser.js */ "./node_modules/dnode/browser.js");
 /* harmony import */ var dnode_browser_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(dnode_browser_js__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var herajs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! herajs */ "./node_modules/herajs/dist/herajs.js");
-/* harmony import */ var herajs__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(herajs__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var herajs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! herajs */ "./node_modules/herajs/src/platforms/web/index.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -379,7 +382,7 @@ function (_EventEmitter) {
     _this.uiState = {
       popupOpen: false
     };
-    _this.aergo = new herajs__WEBPACK_IMPORTED_MODULE_3___default.a();
+    _this.aergo = new herajs__WEBPACK_IMPORTED_MODULE_3__["default"]();
     return _this;
   }
 
@@ -395,22 +398,113 @@ function (_EventEmitter) {
 
       // Setup simple async rpc stream to popup
       var dnode = dnode_browser_js__WEBPACK_IMPORTED_MODULE_2___default()({
-        foo: function foo(param, send) {
-          send({
-            msg: 'bar',
-            param: param
-          });
-        },
-        getAccounts: function getAccounts(send) {
-          _this2.aergo.accounts.get().then(function (addresses) {
-            var accounts = addresses.map(function (address) {
-              return {
-                address: address
-              };
-            });
-            send(accounts);
-          });
-        }
+        getAccounts: function () {
+          var _getAccounts = _asyncToGenerator(
+          /*#__PURE__*/
+          regeneratorRuntime.mark(function _callee(send) {
+            var addresses, accounts;
+            return regeneratorRuntime.wrap(function _callee$(_context) {
+              while (1) {
+                switch (_context.prev = _context.next) {
+                  case 0:
+                    _context.next = 2;
+                    return _this2.aergo.accounts.get();
+
+                  case 2:
+                    addresses = _context.sent;
+                    accounts = addresses.map(function (address) {
+                      return {
+                        address: address
+                      };
+                    });
+                    send(accounts);
+
+                  case 5:
+                  case "end":
+                    return _context.stop();
+                }
+              }
+            }, _callee, this);
+          }));
+
+          return function getAccounts(_x) {
+            return _getAccounts.apply(this, arguments);
+          };
+        }(),
+        createAccount: function () {
+          var _createAccount = _asyncToGenerator(
+          /*#__PURE__*/
+          regeneratorRuntime.mark(function _callee2(_ref, send) {
+            var name, password, createdAddress;
+            return regeneratorRuntime.wrap(function _callee2$(_context2) {
+              while (1) {
+                switch (_context2.prev = _context2.next) {
+                  case 0:
+                    name = _ref.name, password = _ref.password;
+                    _context2.next = 3;
+                    return _this2.aergo.accounts.create('testpass');
+
+                  case 3:
+                    createdAddress = _context2.sent;
+                    send({
+                      address: createdAddress
+                    });
+
+                  case 5:
+                  case "end":
+                    return _context2.stop();
+                }
+              }
+            }, _callee2, this);
+          }));
+
+          return function createAccount(_x2, _x3) {
+            return _createAccount.apply(this, arguments);
+          };
+        }(),
+        sendTransaction: function () {
+          var _sendTransaction = _asyncToGenerator(
+          /*#__PURE__*/
+          regeneratorRuntime.mark(function _callee3(tx, send) {
+            var signedTx, txHash;
+            return regeneratorRuntime.wrap(function _callee3$(_context3) {
+              while (1) {
+                switch (_context3.prev = _context3.next) {
+                  case 0:
+                    _context3.next = 2;
+                    return _this2.aergo.accounts.unlock(tx.from, 'testpass');
+
+                  case 2:
+                    _context3.next = 4;
+                    return _this2.aergo.getNonce(tx.from);
+
+                  case 4:
+                    _context3.t0 = _context3.sent;
+                    tx.nonce = 1 + _context3.t0;
+                    _context3.next = 8;
+                    return _this2.aergo.accounts.signTransaction(tx);
+
+                  case 8:
+                    signedTx = _context3.sent;
+                    _context3.next = 11;
+                    return _this2.aergo.sendSignedTransaction(signedTx);
+
+                  case 11:
+                    txHash = _context3.sent;
+                    send(txHash);
+
+                  case 13:
+                  case "end":
+                    return _context3.stop();
+                }
+              }
+            }, _callee3, this);
+          }));
+
+          return function sendTransaction(_x4, _x5) {
+            return _sendTransaction.apply(this, arguments);
+          };
+        }()
       });
       pump__WEBPACK_IMPORTED_MODULE_1___default()(outStream, dnode, outStream, function (err) {
         if (err) log.error(err);
@@ -444,7 +538,7 @@ module.exports = __webpack_require__.p + "manifest.json";
 
 /***/ }),
 
-/***/ 2:
+/***/ 0:
 /*!********************!*\
   !*** fs (ignored) ***!
   \********************/

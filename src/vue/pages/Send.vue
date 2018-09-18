@@ -5,11 +5,10 @@
       <h2>The transaction has been sent.</h2>
 
       <p v-if="signedTx">
-        <strong>Hash: {{signedTx.hash}}</strong><br>
+        <strong>Hash: {{lastTxHash}}</strong><br>
         From: {{signedTx.from}}<br>
         To: {{signedTx.to}}<br>
-        Amount: {{signedTx.amount}}<br>
-        Nonce: {{signedTx.nonce}}
+        Amount: {{signedTx.amount}}
       </p>
 
       <div class="form-actions">
@@ -23,8 +22,7 @@
       <p v-if="signedTx">
         From: {{signedTx.from}}<br>
         To: {{signedTx.to}}<br>
-        Amount: {{signedTx.amount}}<br>
-        Nonce: {{signedTx.nonce}}
+        Amount: {{signedTx.amount}}
       </p>
 
       <div class="form-actions">
@@ -53,14 +51,6 @@
 
       <div class="form-line">
         <label>
-          Nonce
-
-          <input type="number" class="text-input" v-model="transaction.nonce">
-        </label>
-      </div>
-
-      <div class="form-line">
-        <label>
           Data
 
           <input type="text" class="text-input" >
@@ -78,7 +68,8 @@
 
 <script>
 import controller from '../../controller';
-import {CommitStatus} from 'herajs/src/client';
+import { CommitStatus } from 'herajs/src/client';
+import { promisifySimple } from '../../utils/promisify';
 
 const defaultData = {
   transaction: {
@@ -105,30 +96,19 @@ export default {
     async startConfirm () {
       this.error = '';
       const from = this.$route.params.address;
-      await controller.accounts.unlock(from, 'testpass');
       const tx = {
-          nonce: parseInt(this.transaction.nonce),
+          //nonce: parseInt(this.transaction.nonce),
           from: from,
           to: this.transaction.to,
           amount: parseInt(this.transaction.amount),
           payload: null,
       };
-      try {
-        this.signedTx = await controller.accounts.signTransaction(tx);
-        this.status = 'confirm';
-      } catch (error) {
-        let errorReason = 'Undefined error';
-        if (error.code && error.code < Object.values(CommitStatus).length) {
-          errorReason = Object.keys(CommitStatus)[Object.values(CommitStatus).indexOf(error.code)];
-        }
-        this.error = errorReason;
-        console.log('failed to sign tx', errorReason, error, );
-      }
+      this.signedTx = tx;
+      this.status = 'confirm';
     },
     async confirm () {
       try {
-        this.lastTxHash = await controller.sendTransaction(this.signedTx);
-        this.transaction.nonce = this.signedTx.nonce + 1;
+        this.lastTxHash = await promisifySimple(this.$background.sendTransaction)(this.signedTx);
         console.log('tx sent', this.lastTxHash, this.signedTx);
         this.status = 'success';
       } catch (error) {
