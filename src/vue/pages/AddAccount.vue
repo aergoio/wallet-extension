@@ -4,31 +4,14 @@
       <div class="sep top"></div>
       <div class="account-list-header">Add Account</div>
 
-      <div class="scroll-view">
-        <form class="form" autocomplete="off">
-          <div class="form-line">
-            <label>
-              Accout name
-
-              <input type="text" class="text-input" v-model="name" ref="name">
-            </label>
-          </div>
-
-          <div class="form-line">
-            <label>
-              Password
-
-              <input type="password" class="text-input" v-model="password" autocomplete="new-password">
-            </label>
-          </div>
-
-          <div class="form-actions">
-            <Button text="Create" primary="true" v-on:click.native="create" />
-            <Button text="Cancel" class="secondary" v-on:click.native="cancel" />
-          </div>
-        </form>
+      <div class="action-chooser">
+        <router-link :to="`/add-account/create`">Create new account</router-link>
+        <router-link :to="`/add-account/import`">Import account</router-link>
       </div>
-      
+
+      <div class="form-actions">
+        <Button text="Cancel" class="secondary" v-on:click.native="cancel" />
+      </div>
     </div>
   </transition>
 </template>
@@ -53,14 +36,6 @@ export default {
     }, 400);
   },
   methods: {
-    async create () {
-      const account = await this.$store.dispatch('accounts/createAccount', {
-        name: this.$data.name,
-        password: this.$data.password
-      });
-      console.log('created account', account);
-      this.$router.push('/');
-    },
     cancel () {
       this.$router.push('/');
     }
@@ -72,5 +47,24 @@ export default {
 </script>
 
 <style lang="scss">
+.action-chooser {
+  display: flex;
+  flex-direction: column;
+  margin: 15px;
 
+  a {
+    display: block;
+    line-height: 3;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    background-color: #f0f0f0;
+    margin-bottom: 10px;
+    border-radius: 5px;
+
+    &:hover {
+      background-color: #e6e6e6;
+    }
+  }
+}
 </style>
