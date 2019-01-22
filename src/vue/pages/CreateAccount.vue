@@ -54,6 +54,7 @@ export default {
   },
   methods: {
     async create () {
+      console.log('Creating account...');
       const account = await this.$store.dispatch('accounts/createAccount', {
         name: this.$data.name,
         password: this.$data.password

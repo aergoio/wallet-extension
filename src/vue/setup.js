@@ -7,6 +7,7 @@ import Button from './components/Button';
 import store from './store/index';
 import { shortAddress } from './filters/address';
 import BackgroundConnector from './utils/background-connector';
+import { tooltip } from './directives/tooltip';
 
 const createRouter = (routes, store) => {
     let initialLoad = true;
@@ -35,6 +36,7 @@ export default async function setup(opts) {
 
     Vue.component('Button', Button);
     Vue.filter('shortAddress', shortAddress);
+    Vue.directive('tooltip', tooltip);
 
     const vue = new Vue({
         el: "#app",

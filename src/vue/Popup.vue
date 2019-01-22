@@ -86,6 +86,8 @@ export default {
     flex: 1;
     display: flex;
     overflow: hidden;
+
+    word-break: break-all;
   }
 }
 
@@ -137,6 +139,29 @@ h2, strong {
 
 p { 
   line-height: 1.25;
+}
+
+.label {
+  display: inline-block;
+  vertical-align: text-bottom;
+  text-transform: uppercase;
+  font-size: .85em;
+  background-color: #eee;
+  line-height: 1.5;
+  padding: 0 .4em;
+  border-radius: 4px;
+
+  &.label-positive {
+    background-color: #13c329;
+    color: #fff;
+  }
+  &.label-negative {
+    background-color: #f57336;
+    color: #fff;
+  }
+  &.label-action {
+    font-weight: 500;
+  }
 }
 
 </style>

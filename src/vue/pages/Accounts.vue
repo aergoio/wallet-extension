@@ -7,13 +7,13 @@
 
       <div class="scroll-view">
         <ul class="account-list">
-          <li v-for="account in accounts" :key="account.address">
-            <router-link :to="`/account/${account.address}/`">
+          <li v-for="account in accounts" :key="account.id">
+            <router-link :to="`/account/${account.id}/`">
               <div class="account-item">
-                <Identicon :text="account.address" />
+                <Identicon :text="account.id" />
                 <span class="account-name">Account</span>
-                <span class="account-balance">{{account.balance}} AER</span><br />
-                {{ account.address | shortAddress }}
+                <span class="account-balance" v-if="account && account.data">{{formatAmount(account.data.balance)}}</span><br />
+                {{ account.id | shortAddress }}
               </div>
             </router-link>
           </li>
@@ -35,6 +35,7 @@
 import { mapState, mapActions } from 'vuex'
 
 import Identicon from '../components/Identicon';
+import { Amount } from '@herajs/client';
 
 export default {
   data () {
@@ -47,12 +48,18 @@ export default {
   beforeDestroy () {
   },
   computed: mapState({
-    accounts: state => state.accounts.accounts
+    accounts: state => {
+      return state.accounts.addresses.map(address => state.accounts.accounts[address]);
+    }
   }),
   methods: {
     openPopup() {
       chrome.tabs.create({url : "popup.html"});
     },
+    formatAmount(amount) {
+      if (!amount) return '0 aergo';
+      return (new Amount(amount)).toUnit('aergo').toString();
+    }
   },
   components: {
     Identicon

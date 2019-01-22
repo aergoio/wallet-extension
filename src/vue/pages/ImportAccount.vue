@@ -22,7 +22,7 @@
             </label>
           </div>
 
-          <div class="form-line">
+          <div class="form-line" v-if="keyType === 'encrypted'">
             <label>
               Password
 
@@ -43,7 +43,8 @@
 </template>
 
 <script>
-import {identifyFromPrivateKey, decodePrivateKey, decryptPrivateKey} from 'herajs-crypto';
+import {identifyFromPrivateKey, decodePrivateKey, decryptPrivateKey} from '@herajs/crypto';
+import bs58check from 'bs58check';
 
 export default {
   data () {
@@ -53,6 +54,7 @@ export default {
       key: '',
       identity: null,
       error: '',
+      keyType: ''
     }
   },
   created () {
@@ -63,9 +65,18 @@ export default {
   },
   mounted () {
   },
+  watch: {
+    key: function (key) {
+      this.validateKey();
+    },
+  },
   methods: {
     async importAccount () {
-      if (this.key) {
+      if (!this.keyType) {
+        this.error = 'Need to select either key file or paste text.';
+        return;
+      }
+      if (this.keyType === 'encrypted') {
         const encryptedBytes = decodePrivateKey(this.key);
         try {
           const decryptedBytes = await decryptPrivateKey(encryptedBytes, this.password);
@@ -74,20 +85,29 @@ export default {
           this.error = 'Could not decrypt private key. Wrong password?';
         }
       }
-      if (!this.file && !this.key) {
-        this.error = 'Need to select either key file or paste text.';
-        return;
-      }
 
       console.log(this.identity);
-      alert('Succesfully imported account ' + this.identity.address);
+      //alert('Succesfully imported account ' + this.identity.address);
 
-      /*onst account = await this.$store.dispatch('accounts/createAccount', {
-        name: this.$data.name,
-        password: this.$data.password
+      const account = await this.$store.dispatch('accounts/importAccount', {
+        identity: this.identity
       });
       console.log('created account', account);
-      this.$router.push('/');*/
+      this.$router.push(`/account/${account.address}/`);
+    },
+    validateKey () {
+      try {
+        const version = bs58check.decode(this.key)[0];
+        if (version !== 0xAA) {
+          this.error = 'Invalid key format';
+          return;
+        }
+        this.keyType = 'encrypted';
+      } catch (e) {
+        console.error('Invalid key: ' + e);
+        this.error = 'Invalid key format';
+        this.keyType = '';
+      }
     },
     selectedFile () {
       this.file = this.$refs.files.files[0];
@@ -96,6 +116,7 @@ export default {
         const buffer = e.target.result;
         const bytes = new Uint8Array(buffer);
         this.identity = identifyFromPrivateKey(bytes);
+        this.keyType = 'file';
       };
       reader.readAsArrayBuffer(this.file);
     },

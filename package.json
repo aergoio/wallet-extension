@@ -20,19 +20,27 @@
   },
   "homepage": "https://github.com/aergoio/wallet-extension#readme",
   "dependencies": {
+    "@herajs/client": "0.4.3",
+    "@herajs/crypto": "0.0.5",
+    "bs58": "^4.0.1",
     "bs58check": "^2.1.2",
     "dnode": "^1.2.2",
     "end-of-stream": "^1.4.1",
     "extension-port-stream": "^1.0.0",
     "extensionizer": "^1.0.1",
-    "herajs": "git+https://github.com/aergoio/herajs.git",
+    "google-protobuf": "^3.6.0",
+    "grpc-web-client": "^0.6.2",
+    "idb": "^3.0.2",
     "jdenticon": "^2.1.0",
+    "moment": "^2.24.0",
+    "primer-tooltips": "^1.5.10",
     "pump": "^3.0.0",
     "qrcode": "^1.2.2",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
-    "vuex-persist": "^1.6.1"
+    "vuex-persist": "^1.6.1",
+    "whatwg-fetch": "^3.0.0"
   },
   "browserslist": "> 0.25%, not dead, not ie 11, not op_mini all",
   "devDependencies": {
@@ -57,7 +65,7 @@
     "vue-template-compiler": "^2.5.17",
     "webpack": "^4.17.2",
     "webpack-bundle-analyzer": "^2.13.1",
-    "webpack-chrome-extension-reloader": "^0.8.3",
+    "webpack-chrome-extension-reloader": "^1.1.1",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.8"
   }

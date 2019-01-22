@@ -47,6 +47,7 @@
 		"storage",
 		"unlimitedStorage",
 		"clipboardWrite",
-		"notifications"
+		"notifications",
+		"contextMenus"
 	]
 }

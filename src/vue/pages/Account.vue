@@ -5,7 +5,7 @@
       <div class="account-item">
         <Identicon :text="$route.params.address" />
         <span class="account-name">Account</span>
-        <span class="account-balance">{{account.balance}} AER</span><br />
+        <span class="account-balance" v-if="account && account.data">{{formatAmount(account.data.balance)}}</span><br />
         {{ $route.params.address | shortAddress}}
       </div>
 
@@ -29,6 +29,8 @@
 <script>
 import TransitionPage from '../components/TransitionPage';
 import Identicon from '../components/Identicon';
+import { mapState } from 'vuex'
+import { Amount } from '@herajs/client';
 
 export default {
   data () {
@@ -37,14 +39,30 @@ export default {
   },
   created () {
   },
+  mounted () {
+    this.reloadState();
+  },
   beforeDestroy () {
   },
   computed: {
-    account() {
-      return this.$store.state.accounts.accounts.find(account => account.address == this.$route.params.address);
-    }
+    ...mapState({
+      account: function(state) {
+        if (state.accounts.accounts.hasOwnProperty(this.$route.params.address)) {
+          return state.accounts.accounts[this.$route.params.address];
+        }
+        return {};
+      }
+    }),
   },
   methods: {
+    formatAmount(amount) {
+      return (new Amount(amount)).toUnit('aergo').toString();
+    },
+    async reloadState() {
+      console.log('loading account');
+      const account = await this.$store.dispatch('accounts/loadAccount', { address: this.$route.params.address });
+      console.log('loaded account', account);
+    }
   },
   components: {
     TransitionPage,

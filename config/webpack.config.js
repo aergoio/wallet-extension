@@ -23,6 +23,7 @@ module.exports = (env, argv) => {
     //new BundleAnalyzerPlugin(),
     // create HTML files
     new HtmlWebpackPlugin({filename: 'popup.html', template: 'src/assets/html/popup.html', chunks: ['popup', 'vendor']}),
+    new HtmlWebpackPlugin({filename: 'tab.html', template: 'src/assets/html/tab.html', chunks: ['popup', 'vendor']}),
     new HtmlWebpackPlugin({filename: 'background.html', template: 'src/assets/html/background.html', chunks: ['background', 'vendor']}),
   ];
 
@@ -116,8 +117,7 @@ module.exports = (env, argv) => {
         '@': path.resolve(__dirname, '..'),
         '@assets': path.resolve(__dirname, '..', 'src/assets'),
         'vue$': 'vue/dist/vue.runtime.esm.js',
-        'herajs$': 'herajs/src/platforms/web'
-        //'herajs$': 'herajs/dist/herajs.js'
+        '@herajs/client': '@herajs/client/dist/herajs.js'
       },
       modules: [
         path.resolve(__dirname, '..', 'node_modules'),

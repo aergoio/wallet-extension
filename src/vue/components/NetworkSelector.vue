@@ -1,6 +1,6 @@
 <template>
   <span class="network-selector" :title="blockHeight">
-    <span class="network-icon" v-bind:style="styleObject"></span>
+    <span class="network-icon tooltipped tooltipped-no-delay tooltipped-n" :class="networkStatusClass" v-tooltip="networkStatusLabel"></span>
     localhost 7845
     (#{{blockHeight}})
   </span>
@@ -12,7 +12,7 @@ import { promisifySimple } from '../../utils/promisify';
 export default {
   data () {
     return {
-      isConnected: false,
+      status: 'load',
       blockHeight: 0
     }
   },
@@ -22,32 +22,28 @@ export default {
   beforeDestroy () {
   },
   computed: {
-    styleObject () {
-      const color = '#F91263';
-      if (this.$data.isConnected) {
-        return {
-          backgroundColor: color,
-          borderColor: color
-        }
-      } else {
-        return {
-          borderColor: color
-        }
-      }
-      
+    networkStatusClass () {
+      return `network-${this.status}`;
+    },
+    networkStatusLabel () {
+      return {
+        ok: 'connected',
+        fail: 'disconnected',
+        load: 'connecting...'
+      }[this.status];
     }
   },
   methods: {
     updateStatus () {
       promisifySimple(this.$background.getBlockchainStatus)().then(status => {
-        this.$data.isConnected = true;
+        this.status = 'ok';
         this.$data.blockHeight = status.blockHeight;
 
         setTimeout(() => {
           this.updateStatus();
         }, 5000);
       }).catch(error => {
-        this.$data.isConnected = false;
+        this.status = 'fail';
         console.error('Could not connect to blockchain.', error);
 
         setTimeout(() => {
@@ -69,14 +65,18 @@ export default {
 }
 .network-icon {
   display: inline-block;
-  vertical-align: baseline;
-  width: 4px;
-  height: 4px;
+  vertical-align: text-bottom;
+  width: 9px;
+  height: 9px;
   margin-right: 2px;
-  border: 1px solid transparent;
-  border-radius: 100%;
-  background-color: #eee;
-  position: relative;
-  bottom: 1px;
+  transform: translateY(-1px);
+  background: url(~@assets/img/connection-load.svg) 50% 50% no-repeat;
+
+  &.network-ok {
+    background-image: url(~@assets/img/connection-ok.svg);
+  }
+  &.network-fail {
+    background-image: url(~@assets/img/connection-fail.svg);
+  }
 }
 </style>

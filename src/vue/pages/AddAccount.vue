@@ -31,9 +31,6 @@ export default {
   computed: {
   },
   mounted () {
-    setTimeout(() => {
-      this.$refs.name.focus();
-    }, 400);
   },
   methods: {
     cancel () {

@@ -1,1 +1,1 @@
-console.log('this is the content script! reloaded aha.');
+// This script is added to the content
