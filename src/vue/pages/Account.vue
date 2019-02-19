@@ -1,18 +1,20 @@
 <template>
   <div class="page">
-    <div class="sep top"></div>
+    <div class="seperator top"></div>
     <div class="account-header">
       <div class="account-item">
         <Identicon :text="$route.params.address" />
-        <span class="account-name">Account</span>
-        <span class="account-balance" v-if="account && account.data">{{formatAmount(account.data.balance)}}</span><br />
-        {{ $route.params.address | shortAddress}}
+        <span>
+          <span class="account-name">Account</span>
+          <span class="account-balance" v-if="account && account.data">{{formatAmount(account.data.balance)}}</span><br />
+          {{ $route.params.address | shortAddress}}
+        </span>
       </div>
 
       <router-link :to="`/`" class="menu-link"></router-link>
 
     </div>
-    <div class="sep"></div>
+    <div class="seperator"></div>
     <ul class="account-nav">
       <li><router-link :to="`./`"><span>Deposit</span></router-link></li>
       <li><router-link :to="`send`"><span>Send</span></router-link></li>
@@ -32,36 +34,34 @@ import Identicon from '../components/Identicon';
 import { mapState } from 'vuex'
 import { Amount } from '@herajs/client';
 
+
 export default {
   data () {
     return {
+      account: {}
     }
   },
   created () {
   },
   mounted () {
+    this.loadState();
     this.reloadState();
   },
   beforeDestroy () {
-  },
-  computed: {
-    ...mapState({
-      account: function(state) {
-        if (state.accounts.accounts.hasOwnProperty(this.$route.params.address)) {
-          return state.accounts.accounts[this.$route.params.address];
-        }
-        return {};
-      }
-    }),
   },
   methods: {
     formatAmount(amount) {
       return (new Amount(amount)).toUnit('aergo').toString();
     },
+    async loadState() {
+      await this.$db.open();
+      this.account = await this.$db.accounts.get(this.$route.params.address)
+      console.log('loaded account from db', this.account);
+    },
     async reloadState() {
-      console.log('loading account');
-      const account = await this.$store.dispatch('accounts/loadAccount', { address: this.$route.params.address });
-      console.log('loaded account', account);
+      await this.$db.open();
+      this.account = await this.$store.dispatch('accounts/loadAccount', { address: this.$route.params.address });
+      console.log('loaded account from bg', this.account);
     }
   },
   components: {
@@ -127,12 +127,16 @@ export default {
 
 .account-item {
   line-height: 15px;
+  display: flex;
+
+  > :nth-child(2) {
+    flex: 1;
+  }
 
   .identicon {
-    float: left;
     padding: 2px;
-    border: 1px solid #979797;
-    border-radius: 11px;
+    border: 1px solid #aaa;
+    border-radius: 8px;
     margin-right: 7px;
 
     svg {

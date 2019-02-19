@@ -2,12 +2,16 @@
 import Vue from 'vue';
 import Popup from './Popup';
 import VueRouter from 'vue-router';
-import routes from '../config/routes';
+import routes from './routes';
 import Button from './components/Button';
 import store from './store/index';
 import { shortAddress } from './filters/address';
+import { formatToken } from './filters/format-token';
+import { formatNumber } from './filters/format-number';
 import BackgroundConnector from './utils/background-connector';
+import IndexedDb from './utils/indexed-db';
 import { tooltip } from './directives/tooltip';
+
 
 const createRouter = (routes, store) => {
     let initialLoad = true;
@@ -33,21 +37,30 @@ const createRouter = (routes, store) => {
 export default async function setup(opts) {
     Vue.use(VueRouter);
     Vue.use(BackgroundConnector, {background: opts.background});
+    Vue.use(IndexedDb);
 
     Vue.component('Button', Button);
     Vue.filter('shortAddress', shortAddress);
+    Vue.filter('formatToken', formatToken);
+    Vue.filter('formatNumber', formatNumber);
     Vue.directive('tooltip', tooltip);
+
+    const router = createRouter(routes, store);
 
     const vue = new Vue({
         el: "#app",
         render: createElement => createElement(Popup),
-        router: createRouter(routes, store),
-        store
+        router,
+        store,
     });
 
     vue.$background.on('update', function(state) {
         console.log('there is an update from the background');
         console.log(state);
+        //store.commit('')
+        if (state.hasOwnProperty('unlocked') && !state.unlocked) {
+            router.push('/locked');
+        }
     });
 
     Vue.config.devtools = true;

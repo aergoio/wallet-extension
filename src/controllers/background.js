@@ -1,12 +1,21 @@
-import {EventEmitter} from 'events';
+import extension from 'extensionizer';
+import { EventEmitter } from 'events';
 import pump from 'pump';
 import Dnode from 'dnode/browser.js';
 
 import AergoClient, { GrpcWebProvider, Amount } from '@herajs/client';
-import { createIdentity, identifyFromPrivateKey, signTransaction, hashTransaction } from '@herajs/crypto';
+import {
+    createIdentity, identifyFromPrivateKey,
+    signTransaction, hashTransaction,
+    decryptPrivateKey, encryptPrivateKey,
+    encodePrivateKey
+} from '@herajs/crypto';
 import Store from './store';
+import State from './state';
 import 'whatwg-fetch';
 import { DEFAULT_CHAIN, chainProvider } from './chain-provider';
+import TransactionManager from './transactions';
+import AccountManager from './accounts';
 
 import bs58 from 'bs58';
 import { Buffer } from 'buffer';
@@ -19,46 +28,70 @@ export function decodeTxHash(bs58string) {
     return bs58.decode(bs58string);
 }
 
-
+const AUTO_LOCK_TIMEOUT = 60*1000;
 
 class BackgroundController extends EventEmitter {
     constructor() {
         super();
+
+        this.id = extension.runtime.id;
+
         this.uiState = {
             popupOpen: false
         }
         const provider = new GrpcWebProvider({url: chainProvider(DEFAULT_CHAIN).nodeUrl});
         this.aergo = new AergoClient({}, provider);
         this.store = new Store();
+
+        this.transactionManager = new TransactionManager(this.store);
         
-        this._stateTimeout = null;
-        this.setState('initial');
+        this.state = new State();
+        this._lockTimeout = null;
+        this.lock();
+
+        this.accountManager = new AccountManager(this.store, this.state, this.transactionManager);
     }
 
-    /**
-     * App states: initial -> active -> inactive -> idle
-     * Opening UI switches state to active. Closing UI switches state to inactive.
-     * After being inactive for a certain amount of time, switch to idle.
-     * @param {string} nextState 
-     */
-    setState(nextState) {
-        if (nextState != 'inactive') {
-            if (this._stateTimeout) {
-                clearTimeout(this._stateTimeout);
-            }
+    async unlock (password) {
+        await this.store.open();
+        const encryptedId = await this.store.settings.get('encryptedId');
+        try {
+            const id = await decryptPrivateKey(encryptedId.data, password);
+        } catch (e) {
+            throw new Error('invalid passphrase');
         }
-        if (this.state != nextState && nextState == 'inactive') {
-            if (this._stateTimeout) {
-                clearTimeout(this._stateTimeout);
-            }
-            this._stateTimeout = setTimeout(() => {
-                this.setState('idle');
-            }, 60000);
+            
+        this.masterPassword = password;
+        this.unlocked = true;
+        this.emit('update', { unlocked: true });
+        this.keepUnlocked();
+        console.log('[lock] unlocked');
+    }
+
+    async setupAndUnlock (password) {
+        await this.store.open();
+        // save extension id encrypted using password for a quick check if password is correct later
+        const encryptedId = await encryptPrivateKey(Buffer.from(this.id), password);
+        await this.store.settings.put('encryptedId', encryptedId);
+        await this.store.settings.put('initialized', true);
+        await this.unlock(password);
+    }
+
+    keepUnlocked() {
+        if (this._lockTimeout) {
+            clearTimeout(this._lockTimeout);
         }
-        if (this.state != nextState) {
-            console.log(`[state] ${this.state} -> ${nextState}`);
-        }
-        this.state = nextState;
+        this._lockTimeout = setTimeout(() => {
+            console.log('[lock] auto-locking...');
+            this.lock();
+        }, AUTO_LOCK_TIMEOUT);
+    }
+
+    lock () {
+        this.masterPassword = "";
+        this.unlocked = false;
+        this.emit('update', { unlocked: false });
+        console.log('[lock] locked');
     }
 
     isUiOpen() {
@@ -66,58 +99,106 @@ class BackgroundController extends EventEmitter {
     }
 
     setupCommunication (outStream) {
-        // Setup simple async rpc stream to popup
+        // Setup async rpc stream to UI
         const dnode = Dnode({
+            unlock: async ({ password }, send) => {
+                try {
+                    await this.unlock(password);
+                } catch (e) {
+                    console.error(e);
+                    send({ error: ''+e });
+                    return;
+                }
+                send({});
+            },
+            lock: async (send) => {
+                this.lock();
+                send({});
+            },
+            setup: async ({ password }, send) => {
+                await this.setupAndUnlock(password);
+                send({});
+            },
+            isUnlocked: async (send) => {
+                send(this.unlocked);
+            },
+            reset: async (send) => {
+                await this.store.open();
+                await this.store.accounts.clear();
+                await this.store.transactions.clear();
+                await this.store.settings.clear();
+                send();
+            },
             getBlockchainStatus: async (send) => {
                 const status = await this.aergo.blockchain();
                 send({
-                    blockHeight: status.bestHeight
+                    blockHeight: status.bestHeight,
+                    chainId: DEFAULT_CHAIN
                 });
             },
             getAccounts: async (send) => {
+                this.keepUnlocked();
                 await this.store.open();
                 const accounts = await this.store.accounts.getAll();
-                /*
-                const addresses = await this.aergo.accounts.get();
-                const accounts = await Promise.all(addresses.map(async (address) => {
-                    const state = await this.aergo.getState(address);
-                    return { address: address.toString(), balance: state.balance.toString() };
-                }));
-                */
                 send(accounts);
             },
-            createAccount: async ({ name, password }, send) => {
+            createAccount: async ({ name }, send) => {
+                this.keepUnlocked();
                 const chain = DEFAULT_CHAIN;
                 const identity = await createIdentity();
                 const createdAddress = identity.address;
                 await this.store.open();
                 await this.store.accounts.put(createdAddress, {
-                    balance: 0,
+                    balance: '0 aer',
                     publicKey: identity.publicKey.encodeCompressed(),
-                    privateKey: identity.privateKey.toArray(),
+                    privateKey: await encryptPrivateKey(Buffer.from(identity.privateKey.toArray()), this.masterPassword),
                     chain: chain,
                     name: name
                 });
                 send({address: createdAddress});
             },
             importAccount: async ({ privateKey }, send) => {
+                this.keepUnlocked();
                 const chain = DEFAULT_CHAIN;
                 const identity = identifyFromPrivateKey(privateKey);
                 const createdAddress = identity.address;
                 await this.store.open();
                 await this.store.accounts.put(createdAddress, {
-                    balance: 0,
+                    balance: '0 aer',
                     publicKey: identity.publicKey.encodeCompressed(),
-                    privateKey: identity.privateKey.toArray(),
+                    privateKey: await encryptPrivateKey(Buffer.from(identity.privateKey.toArray()), this.masterPassword),
                     chain: chain,
                     name: name
                 });
                 send({address: createdAddress});
             },
+            exportAccount: async ({ id, password }, send) => {
+                this.keepUnlocked();
+                const account = await this.store.accounts.get(id);
+                let privateKey;
+                try {
+                    privateKey = await decryptPrivateKey(account.data.privateKey, this.masterPassword);
+                } catch (e) {
+                    console.error(e);
+                    send({ error: 'Could not decrypt private key. '+e });
+                    return;
+                }
+                const privkeyEncrypted = await encryptPrivateKey(privateKey, password);
+                send({privateKey: encodePrivateKey(privkeyEncrypted)});
+            },
             sendTransaction: async (tx, send) => {
+                this.keepUnlocked();
                 await this.store.open();
                 const account = await this.store.accounts.get(tx.from);
-                const identity = identifyFromPrivateKey(account.data.privateKey);
+                let privateKey;
+                try {
+                    privateKey = await decryptPrivateKey(account.data.privateKey, this.masterPassword);
+                } catch (e) {
+                    console.error(e);
+                    send({ error: 'Could not decrypt private key. '+e });
+                    return;
+                }
+                const identity = identifyFromPrivateKey(privateKey);
 
                 const amount = (new Amount(tx.amount)).toUnit('aer');
 
@@ -130,9 +211,24 @@ class BackgroundController extends EventEmitter {
                 // but sendSignedTransaction assumes aergo if no unit given
                 tx.amount = amount.toString();
 
-                
+                const encodedHash = encodeTxHash(tx.hash);
+                const meta = {
+                    ts: (new Date()).toISOString(),
+                    blockno: null,
+                    from: tx.from,
+                    to: tx.to,
+                    amount: tx.amount,
+                    type: tx.type,
+                    status: 'pending'
+                };
+                if (tx.payload.length) {
+                    meta.payload0 = ''+tx.payload[0];
+                }
+                await this.store.transactions.put(encodedHash, meta);
+
                 try {
-                    tx.hash = await this.aergo.sendSignedTransaction(tx);
+                    await this.aergo.sendSignedTransaction(tx);
+                    tx.hash = encodedHash;
                     send({ tx });
                 } catch(e) {
                     console.error(e);
@@ -146,19 +242,22 @@ class BackgroundController extends EventEmitter {
                 const response = await fetch(url);
                 const data = await response.json();
                 for (let tx of data.hits) {
-                    await this.store.transactions.put(tx.hash, tx.meta);
-                    // todo check for duplicates
+                    await this.store.transactions.put(tx.hash, {...tx.meta, status: 'confirmed'} );
                 }
-                const txs = await this.store.transactions.getAll();
-                txs.sort((a, b) => -(a.data.blockno - b.data.blockno));
-                console.log(txs);
+                const range =  IDBKeyRange.bound(address, address);
+                const txsFrom = await this.store.transactions.getAllIndex('from', range);
+                const txsTo = await this.store.transactions.getAllIndex('to', range);
+                const txs = txsFrom.concat(txsTo).filter(function(o) {
+                    return this.has(o.hash) ? false : this.add(o.hash);
+                }, new Set());
+                txs.sort((a, b) => (a.data.ts < b.data.ts ? 1 : (a.data.ts == b.data.ts ? 0 : -1)));
                 send(txs);
             },
             syncAccountState: async (address, send) => {
                 await this.store.open();
                 const account = await this.store.accounts.get(address);
                 const state = await this.aergo.getState(address);
-                console.log(state);
+                console.log('got new state', address, state);
                 account.data.balance = state.balance.toString();
                 this.store.accounts.put(address, account.data);
                 send(account);
@@ -180,6 +279,9 @@ class BackgroundController extends EventEmitter {
         /*setInterval(() => {
             this.emit('update', 'something');
         }, 1000)*/
+        this.state.on('change', (state) => {
+            this.emit('update', { state });
+        });
     }
 }
 

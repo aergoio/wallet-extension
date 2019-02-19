@@ -29,10 +29,14 @@ const actions = {
     commit('addAccount', account);
     return account;
   },
-  async loadAccount ({ commit }, { address }) {
-    const account = await promisifySimple(this._vm.$background.syncAccountState)(address);
-    commit('setAccount', { account });
-    return account;
+  async exportAccount ({}, { id, password }) {
+    return await promisifySimple(this._vm.$background.exportAccount)({
+      id,
+      password
+    });
+  },
+  async loadAccount ({}, { address }) {
+    return await promisifySimple(this._vm.$background.syncAccountState)(address);
   },
   async getAccountTx ({ commit }, { address }) {
     const txs = await promisifySimple(this._vm.$background.syncAccountTx)(address);
@@ -53,6 +57,7 @@ const mutations = {
         state.addresses.push(account.id);
     },
     setAccount (state, account) {
+      console.log('set account', account);
       state.accounts[account.id] = account;
     },
     setAccountTxs (state, { address, txs }) {

@@ -12,15 +12,21 @@
 <script>
 import Footer from './components/Footer';
 import TransitionPage from './components/TransitionPage';
+import { promisifySimple } from '../utils/promisify';
 
 export default {
   data () {
     return {
-
+      unlocked: false
     }
   },
-  created() {
-
+  async created() {
+    const unlocked = await promisifySimple(this.$background.isUnlocked)();
+    console.log('unlocked', unlocked);
+    this.unlocked = unlocked;
+    if (!this.unlocked) {
+      this.$router.push('/locked');
+    }
   },
   beforeDestroy () {
   },
@@ -56,7 +62,7 @@ export default {
     }
 }
 
-.sep {
+.seperator {
   background: linear-gradient(90deg, #4B64FF, #F91162);
   height: 1px;
 
@@ -137,6 +143,10 @@ h2, strong {
   font-size: 1em;
 }
 
+h2 {
+  margin: 15px 0 10px;
+}
+
 p { 
   line-height: 1.25;
 }
@@ -164,4 +174,98 @@ p {
   }
 }
 
+.formatted-value {
+  white-space: nowrap;
+
+  &.token {
+    background-color: #f0f0f0;
+    padding: 0 3px;
+  }
+  .unit {
+
+  }
+  .value {
+    font-weight: 500;
+  }
+  .sep {
+    display: inline-block;
+    width: 3px;
+  }
+  .point {
+    display: inline-block;
+  }
+}
+
+.overlay-dialog {
+  background: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+
+  opacity: 0;
+  transition: opacity .3s;
+  pointer-events: none;
+  &.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  p {
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+}
+
+.icon, .logo {
+  display: inline-block;
+  vertical-align: text-bottom;
+  width: 12px;
+  height: 12px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  text-indent: -10000px;
+
+
+  &.icon-view {
+    background-image: url('~@assets/img/view.svg');
+  }
+  &.icon-success {
+    width: 32px;
+    height: 32px;
+    background-image: url(~@assets/img/success.svg);
+  }
+  &.icon-lock {
+    width: 25px;
+    height: 34px;
+    background-image: url(~@assets/img/lock.svg);
+  }
+  &.icon-aergo {
+    width: 34px;
+    height: 34px;
+    background-image: url(~@assets/img/icon.svg);
+  }
+  &.icon-warning {
+    width: 38px;
+    height: 34px;
+    background-image: url(~@assets/img/warning.svg);
+  }
+  &.icon-export {
+    width: 25px;
+    height: 29px;
+    background-image: url(~@assets/img/export.svg);
+  }
+}
+.logo {
+  width: 108px;
+  height: 46px;
+  background-image: url(~@assets/img/aergo.svg);
+}
 </style>

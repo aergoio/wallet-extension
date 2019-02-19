@@ -1,32 +1,23 @@
 <template>
   <transition name="slide">
     <div class="page">
-      <div class="sep top"></div>
+      <div class="seperator top"></div>
       <div class="account-list-header">Create Account</div>
 
       <div class="scroll-view">
-        <form class="form" autocomplete="off">
-          <div class="form-line">
-            <label>
-              Accout name
 
-              <input type="text" class="text-input" v-model="name" ref="name">
-            </label>
-          </div>
+        <div class="overlay-dialog" :class="{visible: state=='success'}">
+          <span class="icon icon-success"></span>
 
-          <div class="form-line">
-            <label>
-              Password
+          <h2>A new account has been created.</h2>
 
-              <input type="password" class="text-input" v-model="password" autocomplete="new-password">
-            </label>
-          </div>
+          <p>{{newAccount.address}}</p>
 
           <div class="form-actions">
-            <Button text="Create" primary="true" v-on:click.native="create" />
-            <Button text="Cancel" class="secondary" v-on:click.native="cancel" />
+            <Button text="View account" primary="true" v-on:click.native="gotoAccount" />
           </div>
-        </form>
+        </div>
+      
       </div>
       
     </div>
@@ -38,7 +29,9 @@ export default {
   data () {
     return {
       name: '',
-      password: ''
+      password: '',
+      state: 'initial',
+      newAccount: {}
     }
   },
   created () {
@@ -48,22 +41,21 @@ export default {
   computed: {
   },
   mounted () {
-    setTimeout(() => {
-      this.$refs.name.focus();
-    }, 400);
+    this.create();
   },
   methods: {
     async create () {
       console.log('Creating account...');
-      const account = await this.$store.dispatch('accounts/createAccount', {
+      this.newAccount = await this.$store.dispatch('accounts/createAccount', {
         name: this.$data.name,
         password: this.$data.password
       });
-      console.log('created account', account);
-      this.$router.push('/');
+      console.log('created account', this.newAccount);
+
+      this.state = 'success';
     },
-    cancel () {
-      this.$router.push('/');
+    gotoAccount () {
+      this.$router.push(`/account/${this.newAccount.address}/`);
     }
   },
   components: {

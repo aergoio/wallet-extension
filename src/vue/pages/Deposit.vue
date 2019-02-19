@@ -7,7 +7,7 @@
     <p class="instruction">
       You can directly deposit to this address.
     </p>
-    <p class="instruction">{{$route.params.address}}</p>
+    <p class="instruction instruction-address">{{$route.params.address}}</p>
   </div>
 </template>
 
@@ -44,5 +44,9 @@ export default {
 .instruction {
   text-align: center;
   margin: 0;
+  padding: 10px;
+}
+.instruction-address {
+  font-size: 1.1em;
 }
 </style>

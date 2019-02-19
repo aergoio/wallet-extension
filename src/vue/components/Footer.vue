@@ -1,6 +1,6 @@
 <template>
   <div id="footer">
-    <a id="logo" href="https://aergo.io"></a>
+    <a id="logo" href="https://aergo.io" target="_blank"></a>
 
     <div>
       <span class="network-selector-label">Network</span>
@@ -50,8 +50,8 @@ export default {
 }
 
 #logo {
-  background: url('~@assets/img/logo.svg');
-  width: 34px;
+  background: url('~@assets/img/aergo.svg');
+  width: 45px;
   height: 14px;
   background-size: auto 100%;
   background-repeat: no-repeat;

@@ -29,7 +29,9 @@ module.exports = (env, argv) => {
 
   if (devMode) {
     // hot-reload for development
-    plugins.push(new ChromeExtensionReloader({reloadPage: false}));
+    plugins.push(new ChromeExtensionReloader({
+      reloadPage: false
+    }));
   }
 
   return {
@@ -101,7 +103,13 @@ module.exports = (env, argv) => {
           exclude: /node_modules/
         },
         // Images, inline up to a certain size
-        { test: /\.(svg)$/, loader: "url-loader?limit=10000"},
+        {
+          test: /\.(svg)$/,
+          use: [
+            { loader: "url-loader?limit=10000" },
+            { loader: 'image-webpack-loader' }, // optimize
+          ]
+        },
         { test: /\.(png)$/, loader: "url-loader?limit=1"},
         // Fonts, always external
         { test: /\.(otf|swf|eot|ttf|woff|woff2)$/, loader: "url-loader?limit=1"}

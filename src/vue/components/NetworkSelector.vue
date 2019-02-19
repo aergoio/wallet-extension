@@ -1,7 +1,7 @@
 <template>
   <span class="network-selector" :title="blockHeight">
     <span class="network-icon tooltipped tooltipped-no-delay tooltipped-n" :class="networkStatusClass" v-tooltip="networkStatusLabel"></span>
-    localhost 7845
+    {{chainId}}
     (#{{blockHeight}})
   </span>
 </template>
@@ -13,7 +13,8 @@ export default {
   data () {
     return {
       status: 'load',
-      blockHeight: 0
+      blockHeight: 0,
+      chainId: ''
     }
   },
   created () {
@@ -37,7 +38,8 @@ export default {
     updateStatus () {
       promisifySimple(this.$background.getBlockchainStatus)().then(status => {
         this.status = 'ok';
-        this.$data.blockHeight = status.blockHeight;
+        this.blockHeight = status.blockHeight;
+        this.chainId = status.chainId;
 
         setTimeout(() => {
           this.updateStatus();

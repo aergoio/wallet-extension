@@ -1,7 +1,7 @@
 <template>
   <transition name="slide">
     <div class="page">
-      <div class="sep top"></div>
+      <div class="seperator top"></div>
       <div class="account-list-header">Import Account</div>
 
       <div class="scroll-view">

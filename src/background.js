@@ -1,7 +1,5 @@
 import "regenerator-runtime/runtime";
 
-console.log('AERGO Wallet Background Script');
-
 require('./manifest.json');
 
 import extension from 'extensionizer';
@@ -10,17 +8,21 @@ import PortStream from 'extension-port-stream';
 
 import BackgroundController from './controllers/background';
 
+console.log('AERGO Wallet Background Script');
+console.log('Extension ID', extension.runtime.id);
+
+
 setupController();
 
 async function setupController() {
     const controller = new BackgroundController();
-    extension.runtime.onConnect.addListener(connectRemote);
+    extension.runtime.onConnect.addListener(connectRemote);    
 
     function connectRemote (remotePort) {
         const processName = remotePort.name;
         console.log('Establishing connection with', processName);
 
-        controller.setState('active');
+        controller.state.set('active');
     
         const portStream = new PortStream(remotePort);
         controller.setupCommunication(portStream);
@@ -29,7 +31,7 @@ async function setupController() {
         endOfStream(portStream, () => {
             controller.uiState.popupOpen = false;
             console.log('Closed connection with', processName);
-            controller.setState('inactive');
+            controller.state.set('inactive');
         })
 
         /*

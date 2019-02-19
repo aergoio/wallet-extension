@@ -15,6 +15,9 @@ class Index {
     getAll() {
         return this.db.transaction(this.name).objectStore(this.name).getAll();
     }
+    getAllIndex(indexName, range) {
+        return this.db.transaction(this.name).objectStore(this.name).index(indexName).getAll(range);
+    }
     put(key, data) {
         const tx = this.db.transaction(this.name, 'readwrite');
         tx.objectStore(this.name).put({
@@ -24,7 +27,10 @@ class Index {
         return tx.complete;
     }
     delete(key) {
-        return this.db.transaction(this.name).objectStore(this.name).delete(key);
+        return this.db.transaction(this.name, 'readwrite').objectStore(this.name).delete(key);
+    }
+    clear() {
+        return this.db.transaction(this.name, 'readwrite').objectStore(this.name).clear();
     }
 }
 
@@ -37,11 +43,15 @@ export default class Store {
         this.db = await openDb(STORAGE_NAME, STORAGE_VERSION, upgradeDB => {
             switch (upgradeDB.oldVersion) {
                 case 0:
-                    upgradeDB.createObjectStore('tx', {keyPath: 'hash'});
+                    const txOS = upgradeDB.createObjectStore('tx', {keyPath: 'hash'});
+                    txOS.createIndex('from', 'data.from', {unique: false});
+                    txOS.createIndex('to', 'data.to', {unique: false});
                     upgradeDB.createObjectStore('accounts', {keyPath: 'id'});
+                    upgradeDB.createObjectStore('settings', {keyPath: 'key'});
             }
         });
         this.transactions = new Index(this.db, 'tx', 'hash');
         this.accounts = new Index(this.db, 'accounts', 'id');
+        this.settings = new Index(this.db, 'settings', 'key');
     }
 }

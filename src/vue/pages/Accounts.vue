@@ -1,22 +1,11 @@
 <template>
   <transition name="slide">
     <div class="page">
-      <div class="sep top"></div>
+      <div class="seperator top"></div>
       <div class="account-list-header">Select Active Account</div>
-      <!--<button v-on:click="openPopup()">Expand</button>-->
 
       <div class="scroll-view">
         <ul class="account-list">
-          <li v-for="account in accounts" :key="account.id">
-            <router-link :to="`/account/${account.id}/`">
-              <div class="account-item">
-                <Identicon :text="account.id" />
-                <span class="account-name">Account</span>
-                <span class="account-balance" v-if="account && account.data">{{formatAmount(account.data.balance)}}</span><br />
-                {{ account.id | shortAddress }}
-              </div>
-            </router-link>
-          </li>
           <li>
             <router-link :to="`/add-account/`">
               <div class="account-item add-account">
@@ -24,22 +13,48 @@
               </div>
             </router-link>
           </li>
+          
+          <li v-for="account in accounts" :key="account.id" v-on:mouseout.self="showAccountMenu(false)">
+            <router-link :to="`/account/${account.id}/`">
+              <div class="account-item">
+                <Identicon :text="account.id" />
+                
+                <span>
+                  <span class="account-name">Account</span>
+                  <span class="account-balance" v-if="account && account.data">{{formatAmount(account.data.balance)}}</span><br />
+                  {{ account.id | shortAddress(18) }}
+                </span>
+
+                <span class="btn-action tooltipped tooltipped-no-delay tooltipped-w" v-tooltip="'More actions'" v-on:click.stop.prevent="showAccountMenu" >
+                </span>
+
+                <span class="account-menu" :class="{visible: accountMenuShown}">
+                  <ul class="account-menu-items">
+                    <li v-on:click.stop.prevent="gotoExplorer(account)">View in Aergoscan</li>
+                    <li v-on:click.stop.prevent="gotoExport(account)">Export</li>
+                    <li v-on:click.stop.prevent="gotoRemove(account)">Remove</li>
+                  </ul>
+                </span>
+                
+              </div>
+            </router-link>
+          </li>
         </ul>
       </div>
-      
     </div>
   </transition>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
-
+import { DEFAULT_CHAIN, chainProvider } from '../../controllers/chain-provider';
 import Identicon from '../components/Identicon';
 import { Amount } from '@herajs/client';
 
 export default {
   data () {
     return {
+      accountMenuShown: false
     }
   },
   created () {
@@ -49,10 +64,24 @@ export default {
   },
   computed: mapState({
     accounts: state => {
-      return state.accounts.addresses.map(address => state.accounts.accounts[address]);
+      const items = state.accounts.addresses.map(address => state.accounts.accounts[address]);
+      //items.sort((a, b) => (new Amount(a.data.balance)).value.compare((new Amount(b.data.balance)).value));
+      return items;
     }
   }),
   methods: {
+    gotoExplorer(account) {
+      window.open(chainProvider(DEFAULT_CHAIN).explorerUrl(`/account/${account.id}`));
+    },
+    gotoExport(account) {
+      this.$router.push(`/account/${account.id}/export`);
+    },
+    gotoRemove(account) {
+      this.$router.push(`/account/${account.id}/remove`);
+    },
+    showAccountMenu(state=true) {
+      this.accountMenuShown = state;
+    },
     openPopup() {
       chrome.tabs.create({url : "popup.html"});
     },
@@ -80,7 +109,7 @@ export default {
   padding: 0;
   list-style: none;
 
-  li {
+  > li {
     
     border-bottom: 1px solid #DFDFDF;
 
@@ -89,7 +118,6 @@ export default {
       text-decoration: none;
       color: inherit;
       padding: 12px 15px;
-      overflow: auto;
     }
 
     &:hover {
@@ -97,6 +125,58 @@ export default {
     }
 
   }
+}
+.account-item .btn-action {
+  visibility: hidden;
+  float: right;
+  width: 25px;
+  height: 32px;
+  background: url(~@assets/img/more.svg) 50% 50%;
+  background-repeat: no-repeat;
+  background-size: 5px auto;
+
+  &:hover {
+    background-image: url(~@assets/img/more-hover.svg);
+  }
+}
+.account-item {
+  position: relative;
+}
+.account-menu {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  display: none;
+  pointer-events: none;
+
+  ul {
+    display: block;
+    margin: 0;
+    padding: 0;
+    background-color: #eee;
+    border-radius: 5px;
+    list-style: none;
+    border: 1px solid #ddd;
+
+    li {
+      border-bottom: 1px solid #ddd;
+      &:last-child { border-bottom: 0; }
+      line-height: 2.5em;
+      padding: 0 .75em;
+      white-space: nowrap;
+      &:hover {
+        background-color: #e0e0e0;
+      }
+    }
+  }
+}
+.account-list li:hover .btn-action {
+  visibility: visible;
+}
+.account-list li:hover .account-menu.visible {
+  display: block;
+  pointer-events: all;
+  z-index: 1;
 }
 .add-account {
   color: #F81264;
