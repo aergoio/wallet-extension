@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="33px" viewBox="0 0 36 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 2</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Enable-Dialog-Copy" transform="translate(-135.000000, -39.000000)">
+            <g id="Group-2" transform="translate(134.000000, 38.000000)">
+                <path d="M20.3094152,2.34316408 L36.7528556,31.768268 C37.1569801,32.491438 36.8983425,33.4052908 36.1751724,33.8094152 C35.9515386,33.9343871 35.699624,34 35.4434404,34 L2.5565596,34 C1.72813247,34 1.0565596,33.3284271 1.0565596,32.5 C1.0565596,32.2438164 1.12217254,31.9919018 1.24714437,31.768268 L17.6905848,2.34316408 C18.0947092,1.61999402 19.008562,1.36135645 19.731732,1.7654809 C19.9740329,1.90088433 20.1740118,2.10086321 20.3094152,2.34316408 Z" id="Triangle" fill="#818080"></path>
+                <text id="!" font-family="DINPro-Black, DINPro" font-size="18" font-weight="700" fill="#FFFFFF">
+                    <tspan x="15.3999939" y="27">!</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

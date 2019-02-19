@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="6px" height="20px" viewBox="0 0 6 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-172.000000, -65.000000)" fill="#F91263">
+            <g id="Group" transform="translate(172.500000, 65.500000)">
+                <circle id="Oval-6" cx="2.5" cy="2.5" r="2.5"></circle>
+                <circle id="Oval-6" cx="2.5" cy="9.5" r="2.5"></circle>
+                <circle id="Oval-6" cx="2.5" cy="16.5" r="2.5"></circle>
+            </g>
+        </g>
+    </g>
+</svg>
