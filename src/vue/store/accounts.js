@@ -39,7 +39,7 @@ const actions = {
     return await promisifySimple(this._vm.$background.syncAccountState)(address);
   },
   async getAccountTx ({ commit }, { address }) {
-    const txs = await promisifySimple(this._vm.$background.syncAccountTx)(address);
+    const txs = await promisifySimple(this._vm.$background.getAccountTx)(address);
     commit('setAccountTxs', { address, txs });
     return txs;
   },

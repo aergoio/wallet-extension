@@ -33,10 +33,8 @@ class AccountManager extends EventEmitter {
     }
 
     async startTracking() {
-        if (!this.initialLoad) {
-            await this.loadFromStore();
-            this.initialLoad = true;
-        }
+        await this.loadFromStore();
+        this.initialLoad = true;
         for (let account of this.accounts) {
             this.transactionManager.trackAccount(account);
         }

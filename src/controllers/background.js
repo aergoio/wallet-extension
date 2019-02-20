@@ -155,6 +155,7 @@ class BackgroundController extends EventEmitter {
                     chain: chain,
                     name: name
                 });
+                this.accountManager.startTracking();
                 send({address: createdAddress});
             },
             importAccount: async ({ privateKey }, send) => {
@@ -170,6 +171,7 @@ class BackgroundController extends EventEmitter {
                     chain: chain,
                     name: name
                 });
+                this.accountManager.startTracking();
                 send({address: createdAddress});
             },
             exportAccount: async ({ id, password }, send) => {
@@ -238,18 +240,13 @@ class BackgroundController extends EventEmitter {
                     send({ error: ''+e });
                 }
             },
-            syncAccountTx: async (address, send) => {
+            getAccountTx: async (address, send) => {
                 await this.store.open();
-                const account = await this.store.accounts.get(address);
-                const url = chainProvider(account.data.chain).apiUrl(`/transactions?q=from:${address}%20OR%20to:${address}&sort=blockno:desc`);
-                const response = await fetch(url);
-                const data = await response.json();
-                for (let tx of data.hits) {
-                    await this.store.transactions.put(tx.hash, {...tx.meta, status: 'confirmed'} );
-                }
                 const range =  IDBKeyRange.bound(address, address);
+                // get all txs from or to this address
                 const txsFrom = await this.store.transactions.getAllIndex('from', range);
                 const txsTo = await this.store.transactions.getAllIndex('to', range);
+                // unique txs by hash
                 const txs = txsFrom.concat(txsTo).filter(function(o) {
                     return this.has(o.hash) ? false : this.add(o.hash);
                 }, new Set());

@@ -57,14 +57,19 @@ export default {
     explorerLink(tx) {
       return chainProvider(DEFAULT_CHAIN).explorerUrl(`/transaction/${tx.hash}`);
     },
-    async load() {
-      this.state = 'loading';
+    async reload() {
+      console.log('Loading txs');
       try {
         this.transactions = await timedAsync(() => this.$store.dispatch('accounts/getAccountTx', { address: this.address }), { fastTime: 1500 });
       } catch(e) {
         this.state = 'error';
         console.error(e);
       }
+      setTimeout(() => this.reload(), 10*1000);
+    },
+    async load() {
+      this.state = 'loading';
+      await this.reload();
       this.state = 'loaded';
     }
   },

@@ -6,10 +6,14 @@
 
       <div class="scroll-view">
 
-        <div class="overlay-dialog" :class="{visible: state=='success'}">
+        <div class="overlay-dialog create-result" :class="{visible: state=='success'}">
           <span class="icon icon-success"></span>
 
           <h2>A new account has been created.</h2>
+
+          <p>You can identify your account by its address or picture.</p>
+
+          <Identicon :text="newAccount.address" />
 
           <p>{{newAccount.address}}</p>
 
@@ -25,6 +29,7 @@
 </template>
 
 <script>
+import Identicon from '../components/Identicon';
 export default {
   data () {
     return {
@@ -59,11 +64,17 @@ export default {
     }
   },
   components: {
-
+    Identicon,
   }
 };
 </script>
 
 <style lang="scss">
+.create-result {
+  .identicon svg {
+    width: 80px;
+    height: 80px;
+  }
+}
 
 </style>

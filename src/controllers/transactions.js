@@ -41,7 +41,7 @@ class TransactionManager extends EventEmitter {
      */
     trackAccount(account) {
         if (typeof this.intervals[account.id] !== 'undefined' && this.intervals[account.id] !== null) {
-            this.stopTracking(account);
+            this.stopTrackingAccount(account);
         }
         const sync = async () => {
             await this.store.open();

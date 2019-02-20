@@ -5,7 +5,23 @@
       <div class="account-list-header">Import Account</div>
 
       <div class="scroll-view">
-        <form class="form" autocomplete="off">
+        <div class="overlay-dialog create-result" :class="{visible: importedAddress}">
+          <span class="icon icon-success"></span>
+
+          <h2>The account has been imported.</h2>
+
+          <p>You can identify your account by its address or picture.</p>
+
+          <Identicon :text="importedAddress" />
+
+          <p>{{importedAddress}}</p>
+
+          <div class="form-actions">
+            <Button text="View account" primary="true" v-on:click.native="gotoAccount" />
+          </div>
+        </div>
+
+        <form class="form" autocomplete="off" v-if="!importedAddress">
           <div class="form-line">
             <label>
               Select file
@@ -43,6 +59,7 @@
 </template>
 
 <script>
+import Identicon from '../components/Identicon';
 import {identifyFromPrivateKey, decodePrivateKey, decryptPrivateKey} from '@herajs/crypto';
 import bs58check from 'bs58check';
 
@@ -54,7 +71,8 @@ export default {
       key: '',
       identity: null,
       error: '',
-      keyType: ''
+      keyType: '',
+      importedAddress: ''
     }
   },
   created () {
@@ -93,7 +111,7 @@ export default {
         identity: this.identity
       });
       console.log('created account', account);
-      this.$router.push(`/account/${account.address}/`);
+      this.importedAddress = account.address;
     },
     validateKey () {
       try {
@@ -120,12 +138,15 @@ export default {
       };
       reader.readAsArrayBuffer(this.file);
     },
+    gotoAccount () {
+      this.$router.push(`/account/${this.importedAddress}/`);
+    },
     cancel () {
       this.$router.push('/');
     }
   },
   components: {
-
+    Identicon,
   }
 };
 </script>

@@ -13,8 +13,18 @@ export default {
     return {
     }
   },
+  watch: {
+    'text' (to, from) {
+      this.load();
+    }
+  },
+  methods: {
+    load() {
+      this.$el.innerHTML = jdenticon.toSvg(this.$props.text, 200);
+    }
+  },
   mounted () {
-    this.$el.innerHTML = jdenticon.toSvg(this.$props.text, 200);
+    this.load();
   },
 };
 </script>
