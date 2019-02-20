@@ -120,6 +120,14 @@ export default {
       justify-content: space-between;
       align-items: center;
     }
+    &.vertical label {
+      flex-direction: column;
+        align-items: stretch;
+
+        .text-input {
+          margin-top: 5px;
+        }
+    }
   }
 }
 
@@ -133,9 +141,13 @@ export default {
 .text-input {
   border: 1px solid #C6C6C6;
   border-radius: 4px;
-  line-height: 22px;
+  line-height: 20px;
   padding: 0 6px;
   font-weight: normal;
+
+  &[disabled] {
+    background-color: #f6f6f6;
+  }
 }
 
 h2, strong {

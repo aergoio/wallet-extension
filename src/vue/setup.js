@@ -28,7 +28,9 @@ const createRouter = (routes, store) => {
                 return;
             }
         }
-        store.dispatch('navigation/setCurrentRoute', to);
+        if (to.fullPath != '/locked') {
+            store.dispatch('navigation/setCurrentRoute', to);
+        }
         next();
     });
     return router;

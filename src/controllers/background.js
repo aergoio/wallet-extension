@@ -211,24 +211,27 @@ class BackgroundController extends EventEmitter {
                 // but sendSignedTransaction assumes aergo if no unit given
                 tx.amount = amount.toString();
 
+                console.log(tx);
+
                 const encodedHash = encodeTxHash(tx.hash);
-                const meta = {
-                    ts: (new Date()).toISOString(),
-                    blockno: null,
-                    from: tx.from,
-                    to: tx.to,
-                    amount: tx.amount,
-                    type: tx.type,
-                    status: 'pending'
-                };
-                if (tx.payload.length) {
-                    meta.payload0 = ''+tx.payload[0];
-                }
-                await this.store.transactions.put(encodedHash, meta);
+                
 
                 try {
                     await this.aergo.sendSignedTransaction(tx);
                     tx.hash = encodedHash;
+                    const meta = {
+                        ts: (new Date()).toISOString(),
+                        blockno: null,
+                        from: tx.from,
+                        to: tx.to,
+                        amount: tx.amount,
+                        type: tx.type,
+                        status: 'pending'
+                    };
+                    if (tx.payload.length) {
+                        meta.payload0 = ''+tx.payload[0];
+                    }
+                    await this.store.transactions.put(encodedHash, meta);
                     send({ tx });
                 } catch(e) {
                     console.error(e);
