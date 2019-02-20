@@ -43,6 +43,7 @@ class TransactionManager extends EventEmitter {
         if (typeof this.intervals[account.id] !== 'undefined' && this.intervals[account.id] !== null) {
             this.stopTrackingAccount(account);
         }
+        let initialSyncDone = false;
         const sync = async () => {
             await this.store.open();
             let lastBlockno = 0;
@@ -56,6 +57,13 @@ class TransactionManager extends EventEmitter {
                 blockno: bestBlock.meta.no,
                 time: bestBlock.meta.ts
             }
+            if (txs.length > 0 || !initialSyncDone) {
+                // new tx, update account state
+                const state = await chainProvider(account.data.chain).nodeClient().getState(account.id);
+                account.data.balance = state.balance.toString();
+                initialSyncDone = true;
+            }
+            console.log(`[${account.id}] Saved ${txs.length} new txs, balance is ${account.data.balance}.`);
             await this.store.accounts.put(account.id, account.data);
         };
         this.intervals[account.id] = setInterval(sync, SYNC_INTERVAL);

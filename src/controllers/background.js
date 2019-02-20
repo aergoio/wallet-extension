@@ -3,7 +3,7 @@ import { EventEmitter } from 'events';
 import pump from 'pump';
 import Dnode from 'dnode/browser.js';
 
-import AergoClient, { GrpcWebProvider, Amount } from '@herajs/client';
+import { Amount } from '@herajs/client';
 import {
     createIdentity, identifyFromPrivateKey,
     signTransaction, hashTransaction,
@@ -39,8 +39,7 @@ class BackgroundController extends EventEmitter {
         this.uiState = {
             popupOpen: false
         }
-        const provider = new GrpcWebProvider({url: chainProvider(DEFAULT_CHAIN).nodeUrl});
-        this.aergo = new AergoClient({}, provider);
+        this.aergo = chainProvider(DEFAULT_CHAIN).nodeClient();
         this.store = new Store();
 
         this.transactionManager = new TransactionManager(this.store);

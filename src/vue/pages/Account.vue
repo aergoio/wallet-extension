@@ -38,7 +38,8 @@ import { Amount } from '@herajs/client';
 export default {
   data () {
     return {
-      account: {}
+      account: {},
+      timeout: null
     }
   },
   created () {
@@ -48,6 +49,7 @@ export default {
     this.reloadState();
   },
   beforeDestroy () {
+    clearTimeout(this.timeout);
   },
   methods: {
     formatAmount(amount) {
@@ -57,6 +59,9 @@ export default {
       await this.$db.open();
       this.account = await this.$db.accounts.get(this.$route.params.address)
       console.log('loaded account from db', this.account);
+      this.timeout = setTimeout(() => {
+        this.loadState();
+      }, 10*1000);
     },
     async reloadState() {
       await this.$db.open();
