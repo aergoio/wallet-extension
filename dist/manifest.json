@@ -11,8 +11,8 @@
 	"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 
 	"icons": {
-		"17": "47c549804dd70500108560cc24bca5f3.png",
-		"102": "0da81dee4755822e45e812c8ce30d733.png"
+		"17": "27c8b3a52ec7ff171a36ab5196bb477c.png",
+		"102": "964e16ccf5411f734082f56b4c027b45.png"
 	},
 	
 	"background": {
@@ -22,8 +22,8 @@
 
 	"browser_action": {
 		"default_icon": {
-		  "17": "47c549804dd70500108560cc24bca5f3.png",
-		  "34": "20bc6432e45b1731a33f0f1ed4c1fead.png"
+		  "17": "27c8b3a52ec7ff171a36ab5196bb477c.png",
+		  "34": "e38302ac8e3c86895a755c6be89aa407.png"
 		},
 		"default_title": "AERGO Wallet",
 		"default_popup": "popup.html"
