@@ -2,7 +2,7 @@
 
 This is the source code for the official AERGO Wallet browser extension. It works with Chrome and Firefox.
 
-## Install
+## Install test version
 
 1. `git clone https://github.com/aergoio/wallet-extension`
 2. Go to [chrome://extensions/](chrome://extensions/).
@@ -11,9 +11,10 @@ This is the source code for the official AERGO Wallet browser extension. It work
 
 ### Update
 
-1. `git pull`
-2. Go to [chrome://extensions/](chrome://extensions/).
-3. Click the "Reload" button.
+1. Change your terminal to the `wallet-extension` directory
+2. `git pull`
+3. Go to [chrome://extensions/](chrome://extensions/).
+4. Click the "Reload" button.
 
 ## Develop
 
