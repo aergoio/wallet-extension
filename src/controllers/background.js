@@ -141,34 +141,34 @@ class BackgroundController extends EventEmitter {
                 const accounts = await this.store.accounts.getAll();
                 send(accounts);
             },
-            createAccount: async ({ name }, send) => {
+            createAccount: async ({ network }, send) => {
                 this.keepUnlocked();
-                const chain = DEFAULT_CHAIN;
+                const chain = network || DEFAULT_CHAIN;
                 const identity = await createIdentity();
                 const createdAddress = identity.address;
                 await this.store.open();
-                await this.store.accounts.put(createdAddress, {
+                await this.store.accounts.put(`${chain}/${createdAddress}`, {
+                    address: createdAddress,
                     balance: '0 aer',
                     publicKey: identity.publicKey.encodeCompressed(),
                     privateKey: await encryptPrivateKey(Buffer.from(identity.privateKey.toArray()), this.masterPassword),
-                    chain: chain,
-                    name: name
+                    chain: chain
                 });
                 this.accountManager.startTracking();
                 send({address: createdAddress});
             },
-            importAccount: async ({ privateKey }, send) => {
+            importAccount: async ({ privateKey, network }, send) => {
                 this.keepUnlocked();
-                const chain = DEFAULT_CHAIN;
+                const chain = network || DEFAULT_CHAIN;
                 const identity = identifyFromPrivateKey(privateKey);
                 const createdAddress = identity.address;
                 await this.store.open();
-                await this.store.accounts.put(createdAddress, {
+                await this.store.accounts.put(`${chain}/${createdAddress}`, {
+                    address: createdAddress,
                     balance: '0 aer',
                     publicKey: identity.publicKey.encodeCompressed(),
                     privateKey: await encryptPrivateKey(Buffer.from(identity.privateKey.toArray()), this.masterPassword),
-                    chain: chain,
-                    name: name
+                    chain: chain
                 });
                 this.accountManager.startTracking();
                 send({address: createdAddress});
@@ -203,7 +203,8 @@ class BackgroundController extends EventEmitter {
 
                 const amount = (new Amount(tx.amount)).toUnit('aer');
 
-                tx.nonce = 1 + await this.aergo.getNonce(tx.from); // TODO: check if there's a local, non-confirmed tx
+                tx.nonce = 1 + await chainProvider(account.data.chain).nodeClient().getNonce(account.data.address); // TODO: check if there's a local, non-confirmed tx
+                tx.from = account.data.address;
                 tx.amount = amount.value.toString();
                 tx.sign = await signTransaction(tx, identity.keyPair);
                 
@@ -215,16 +216,15 @@ class BackgroundController extends EventEmitter {
                 console.log(tx);
 
                 const encodedHash = encodeTxHash(tx.hash);
-                
 
                 try {
-                    await this.aergo.sendSignedTransaction(tx);
+                    await chainProvider(account.data.chain).nodeClient().sendSignedTransaction(tx);
                     tx.hash = encodedHash;
                     const meta = {
                         ts: (new Date()).toISOString(),
                         blockno: null,
-                        from: tx.from,
-                        to: tx.to,
+                        from: `${account.data.chain}/${tx.from}`,
+                        to: `${account.data.chain}/${tx.to}`,
                         amount: tx.amount,
                         type: tx.type,
                         status: 'pending'
@@ -252,13 +252,16 @@ class BackgroundController extends EventEmitter {
                 txs.sort((a, b) => (a.data.ts < b.data.ts ? 1 : (a.data.ts == b.data.ts ? 0 : -1)));
                 send(txs);
             },
-            syncAccountState: async (address, send) => {
+            syncAccountState: async (id, send) => {
+                if (!id) return send({});
                 await this.store.open();
-                const account = await this.store.accounts.get(address);
-                const state = await this.aergo.getState(address);
-                console.log('got new state', address, state);
+                const account = await this.store.accounts.get(id);
+                
+                const state = await chainProvider(account.data.chain).nodeClient().getState(account.data.address);
                 account.data.balance = state.balance.toString();
-                this.store.accounts.put(address, account.data);
+                console.log('got new state', account.data.address, state);
+                account.data.balance = state.balance.toString();
+                this.store.accounts.put(id, account.data);
                 send(account);
             }
         })

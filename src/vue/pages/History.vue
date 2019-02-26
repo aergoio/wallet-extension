@@ -11,8 +11,8 @@
           <span class="address-amount-wrap">
             <span class="address">
               <span v-if="tx.data.to == tx.data.from" class="label">self-transfer</span>
-              <span v-if="tx.data.to != tx.data.from && address == tx.data.from"><span class="label label-negative">to</span> {{tx.data.to | shortAddress(99)}}</span>
-              <span v-if="tx.data.to != tx.data.from && address == tx.data.to"><span class="label label-positive">from</span> {{tx.data.from | shortAddress(99)}}</span>
+              <span v-if="tx.data.to != tx.data.from && address == tx.data.from"><span class="label label-negative">to</span> {{tx.data.to.split('/')[1] | shortAddress(99)}}</span>
+              <span v-if="tx.data.to != tx.data.from && address == tx.data.to"><span class="label label-positive">from</span> {{tx.data.from.split('/')[1] | shortAddress(99)}}</span>
             </span>
             <span class="amount" v-html="$options.filters.formatToken(tx.data.amount)"></span>
           </span>
@@ -55,7 +55,8 @@ export default {
   methods: {
     moment,
     explorerLink(tx) {
-      return chainProvider(DEFAULT_CHAIN).explorerUrl(`/transaction/${tx.hash}`);
+      const chainId = tx.data.from.split('/')[0] || DEFAULT_CHAIN;
+      return chainProvider(chainId).explorerUrl(`/transaction/${tx.hash}`);
     },
     async reload() {
       console.log('Loading txs');

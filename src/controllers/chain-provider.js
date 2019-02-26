@@ -5,11 +5,15 @@ export const CHAINS = {
         apiUrl: 'https://api.aergoscan.io/testnet',
         explorerUrl: 'https://testnet.aergoscan.io',
         nodeUrl: 'http://testnet.aergo.io:7845'
+    },
+    'sqltestnet.aergo.io': {
+        apiUrl: 'https://sqltestnet.aergoscan.io/testnet',
+        explorerUrl: 'https://sqltestnet.aergoscan.io',
+        nodeUrl: 'https://sqltestnet.aergoscan.io/aergo'
     }
 };
 
 export const DEFAULT_CHAIN = 'testnet.aergo.io';
-
 
 export function chainProvider(chainId) {
     const chainConfig = CHAINS[chainId];

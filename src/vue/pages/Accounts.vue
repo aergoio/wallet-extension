@@ -15,14 +15,17 @@
           </li>
           
           <li v-for="account in accounts" :key="account.id" v-on:mouseout.self="showAccountMenu(false)">
-            <router-link :to="`/account/${account.id}/`">
+            <router-link :to="`/account/${encodeURIComponent(account.id)}/`">
               <div class="account-item">
-                <Identicon :text="account.id" />
+                <Identicon :text="account.data.address" />
                 
                 <span>
                   <span class="account-name">Account</span>
                   <span class="account-balance" v-if="account && account.data">{{formatAmount(account.data.balance)}}</span><br />
-                  {{ account.id | shortAddress(18) }}
+                  <span class="account-address-chain">
+                    <span class="address">{{ account.data.address | shortAddress(18) }}</span>
+                    <span class="chain">{{ account.data.chain }}</span>
+                  </span>
                 </span>
 
                 <span class="btn-action tooltipped tooltipped-no-delay tooltipped-w" v-tooltip="'More actions'" v-on:click.stop.prevent="showAccountMenu" >
@@ -65,7 +68,7 @@ export default {
   computed: mapState({
     accounts: state => {
       const items = state.accounts.addresses.map(address => state.accounts.accounts[address]);
-      //items.sort((a, b) => (new Amount(a.data.balance)).value.compare((new Amount(b.data.balance)).value));
+      //items.sort((a, b) => (new Amount(a.data.balance)).compare((new Amount(b.data.balance))));
       return items;
     }
   }),
@@ -188,5 +191,9 @@ export default {
   &.account-item {
     line-height: 23px;
   }
+}
+
+.chain {
+  color: #444;
 }
 </style>

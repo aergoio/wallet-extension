@@ -3,11 +3,11 @@
     <div class="seperator top"></div>
     <div class="account-header">
       <div class="account-item">
-        <Identicon :text="$route.params.address" />
+        <Identicon :text="account.data.address" v-if="account && account.data" />
         <span>
           <span class="account-name">Account</span>
           <span class="account-balance" v-if="account && account.data">{{formatAmount(account.data.balance)}}</span><br />
-          {{ $route.params.address | shortAddress}}
+          <span v-if="account && account.data">{{ account.data.address | shortAddress}}</span>
         </span>
       </div>
 

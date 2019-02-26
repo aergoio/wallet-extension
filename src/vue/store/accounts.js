@@ -17,14 +17,17 @@ const actions = {
     commit('setAccounts', accounts);
     return accounts;
   },
-  async createAccount ({ commit }, options) {
-    const account = await promisifySimple(this._vm.$background.createAccount)(options);
+  async createAccount ({ commit }, { network }) {
+    const account = await promisifySimple(this._vm.$background.createAccount)({
+      network
+    });
     commit('addAccount', account);
     return account;
   },
-  async importAccount ({ commit }, { identity }) {
+  async importAccount ({ commit }, { identity, network }) {
     const account = await promisifySimple(this._vm.$background.importAccount)({
-      privateKey: identity.privateKey.toArray()
+      privateKey: identity.privateKey.toArray(),
+      network
     });
     commit('addAccount', account);
     return account;

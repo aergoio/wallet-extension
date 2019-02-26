@@ -14,7 +14,7 @@ class TransactionManager extends EventEmitter {
 
     async _getTransactionsSince(account, blockno, size=100, offset=0) {
         console.log(`Getting txs for ${account.id} since ${blockno}...`);
-        const q = encodeURIComponent(`(from:${account.id} OR to:${account.id}) AND blockno:>${blockno}`);
+        const q = encodeURIComponent(`(from:${account.data.address} OR to:${account.data.address}) AND blockno:>${blockno}`);
         const url = chainProvider(account.data.chain).apiUrl(`/transactions?q=${q}&sort=blockno:desc&size=${size}&from=${offset}`);
         const response = await fetch(url);
         const data = await response.json();
@@ -51,7 +51,11 @@ class TransactionManager extends EventEmitter {
                 lastBlockno = account.data.lastSync.blockno;
             } catch(e) {}
             const txs = await this._getTransactionsSince(account, lastBlockno);
-            await Promise.all(txs.map(tx => this.store.transactions.put(tx.hash, tx.meta)));
+            await Promise.all(txs.map(tx => this.store.transactions.put(tx.hash, {
+                ...tx.meta,
+                from: `${account.data.chain}/${tx.meta.from}`,
+                to: `${account.data.chain}/${tx.meta.to}`,
+            })));
             const bestBlock = await this._getBestBlock(account);
             account.data.lastSync = {
                 blockno: bestBlock.meta.no,
@@ -59,7 +63,7 @@ class TransactionManager extends EventEmitter {
             }
             if (txs.length > 0 || !initialSyncDone) {
                 // new tx, update account state
-                const state = await chainProvider(account.data.chain).nodeClient().getState(account.id);
+                const state = await chainProvider(account.data.chain).nodeClient().getState(account.data.address);
                 account.data.balance = state.balance.toString();
                 initialSyncDone = true;
             }

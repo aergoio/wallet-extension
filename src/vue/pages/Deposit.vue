@@ -7,7 +7,7 @@
     <p class="instruction">
       You can directly deposit to this address.
     </p>
-    <p class="instruction instruction-address">{{$route.params.address}}</p>
+    <p class="instruction instruction-address">{{network}}<br>{{address}}</p>
   </div>
 </template>
 
@@ -24,6 +24,12 @@ export default {
   beforeDestroy () {
   },
   computed: {
+    network() {
+      return this.$route.params.address.split('/')[0];
+    },
+    address() {
+      return this.$route.params.address.split('/')[1];
+    }
   },
   methods: {
   },

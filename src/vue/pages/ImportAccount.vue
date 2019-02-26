@@ -22,6 +22,17 @@
         </div>
 
         <form class="form" autocomplete="off" v-if="!importedAddress">
+
+          <div class="form-line">
+            <label>
+              Network
+
+              <select class="text-input" v-model="network">
+                <option v-for="option in networkOptions" :key="option">{{option}}</option>
+              </select>
+            </label>
+          </div>
+
           <div class="form-line">
             <label>
               Select file
@@ -62,6 +73,7 @@
 import Identicon from '../components/Identicon';
 import {identifyFromPrivateKey, decodePrivateKey, decryptPrivateKey} from '@herajs/crypto';
 import bs58check from 'bs58check';
+import { CHAINS, DEFAULT_CHAIN } from '../../controllers/chain-provider';
 
 export default {
   data () {
@@ -72,7 +84,8 @@ export default {
       identity: null,
       error: '',
       keyType: '',
-      importedAddress: ''
+      importedAddress: '',
+      network: DEFAULT_CHAIN
     }
   },
   created () {
@@ -80,6 +93,9 @@ export default {
   beforeDestroy () {
   },
   computed: {
+    networkOptions() {
+      return Object.keys(CHAINS);
+    }
   },
   mounted () {
   },
@@ -104,11 +120,9 @@ export default {
         }
       }
 
-      console.log(this.identity);
-      //alert('Succesfully imported account ' + this.identity.address);
-
       const account = await this.$store.dispatch('accounts/importAccount', {
-        identity: this.identity
+        identity: this.identity,
+        network: this.network
       });
       console.log('created account', account);
       this.importedAddress = account.address;
@@ -139,7 +153,8 @@ export default {
       reader.readAsArrayBuffer(this.file);
     },
     gotoAccount () {
-      this.$router.push(`/account/${this.importedAddress}/`);
+      const id = encodeURIComponent(`${this.network}/${this.importedAddress}`);
+      this.$router.push(`/account/${id}/`);
     },
     cancel () {
       this.$router.push('/');

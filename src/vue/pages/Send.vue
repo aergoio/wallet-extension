@@ -6,7 +6,7 @@
 
       <p v-if="signedTx">
         <strong>Hash: {{lastTxHash}}</strong><br>
-        From: {{signedTx.from}}<br>
+        From: {{signedTx.fromAdr}}<br>
         To: {{signedTx.to}}<br>
         Amount: {{signedTx.amount}}
       </p>
@@ -20,7 +20,7 @@
       <h2>Please confirm this transaction.</h2>
 
       <p v-if="signedTx" class="tx-verify">
-        From: <Identicon :text="signedTx.from" /> {{signedTx.from}}<br>
+        From: <Identicon :text="signedTx.fromAdr" /> {{signedTx.fromAdr}}<br>
         To: <Identicon :text="signedTx.to" /> {{signedTx.to}}<br>
         Amount: {{signedTx.amount}}
       </p>
@@ -265,6 +265,7 @@ export default {
       payload = Array.from(payload);
       const tx = {
           from: from,
+          fromAdr: from.split('/')[1],
           to: this.transaction.to,
           amount: `${amount} ${this.transaction.amountUnit}`,
           payload,
