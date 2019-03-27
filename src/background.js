@@ -16,8 +16,8 @@ setupController();
 
 async function setupController() {
     const controller = new BackgroundController();
-    extension.runtime.onConnect.addListener(connectRemote);    
-
+    extension.runtime.onConnect.addListener(connectRemote);
+    
     function connectRemote (remotePort) {
         const processName = remotePort.name;
         console.log('Establishing connection with', processName);

@@ -16,7 +16,7 @@ export const CHAINS = {
 export const DEFAULT_CHAIN = 'testnet.aergo.io';
 
 export function chainProvider(chainId) {
-    const chainConfig = CHAINS[chainId];
+    let chainConfig = CHAINS[chainId];
     if (typeof chainConfig === 'undefined') chainConfig = CHAINS[DEFAULT_CHAIN];
     return {
         apiUrl: path => `${chainConfig.apiUrl}${path}`,

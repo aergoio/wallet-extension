@@ -36,7 +36,7 @@ export default {
   }
 
   &.primary {
-    background-color: #F8105F;
+    background-color: #FF36AD;
     border-color: #F8105F;
     color: #FFFFFF;
   }

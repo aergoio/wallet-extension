@@ -1,7 +1,15 @@
 <template>
   <div class="scroll-view">
 
+    <div class="overlay-dialog" :class="{visible: status=='sending'}">
+      <div class="loading-wrap">
+        <Spinner size=30 />
+      </div>
+    </div>
+
     <div class="overlay-dialog" :class="{visible: status=='success'}">
+      <span class="icon icon-success"></span>
+      
       <h2>The transaction has been sent.</h2>
 
       <p v-if="signedTx">
@@ -13,6 +21,18 @@
 
       <div class="form-actions">
         <Button text="OK" primary="true" v-on:click.native="cancel" />
+      </div>
+    </div>
+
+    <div class="overlay-dialog" :class="{visible: status=='error'}">
+      <span class="icon icon-fail"></span>
+      
+      <h2>An error occured.</h2>
+
+      <p class="error">{{error}}</p>
+
+      <div class="form-actions">
+        <Button text="Go back" primary="true" v-on:click.native="cancel" />
       </div>
     </div>
 
@@ -161,11 +181,13 @@ import { promisifySimple } from '../../utils/promisify';
 import Identicon from '../components/Identicon';
 import { Address } from '@herajs/client';
 import bs58 from 'bs58';
+import { timedAsync } from 'timed-async';
+import Spinner from '../components/Spinner';
 
 const defaultData = {
   transaction: {
     to: '',
-    amount: 0,
+    amount: '0',
     nonce: 1,
     amountUnit: 'aergo',
     payload: '',
@@ -264,7 +286,8 @@ export default {
       }
       payload = Array.from(payload);
       const tx = {
-          from: from,
+          chainId: from.split('/')[0],
+          from: from.split('/')[1],
           fromAdr: from.split('/')[1],
           to: this.transaction.to,
           amount: `${amount} ${this.transaction.amountUnit}`,
@@ -276,23 +299,21 @@ export default {
       this.status = 'confirm';
     },
     async confirm () {
-      const result = await promisifySimple(this.$background.sendTransaction)(this.signedTx);
+      this.status = 'sending';
+      const result = await timedAsync(() =>
+          promisifySimple(this.$background.sendTransaction)(this.signedTx, this.signedTx.chainId),
+          { fastTime: 1000 }
+      );
       if ('tx' in result) {
         this.lastTxHash = result.tx.hash;
         console.log('tx sent', this.lastTxHash, this.signedTx);
         this.status = 'success';
-      }
-
-      if ('error' in result) {
-        /*
-        let errorReason = 'Undefined error';
-        if (error.code && error.code < Object.values(CommitStatus).length) {
-          errorReason = Object.keys(CommitStatus)[Object.values(CommitStatus).indexOf(error.code)];
-        }
-        this.error = errorReason;
-        */
+      } else if ('error' in result) {
         this.error = result.error;
-        console.log('failed to send tx', errorReason, error, );
+        this.status = 'error';
+        console.error('failed to send tx', error);
+      } else {
+        console.log(result);
       }
     },
     cancel () {
@@ -306,6 +327,7 @@ export default {
   },
   components: {
     Identicon,
+    Spinner,
   }
 };
 </script>

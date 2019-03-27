@@ -19,15 +19,15 @@ const actions = {
   },
   async createAccount ({ commit }, { network }) {
     const account = await promisifySimple(this._vm.$background.createAccount)({
-      network
+      chainId: network
     });
     commit('addAccount', account);
     return account;
   },
   async importAccount ({ commit }, { identity, network }) {
     const account = await promisifySimple(this._vm.$background.importAccount)({
-      privateKey: identity.privateKey.toArray(),
-      network
+      privateKey: Array.from(identity.privateKey),
+      chainId: network
     });
     commit('addAccount', account);
     return account;
@@ -38,11 +38,11 @@ const actions = {
       password
     });
   },
-  async loadAccount ({}, { address }) {
-    return await promisifySimple(this._vm.$background.syncAccountState)(address);
+  async loadAccount ({}, { address, chainId }) {
+    return await promisifySimple(this._vm.$background.syncAccountState)({ address, chainId });
   },
-  async getAccountTx ({ commit }, { address }) {
-    const txs = await promisifySimple(this._vm.$background.getAccountTx)(address);
+  async getAccountTx ({ commit }, { address, chainId }) {
+    const txs = await promisifySimple(this._vm.$background.getAccountTx)({ address, chainId });
     commit('setAccountTxs', { address, txs });
     return txs;
   },
@@ -60,12 +60,11 @@ const mutations = {
         state.addresses.push(account.id);
     },
     setAccount (state, account) {
-      console.log('set account', account);
-      state.accounts[account.id] = account;
+        state.accounts[account.id] = account;
     },
     setAccountTxs (state, { address, txs }) {
-      state.txs[address] = txs;
-  }
+        state.txs[address] = txs;
+    }
 }
 
 export default {

@@ -116,7 +116,9 @@ export default {
           const decryptedBytes = await decryptPrivateKey(encryptedBytes, this.password);
           this.identity = identifyFromPrivateKey(decryptedBytes);
         } catch(e) {
+          console.log(e);
           this.error = 'Could not decrypt private key. Wrong password?';
+          return;
         }
       }
 

@@ -63,7 +63,7 @@ export default {
 }
 
 .seperator {
-  background: linear-gradient(90deg, #4B64FF, #F91162);
+  background: linear-gradient(90deg, #4B64FF, #FF36AD);
   height: 1px;
 
   &.top {
@@ -253,6 +253,11 @@ p {
     width: 32px;
     height: 32px;
     background-image: url(~@assets/img/success.svg);
+  }
+  &.icon-fail {
+    width: 32px;
+    height: 32px;
+    background-image: url(~@assets/img/fail.svg);
   }
   &.icon-lock {
     width: 25px;

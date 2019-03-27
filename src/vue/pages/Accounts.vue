@@ -14,8 +14,8 @@
             </router-link>
           </li>
           
-          <li v-for="account in accounts" :key="account.id" v-on:mouseout.self="showAccountMenu(false)">
-            <router-link :to="`/account/${encodeURIComponent(account.id)}/`">
+          <li v-for="account in accounts" :key="account.key" v-on:mouseout.self="showAccountMenu(false)">
+            <router-link :to="`/account/${encodeURIComponent(account.key)}/`">
               <div class="account-item">
                 <Identicon :text="account.data.address" />
                 
@@ -23,8 +23,8 @@
                   <span class="account-name">Account</span>
                   <span class="account-balance" v-if="account && account.data">{{formatAmount(account.data.balance)}}</span><br />
                   <span class="account-address-chain">
-                    <span class="address">{{ account.data.address | shortAddress(18) }}</span>
-                    <span class="chain">{{ account.data.chain }}</span>
+                    <span class="address">{{ account.data.spec.address | shortAddress(18) }}</span>
+                    <span class="chain">{{ account.data.spec.chainId }}</span>
                   </span>
                 </span>
 
@@ -74,13 +74,13 @@ export default {
   }),
   methods: {
     gotoExplorer(account) {
-      window.open(chainProvider(DEFAULT_CHAIN).explorerUrl(`/account/${account.id}`));
+      window.open(chainProvider(DEFAULT_CHAIN).explorerUrl(`/account/${account.key}`));
     },
     gotoExport(account) {
-      this.$router.push(`/account/${account.id}/export`);
+      this.$router.push(`/account/${account.key}/export`);
     },
     gotoRemove(account) {
-      this.$router.push(`/account/${account.id}/remove`);
+      this.$router.push(`/account/${account.key}/remove`);
     },
     showAccountMenu(state=true) {
       this.accountMenuShown = state;
@@ -102,7 +102,7 @@ export default {
 <style lang="scss">
 .account-list-header {
   text-align: center;
-  color: #F81264;
+  color: #FF0097;
   font-size: (11/12)*1em;
   line-height: 22px;
   border-bottom: 1px solid #DFDFDF;
@@ -182,7 +182,7 @@ export default {
   z-index: 1;
 }
 .add-account {
-  color: #F81264;
+  color: #FF0097;
   background: url(~@assets/img/add.svg) 4px 50%;
   background-size: 23px 23px;
   background-repeat: no-repeat;
@@ -195,5 +195,17 @@ export default {
 
 .chain {
   color: #444;
+
+  &:before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    background: url(~@assets/img/connection.svg) 50% 50%;
+    background-size: contain;
+    margin-right: 2px;
+    vertical-align: text-bottom;
+    transform: translateY(-.15em);
+  }
 }
 </style>

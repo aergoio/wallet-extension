@@ -30,7 +30,7 @@
     "extensionizer": "^1.0.1",
     "google-protobuf": "^3.6.0",
     "grpc-web-client": "^0.6.2",
-    "idb": "^3.0.2",
+    "idb": "^4.0.0",
     "jdenticon": "^2.1.0",
     "moment": "^2.24.0",
     "primer-tooltips": "^1.5.10",

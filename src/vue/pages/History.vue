@@ -11,8 +11,8 @@
           <span class="address-amount-wrap">
             <span class="address">
               <span v-if="tx.data.to == tx.data.from" class="label">self-transfer</span>
-              <span v-if="tx.data.to != tx.data.from && address == tx.data.from"><span class="label label-negative">to</span> {{tx.data.to.split('/')[1] | shortAddress(99)}}</span>
-              <span v-if="tx.data.to != tx.data.from && address == tx.data.to"><span class="label label-positive">from</span> {{tx.data.from.split('/')[1] | shortAddress(99)}}</span>
+              <span v-if="tx.data.to != tx.data.from && address == tx.data.from"><span class="label label-negative">to</span> {{tx.data.to | shortAddress(99)}}</span>
+              <span v-if="tx.data.to != tx.data.from && address == tx.data.to"><span class="label label-positive">from</span> {{tx.data.from | shortAddress(99)}}</span>
             </span>
             <span class="amount" v-html="$options.filters.formatToken(tx.data.amount)"></span>
           </span>
@@ -46,7 +46,10 @@ export default {
   },
   computed: {
     address() {
-      return this.$route.params.address;
+      return this.$route.params.address.split('/')[1];
+    },
+    chainId() {
+      return this.$route.params.address.split('/')[0];
     }
   },
   components: {
@@ -55,13 +58,16 @@ export default {
   methods: {
     moment,
     explorerLink(tx) {
-      const chainId = tx.data.from.split('/')[0] || DEFAULT_CHAIN;
-      return chainProvider(chainId).explorerUrl(`/transaction/${tx.hash}`);
+      const chainId = tx.data.chainId || DEFAULT_CHAIN;
+      return chainProvider(chainId).explorerUrl(`/transaction/${tx.data.hash}`);
     },
     async reload() {
       console.log('Loading txs');
       try {
-        this.transactions = await timedAsync(() => this.$store.dispatch('accounts/getAccountTx', { address: this.address }), { fastTime: 1500 });
+        this.transactions = await timedAsync(() =>
+          this.$store.dispatch('accounts/getAccountTx', { address: this.address, chainId: this.chainId }),
+          { fastTime: 1500 }
+        );
       } catch(e) {
         this.state = 'error';
         console.error(e);

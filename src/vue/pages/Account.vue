@@ -7,7 +7,10 @@
         <span>
           <span class="account-name">Account</span>
           <span class="account-balance" v-if="account && account.data">{{formatAmount(account.data.balance)}}</span><br />
-          <span v-if="account && account.data">{{ account.data.address | shortAddress}}</span>
+          <span v-if="account && account.data" class="account-address-chain">
+            <span class="address">{{ account.data.spec.address | shortAddress(18) }}</span>
+            <span class="chain">{{ account.data.spec.chainId }}</span>
+          </span>
         </span>
       </div>
 
@@ -44,8 +47,8 @@ export default {
   },
   created () {
   },
-  mounted () {
-    this.loadState();
+  async mounted () {
+    await this.loadState();
     this.reloadState();
   },
   beforeDestroy () {
@@ -57,15 +60,20 @@ export default {
     },
     async loadState() {
       await this.$db.open();
-      this.account = await this.$db.accounts.get(this.$route.params.address)
-      console.log('loaded account from db', this.account);
-      this.timeout = setTimeout(() => {
-        this.loadState();
-      }, 10*1000);
+      try {
+        this.account = await this.$db.getIndex('accounts').get(this.$route.params.address)
+        console.log('loaded account from db', this.account);
+        this.timeout = setTimeout(() => {
+          this.loadState();
+        }, 10*1000);
+      } catch(e) {
+        console.log('not found, go back to the start');
+        this.$router.push(`/`);
+      }
     },
     async reloadState() {
       await this.$db.open();
-      this.account = await this.$store.dispatch('accounts/loadAccount', { address: this.$route.params.address });
+      this.account = await this.$store.dispatch('accounts/loadAccount', this.account.data.spec);
       console.log('loaded account from bg', this.account);
     }
   },
@@ -100,7 +108,7 @@ export default {
         padding-bottom: 2px;
       }
       &.router-link-exact-active  span {
-        border-color: #F8105F;
+        border-color: #FF36AD;
       }
     }
   }

@@ -7,7 +7,7 @@
     <p class="instruction">
       You can directly deposit to this address.
     </p>
-    <p class="instruction instruction-address">{{network}}<br>{{address}}</p>
+    <p class="instruction instruction-address"><span class="chain">{{network}}</span><br>{{address}}</p>
   </div>
 </template>
 

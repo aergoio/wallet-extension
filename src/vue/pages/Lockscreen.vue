@@ -64,7 +64,7 @@ export default {
   },
   async created () {
     await this.$db.open();
-    this.initialized = !!await this.$db.settings.get('initialized');
+    this.initialized = !!await this.$db.getIndex('settings').get('encryptedId');
     console.log('wallet initialized', this.initialized);
   },
   mounted() {
