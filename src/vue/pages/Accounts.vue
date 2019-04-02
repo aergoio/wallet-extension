@@ -17,7 +17,7 @@
           <li v-for="account in accounts" :key="account.key" v-on:mouseout.self="showAccountMenu(false)">
             <router-link :to="`/account/${encodeURIComponent(account.key)}/`">
               <div class="account-item">
-                <Identicon :text="account.data.address" />
+                <Identicon :text="account.data.spec.address" />
                 
                 <span>
                   <span class="account-name">Account</span>
@@ -68,19 +68,19 @@ export default {
   computed: mapState({
     accounts: state => {
       const items = state.accounts.addresses.map(address => state.accounts.accounts[address]);
-      //items.sort((a, b) => (new Amount(a.data.balance)).compare((new Amount(b.data.balance))));
+      items.sort((a, b) => !a.data ? 0 : - (new Amount(a.data.balance)).compare((new Amount(b.data.balance))));
       return items;
     }
   }),
   methods: {
     gotoExplorer(account) {
-      window.open(chainProvider(DEFAULT_CHAIN).explorerUrl(`/account/${account.key}`));
+      window.open(chainProvider(account.data.spec.chainId).explorerUrl(`/account/${account.data.spec.address}`));
     },
     gotoExport(account) {
-      this.$router.push(`/account/${account.key}/export`);
+      this.$router.push(`/account/${encodeURIComponent(account.key)}/export`);
     },
     gotoRemove(account) {
-      this.$router.push(`/account/${account.key}/remove`);
+      this.$router.push(`/account/${encodeURIComponent(account.key)}/remove`);
     },
     showAccountMenu(state=true) {
       this.accountMenuShown = state;

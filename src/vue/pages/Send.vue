@@ -5,6 +5,12 @@
       <div class="loading-wrap">
         <Spinner size=30 />
       </div>
+      <div v-if="slowQuery">
+        Sending is taking longer than usual.<br>You can wait or cancel the transaction.
+        <div class="form-actions">
+          <Button text="Cancel" primary="true" v-on:click.native="cancelSend" />
+        </div>
+      </div>
     </div>
 
     <div class="overlay-dialog" :class="{visible: status=='success'}">
@@ -204,6 +210,7 @@ const defaultData = {
     newOwner: "",
     bpIds: ""
   },
+  slowQuery: false,
   amountFixed: false
 };
 export default {
@@ -264,24 +271,52 @@ export default {
       this.payloadFormState = 'manual';
     },
     async startConfirm () {
+      function jsonPayload(data) {
+        return Buffer.from(JSON.stringify(data));
+      }
+
       this.error = '';
       const from = this.$route.params.address;
       const amount = this.transaction.amount.replace(/[^\d\.]/g, '');
       let payload = Buffer.from(this.transaction.payload);
       let type = 0;
       if (this.payloadFormState === 'name') {
-        payload = Buffer.from(this.payload.action + this.payload.name);
+        if (this.payload.action == 'c') {
+          payload = jsonPayload({
+            Name: 'v1createName',
+            Args: [this.payload.name]
+          });
+        }
         if (this.payload.action == 'u') {
-          payload = Buffer.concat([payload, Buffer.from(','), Address.decode(this.payload.newOwner)]);
+          payload = jsonPayload({
+            Name: 'v1updateName',
+            Args: [this.payload.name, this.payload.newOwner]
+          });
+          //payload = Buffer.concat([payload, Buffer.from(','), Address.decode(this.payload.newOwner)]);
         }
         type = 1;
       }
       else if (this.payloadFormState === 'system') {
+        if (this.payload.action == 's') {
+          payload = jsonPayload({
+            Name: 'v1stake',
+            Args: []
+          });
+        }
+        if (this.payload.action == 'v') {
+          payload = jsonPayload({
+            Name: 'v1voteBP',
+            Args: this.payload.bpIds.split(',')
+          });
+        }
+
+        /*
         payload = Buffer.from(this.payload.action);
         if (this.payload.action == 'v') {
           const bpids = this.payload.bpIds.split(',').map(id => bs58.decode(id));
           payload = Buffer.concat([payload, ...bpids]);
         }
+        */
         type = 1;
       }
       payload = Array.from(payload);
@@ -302,7 +337,9 @@ export default {
       this.status = 'sending';
       const result = await timedAsync(() =>
           promisifySimple(this.$background.sendTransaction)(this.signedTx, this.signedTx.chainId),
-          { fastTime: 1000 }
+          { fastTime: 1000, slowTime: 5000, slow: () => {
+            this.slowQuery = true;
+          } }
       );
       if ('tx' in result) {
         this.lastTxHash = result.tx.hash;

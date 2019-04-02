@@ -20,7 +20,7 @@ export default {
 
 <style lang="scss">
 .dialog {
-  background-image: linear-gradient(90deg, #4B64FF, #F91162);
+  background-image: linear-gradient(90deg, #4B64FF, #FF0097);
   position: absolute;
   top: 0;
   left: 0;

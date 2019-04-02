@@ -46,10 +46,10 @@ export default {
   },
   computed: {
     address() {
-      return this.$route.params.address.split('/')[1];
+      return this.$route.params.address && this.$route.params.address.split('/')[1];
     },
     chainId() {
-      return this.$route.params.address.split('/')[0];
+      return this.$route.params.address && this.$route.params.address.split('/')[0];
     }
   },
   components: {

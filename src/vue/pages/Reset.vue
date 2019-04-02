@@ -7,7 +7,7 @@
       <div v-if="accounts.length">
         <p>You will lose access to {{accounts.length}} accounts saved in this wallet. Make sure you have a backup or don't need these accounts anymore.</p>
         <ol class="address-list">
-          <li v-for="account in accounts" :key="account.id">{{account.id}}</li>
+          <li v-for="account in accounts" :key="account.key">{{account.key}}</li>
         </ol>
       </div>
       <form class="form" autocomplete="off">

@@ -56,7 +56,8 @@ export default {
     return {
       network: DEFAULT_CHAIN,
       state: 'initial',
-      newAccount: {}
+      newAccount: {},
+      error: ''
     }
   },
   created () {

@@ -34,7 +34,7 @@ const actions = {
   },
   async exportAccount ({}, { id, password }) {
     return await promisifySimple(this._vm.$background.exportAccount)({
-      id,
+      key: id,
       password
     });
   },
@@ -50,17 +50,17 @@ const actions = {
 
 const mutations = {
     setAccounts (state, accounts) {
-        state.addresses = accounts.map(acc => acc.id);
+        state.addresses = accounts.map(acc => acc.key);
         for (let account of accounts) {
-          state.accounts[account.id] = account;
+          state.accounts[account.key] = account;
         }
     },
     addAccount (state, account) {
-        state.accounts[account.id] = account;
-        state.addresses.push(account.id);
+        state.accounts[account.key] = account;
+        state.addresses.push(account.key);
     },
     setAccount (state, account) {
-        state.accounts[account.id] = account;
+        state.accounts[account.key] = account;
     },
     setAccountTxs (state, { address, txs }) {
         state.txs[address] = txs;

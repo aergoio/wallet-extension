@@ -112,10 +112,20 @@ class BackgroundController extends EventEmitter {
         return this.uiState.popupOpen;
     }
 
-    trackAccount(account) {
-        console.log('tracking account', account);
-        this.wallet.accountManager.trackAccount(account);
+    trackAccount(account, onceCb) {
+        const accountTracker = this.wallet.accountManager.trackAccount(account);
         this.wallet.transactionManager.trackAccount(account);
+        accountTracker.then(t => {
+            t.removeAllListeners('update');
+            t.on('update', account => {
+                console.log('got new state', account);
+                this.emit('update', { accounts: [account] });
+                if (onceCb) {
+                    onceCb(account);
+                    onceCb = false;
+                }
+            });
+        });
     }
 
     setupCommunication (outStream) {
@@ -143,10 +153,11 @@ class BackgroundController extends EventEmitter {
                 send(this.wallet.unlocked);
             },
             reset: async (send) => {
-                await this.store.open();
-                await this.store.accounts.clear();
-                await this.store.transactions.clear();
-                await this.store.settings.clear();
+                await store.open();
+                await store.getIndex('accounts').clear();
+                await store.getIndex('transactions').clear();
+                await store.getIndex('settings').clear();
+                await store.getIndex('keys').clear();
                 send();
             },
             getBlockchainStatus: async (send) => {
@@ -167,7 +178,7 @@ class BackgroundController extends EventEmitter {
             createAccount: async ({ chainId }, send) => {
                 this.keepUnlocked();
                 
-                const account = this.wallet.accountManager.createAccount(chainId);
+                const account = await this.wallet.accountManager.createAccount(chainId);
                 this.trackAccount(account);
                 send(account.data.spec);
             },
@@ -210,11 +221,11 @@ class BackgroundController extends EventEmitter {
                         address: tx.from,
                         chainId: chainId
                     }, tx);
-                    console.log(txTracker);
+                    console.log(txTracker, txTracker.transaction.txBody);
                     send({ tx: txTracker.transaction.txBody });
                 } catch(e) {
                     console.error(e);
-                    send({ error: e.message });
+                    send({ error: e.message || ''+e });
                 }
             },
             getAccountTx: async (accountSpec, send) => {
@@ -226,12 +237,14 @@ class BackgroundController extends EventEmitter {
             },
             syncAccountState: async (accountSpec, send) => {
                 if (!accountSpec.address) return send({});
-                const tracker = await this.wallet.accountManager.trackAccount(accountSpec);
+                const account = await this.wallet.transactionManager.getOrCreateAccount(accountSpec);
+                this.trackAccount(account, send);
+                /*const tracker = await this.wallet.accountManager.trackAccount(accountSpec);
                 tracker.once('update', account => {
                     console.log('got new state', account);
                     tracker.pause();
                     send(account);
-                });
+                });*/
             }
         })
         pump(

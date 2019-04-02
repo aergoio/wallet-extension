@@ -63,7 +63,7 @@ export default {
 }
 
 .seperator {
-  background: linear-gradient(90deg, #4B64FF, #FF36AD);
+  background: linear-gradient(90deg, #4B64FF, #FF0097);
   height: 1px;
 
   &.top {
@@ -101,7 +101,22 @@ export default {
   flex: 1;
   overflow-y: auto;
   position: relative;
+
+  &::-webkit-scrollbar {
+      width: 6px;
+  }
+
+  &:hover {
+    &::-webkit-scrollbar {
+      background-color: transparent;
+      width: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0,0,0,.2)
+    }
+  }
 }
+
 
 .form {
   margin: 10px;
