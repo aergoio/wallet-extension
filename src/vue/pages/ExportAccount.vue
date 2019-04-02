@@ -35,8 +35,11 @@ export default {
   },
   methods: {
     async exportAccount() {
+      const chainId = this.$route.params.address.split('/')[0];
+      const address = this.$route.params.address.split('/')[1];
       const result = await this.$store.dispatch('accounts/exportAccount', {
-        id: this.$route.params.address,
+        address,
+        chainId,
         password: this.password
       });
       this.exportedPrivateKey = result.privateKey;

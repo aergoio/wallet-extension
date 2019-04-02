@@ -200,9 +200,13 @@ class BackgroundController extends EventEmitter {
                     send({ error: 'Could not import account. '+e });
                 }
             },
-            exportAccount: async ({ id, password }, send) => {
+            exportAccount: async ({ address, chainId, password }, send) => {
                 this.keepUnlocked();
-                const account = await this.store.accounts.get(id);
+                const account = await this.wallet.accountManager.getOrAddAccount({ address, chainId });
+                const key = await this.wallet.keyManager.getKey(account);
+                console.log(account, key);
+                const privateKey = key.data.privateKey;
+                /*
                 let privateKey;
                 try {
                     privateKey = await decryptPrivateKey(account.data.privateKey, this.masterPassword);
@@ -210,7 +214,7 @@ class BackgroundController extends EventEmitter {
                     console.error(e);
                     send({ error: 'Could not decrypt private key. '+e });
                     return;
-                }
+                }*/
                 const privkeyEncrypted = await encryptPrivateKey(privateKey, password);
                 send({privateKey: encodePrivateKey(privkeyEncrypted)});
             },
@@ -237,7 +241,7 @@ class BackgroundController extends EventEmitter {
             },
             syncAccountState: async (accountSpec, send) => {
                 if (!accountSpec.address) return send({});
-                const account = await this.wallet.transactionManager.getOrCreateAccount(accountSpec);
+                const account = await this.wallet.accountManager.getOrAddAccount(accountSpec);
                 this.trackAccount(account, send);
                 /*const tracker = await this.wallet.accountManager.trackAccount(accountSpec);
                 tracker.once('update', account => {

@@ -6,6 +6,11 @@ export const CHAINS = {
         explorerUrl: 'https://testnet.aergoscan.io',
         nodeUrl: 'http://testnet.aergo.io:7845'
     },
+    'main.aergo.io': {
+        apiUrl: 'https://api.aergoscan.io/main',
+        explorerUrl: 'https://mainnet-74909.aergoscan.io',
+        nodeUrl: 'http://main.aergo.io:7845'
+    },
     'sqltestnet.aergo.io': {
         apiUrl: 'https://sqltestnet.aergoscan.io/testnet',
         explorerUrl: 'https://sqltestnet.aergoscan.io',
