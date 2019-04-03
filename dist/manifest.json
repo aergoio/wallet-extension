@@ -1,8 +1,8 @@
 {
 	"manifest_version": 2,
-	"name": "AERGO Wallet",
-	"version": "0.0.1",
-	"description": "AERGO Wallet Browser Extension",
+	"name": "Aergo Wallet",
+	"version": "0.0.2",
+	"description": "Aergo Wallet Extension",
 	"author": "Aergo team and contributors",
 	"homepage_url": "https://github.com/aergoio/wallet-extension#readme",
 	"minimum_chrome_version": "64",
@@ -25,7 +25,7 @@
 		  "17": "27c8b3a52ec7ff171a36ab5196bb477c.png",
 		  "34": "e38302ac8e3c86895a755c6be89aa407.png"
 		},
-		"default_title": "AERGO Wallet",
+		"default_title": "Aergo Wallet",
 		"default_popup": "popup.html"
 	},
 
