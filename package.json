@@ -1,8 +1,8 @@
 {
   "name": "wallet-extension",
   "version": "0.0.1",
-  "title": "AERGO Wallet",
-  "description": "AERGO Wallet Browser Extension",
+  "title": "Aergo Wallet",
+  "description": "Aergo Wallet Extension",
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=development webpack --config config/webpack.config.js --watch",
