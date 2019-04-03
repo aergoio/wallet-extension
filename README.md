@@ -1,8 +1,10 @@
-# AERGO Wallet (Browser extension)
+# Aergo Wallet (Browser extension)
 
-This is the source code for the official AERGO Wallet browser extension. It works with Chrome and Firefox.
+**Beta version under active testing: use at your own risk!**
 
-## Install test version
+This is the source code for the official Aergo Wallet browser extension. It's developed and tested with Chrome.
+
+## Install development version
 
 1. `git clone https://github.com/aergoio/wallet-extension`
 2. Go to [chrome://extensions/](chrome://extensions/).
@@ -18,8 +20,10 @@ This is the source code for the official AERGO Wallet browser extension. It work
 
 ## Develop
 
-`npm run start` starts webpack in watch mode and also reloads the Chrome extension after every build.
+1. `npm install` to install dependencies.
 
-`npm run start2` starts webpack in watch mode with the webpack's devserver. You can access the wallet at `http://localhost:8080/dist/popup.html` and code will auto-reload. Browser extension features won't work in this mode. This script will likely be removed in the future. It's not very useful except for quickly testing CSS changes.
+2. `npm run start` starts webpack in watch mode and also reloads the Chrome extension after every build.
 
-`npm run build` builds everything for distribution. Please do commit the `dist` directory to the repository, that way people can test the extension without building themselves.
+3. Add the extension to Chrome following to the Install development version steps above.
+
+4. `npm run build` builds everything for distribution. Please do commit the `dist` directory to the repository, that way people can test the extension without building it by themself.
