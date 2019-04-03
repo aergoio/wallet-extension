@@ -2,15 +2,15 @@
   <div class="scroll-view">
     <Dialog>
       <h1>Export account</h1>
+      
       <div v-if="state=='input'">
         <p>To export this account's private key,<br> choose a passphrase for encryption.</p>
-
         <div class="form-actions">
           <input type="password" class="wallet-password" v-model="password" ref="passwordField" placeholder="Enter passphrase" />
-
           <Button text="Export" primary="true" v-on:click.native="exportAccount" />
         </div>
       </div>
+
       <div v-if="state=='result'">
         <p>You can now copy and save your encrypted private key.</p>
         <div class="export">{{exportedPrivateKey}}</div>
@@ -43,11 +43,10 @@ export default {
         password: this.password
       });
       this.exportedPrivateKey = result.privateKey;
-      console.log(this.exportedPrivateKey);
       this.state = 'result';
     },
     goBack() {
-      this.$router.push(`/account/${this.$route.params.address}/`);
+      this.$router.push(`/account/${encodeURIComponent(this.$route.params.address)}/`);
     }
   },
   components: {
