@@ -85,8 +85,6 @@
         </label>
       </div>
 
-      
-
       <div class="form-line" v-if="payloadFormState == 'system'">
         <label>
           Action
@@ -94,12 +92,16 @@
           <select v-model="payload.action">
             <option value="">Please select...</option>
             <option value="s">Stake</option>
+            <option value="u">Unstake</option>
             <option value="v">Vote</option>
           </select>
         </label>
       </div>
       <div class="form-line action-hint" v-if="payloadFormState == 'system' && payload.action == 's'">
         The specified amount will be staked. 
+      </div>
+      <div class="form-line action-hint" v-if="payloadFormState == 'system' && payload.action == 'u'">
+        The specified amount will be unstaked. 
       </div>
       <div class="form-line action-hint" v-if="payloadFormState == 'system' && payload.action == 'v'">
         Your vote (weighted by previously staked amount)<br>will be cast for the specified BPs. 
@@ -133,7 +135,7 @@
         <label>
           Name
 
-          <input type="text" class="text-input input-field" v-model="payload.name">
+          <input type="text" class="text-input input-field" v-model="payload.name" placeholder="Alphanumerical, 12 characters">
         </label>
       </div>
       <div class="form-line" v-if="payloadFormState == 'name' && payload.action === 'u'">
@@ -300,6 +302,12 @@ export default {
         if (this.payload.action == 's') {
           payload = jsonPayload({
             Name: 'v1stake',
+            Args: []
+          });
+        }
+        if (this.payload.action == 'u') {
+          payload = jsonPayload({
+            Name: 'v1unstake',
             Args: []
           });
         }

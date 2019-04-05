@@ -3,6 +3,7 @@ import Accounts from '../vue/pages/Accounts.vue';
 import Account from '../vue/pages/Account.vue';
 import Deposit from '../vue/pages/Deposit.vue';
 import Send from '../vue/pages/Send.vue';
+import Sign from '../vue/pages/Sign.vue';
 import History from '../vue/pages/History.vue';
 import AddAccount from '../vue/pages/AddAccount.vue';
 import CreateAccount from '../vue/pages/CreateAccount.vue';
@@ -22,7 +23,8 @@ export default [
         children: [
             { path: '', component: Deposit, meta: { transitionName: 'slide', index: 1 } },
             { path: 'send', component: Send, meta: { transitionName: 'slide', index: 2 } },
-            { path: 'history', component: History, meta: { transitionName: 'slide', index: 3 } },
+            { path: 'sign', component: Sign, meta: { transitionName: 'sign', index: 3 } },
+            { path: 'history', component: History, meta: { transitionName: 'slide', index: 4 } },
             { path: 'export', component: ExportAccount, meta: { transitionName: 'slide' } },
             { path: 'remove', component: RemoveAccount, meta: { transitionName: 'slide' } },
         ]

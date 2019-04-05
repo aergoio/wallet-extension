@@ -21,6 +21,7 @@
     <ul class="account-nav">
       <li><router-link :to="`./`"><span>Deposit</span></router-link></li>
       <li><router-link :to="`send`"><span>Send</span></router-link></li>
+      <li><router-link :to="`sign`"><span>Sign</span></router-link></li>
       <li><router-link :to="`history`"><span>History</span></router-link></li>
     </ul>
     <div class="account-subpage">
