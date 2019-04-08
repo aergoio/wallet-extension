@@ -28,8 +28,9 @@
             <label>
               Network
 
-              <select class="text-input" v-model="network">
+              <select class="text-input" v-model="selection">
                 <option v-for="option in networkOptions" :key="option">{{option}}</option>
+                <option value="other">Other...</option>
               </select>
             </label>
           </div>
@@ -54,7 +55,8 @@ import Identicon from '../components/Identicon';
 export default {
   data () {
     return {
-      network: DEFAULT_CHAIN,
+      selection: DEFAULT_CHAIN,
+      chainId: '',
       state: 'initial',
       newAccount: {},
       error: ''
@@ -69,19 +71,34 @@ export default {
       return Object.keys(CHAINS);
     }
   },
+  watch: {
+    'selection': async function(network) {
+      if (network === 'other') {
+        const chainId = prompt('Please enter the Chain ID');
+        const nodeUrl = prompt('Please enter the node URL (e.g. http://127.0.0.1:7845)');
+        await this.$store.dispatch('accounts/addNetwork', {
+          chainId, nodeUrl
+        });
+        this.chainId = chainId;
+      }
+    },
+  },
   mounted () {
   },
   methods: {
     async create () {
+      if (this.selection !== 'other') {
+        this.chainId = this.selection;
+      }
       this.newAccount = await this.$store.dispatch('accounts/createAccount', {
-        network: this.network
+        network: this.chainId
       });
-      console.log('created account', this.newAccount);
+      console.log('created account', this.newAccount, this.chainId);
 
       this.state = 'success';
     },
     gotoAccount () {
-      const id = encodeURIComponent(`${this.network}/${this.newAccount.address}`);
+      const id = encodeURIComponent(`${this.chainId}/${this.newAccount.address}`);
       this.$router.push(`/account/${id}/`);
     },
     cancel () {

@@ -47,6 +47,9 @@ const actions = {
     commit('setAccountTxs', { address, txs });
     return txs;
   },
+  async addNetwork ({}, { chainId, nodeUrl }) {
+    return await promisifySimple(this._vm.$background.addNetwork)({ chainId, nodeUrl });
+  },
 }
 
 const mutations = {

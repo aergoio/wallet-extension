@@ -10,7 +10,7 @@ import { AergoscanTransactionScanner } from './tx-scanner';
 
 import {
     identifyFromPrivateKey,
-    decryptPrivateKey, encryptPrivateKey,
+    encryptPrivateKey,
     encodePrivateKey
 } from '@herajs/crypto';
 import State from './state';
@@ -47,8 +47,13 @@ class BackgroundController extends EventEmitter {
             instanceId: this.id
         });
         this.wallet.use(AergoscanTransactionScanner);
-        this.wallet.useStorage(store).then(() => {
+        this.wallet.useStorage(store).then(async () => {
             this.firstLoad();
+            // Load custom defined chains
+            const customChains = await this.wallet.datastore.getIndex('settings').get('customChains')
+            for (let chainId of Object.keys(customChains.data)) {
+                this.wallet.useChain({ chainId, nodeUrl: customChains.data[chainId].nodeUrl});
+            }
         });
         for (let chain of config.chains) {
             this.wallet.useChain(chain);
@@ -159,6 +164,23 @@ class BackgroundController extends EventEmitter {
                 await store.getIndex('settings').clear();
                 await store.getIndex('keys').clear();
                 send();
+            },
+            addNetwork: async ({ chainId, nodeUrl }, send) => {
+                console.log('Adding chain', { chainId, nodeUrl });
+                this.wallet.useChain({ chainId, nodeUrl });
+                let chains = {};
+                try {
+                    chains = (await this.wallet.datastore.getIndex('settings').get('customChains')).data;
+                    
+                } catch(e) {
+                    // not found
+                }
+                chains[chainId] = { chainId, nodeUrl };
+                await this.wallet.datastore.getIndex('settings').put({
+                    key: 'customChains',
+                    data: chains
+                });
+                send({});
             },
             getBlockchainStatus: async (send) => {
                 const status = await this.wallet.getClient().blockchain();

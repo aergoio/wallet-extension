@@ -27,8 +27,9 @@
             <label>
               Network
 
-              <select class="text-input" v-model="network">
+              <select class="text-input" v-model="selection">
                 <option v-for="option in networkOptions" :key="option">{{option}}</option>
+                <option value="other">Other...</option>
               </select>
             </label>
           </div>
@@ -85,7 +86,8 @@ export default {
       error: '',
       keyType: '',
       importedAddress: '',
-      network: DEFAULT_CHAIN
+      selection: DEFAULT_CHAIN,
+      chainId: '',
     }
   },
   created () {
@@ -103,9 +105,22 @@ export default {
     key: function (key) {
       this.validateKey();
     },
+    selection: async function(network) {
+      if (network === 'other') {
+        const chainId = prompt('Please enter the Chain ID');
+        const nodeUrl = prompt('Please enter the node URL (e.g. http://127.0.0.1:7845)');
+        await this.$store.dispatch('accounts/addNetwork', {
+          chainId, nodeUrl
+        });
+        this.chainId = chainId;
+      }
+    },
   },
   methods: {
     async importAccount () {
+      if (this.selection !== 'other') {
+        this.chainId = this.selection;
+      }
       if (!this.keyType) {
         this.error = 'Need to select either key file or paste text.';
         return;
@@ -124,7 +139,7 @@ export default {
 
       const account = await this.$store.dispatch('accounts/importAccount', {
         identity: this.identity,
-        network: this.network
+        network: this.chainId
       });
       console.log('created account', account);
       this.importedAddress = account.address;
