@@ -1,4 +1,4 @@
-# Aergo Wallet (Browser extension)
+# Aergo Connect (wallet browser extension)
 
 **Beta version under active testing: use at your own risk!**
 

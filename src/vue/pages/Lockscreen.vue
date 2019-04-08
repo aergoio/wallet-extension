@@ -20,8 +20,8 @@
       </div>
       <div v-if="!initialized && !setupVisible">
         <div class="logo"></div>
-        <h1>Welcome to Aergo Browser Wallet.</h1>
-        <p>Use the wallet to manage your Aergo accounts in the browser.</p>
+        <h1>Welcome to Aergo Connect.</h1>
+        <p>A secure wallet to manage your Aergo accounts in the browser.</p>
         <form class="form" autocomplete="off">
           <div class="form-actions">
             <Button text="Get started" primary="true" v-on:click.native="showSetup" />

@@ -40,7 +40,6 @@ class BackgroundController extends EventEmitter {
         }
         this.state = new State();
         this._lockTimeout = null;
-        
 
         this.wallet = new Wallet({
             appName: 'aergo-browser-wallet',
@@ -50,9 +49,13 @@ class BackgroundController extends EventEmitter {
         this.wallet.useStorage(store).then(async () => {
             this.firstLoad();
             // Load custom defined chains
-            const customChains = await this.wallet.datastore.getIndex('settings').get('customChains')
-            for (let chainId of Object.keys(customChains.data)) {
-                this.wallet.useChain({ chainId, nodeUrl: customChains.data[chainId].nodeUrl});
+            try {
+                const customChains = await this.wallet.datastore.getIndex('settings').get('customChains')
+                for (let chainId of Object.keys(customChains.data)) {
+                    this.wallet.useChain({ chainId, nodeUrl: customChains.data[chainId].nodeUrl});
+                }
+            } catch (e) {
+                // not found
             }
         });
         for (let chain of config.chains) {
@@ -171,7 +174,6 @@ class BackgroundController extends EventEmitter {
                 let chains = {};
                 try {
                     chains = (await this.wallet.datastore.getIndex('settings').get('customChains')).data;
-                    
                 } catch(e) {
                     // not found
                 }
