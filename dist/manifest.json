@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "Aergo Wallet",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "Aergo Wallet Extension",
 	"author": "Aergo team and contributors",
 	"homepage_url": "https://github.com/aergoio/wallet-extension#readme",
