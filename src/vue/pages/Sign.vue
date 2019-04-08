@@ -19,7 +19,7 @@
         <label>
           Signed message
 
-          <textarea class="text-input" v-model="signedMessage" readonly></textarea>
+          <textarea class="text-input" v-model="signedMessage" style="height: 60px" readonly></textarea>
         </label>
       </div>
 
@@ -62,12 +62,16 @@ export default {
   methods: {
     async sign () {
       this.status = 'sending';
+      let buf = Buffer.from(this.message);
+      if (this.message.substr(0, 2) === '0x') {
+        buf = Buffer.from(this.message.substr(2), "hex");
+      }
       const result = await promisifySimple(this.$background.signMessage)({
         address: this.address,
         chainId: this.chainId,
-        message: Array.from(Uint8Array.from(Buffer.from(this.message)))
+        message: Array.from(Uint8Array.from(buf))
       });
-      this.signedMessage = result.signedMessage;
+      this.signedMessage = '0x' + result.signedMessage;
     },
     cancel () {
       this.message = '';

@@ -10,7 +10,7 @@ export class AergoscanTransactionScanner {
     fetchAccountTransactionsAfter(wallet) {
         return (next) => async ({ account, blockno, limit }) => {
             const chainId = account.data.spec.chainId
-            if (chainId !== 'testnet.aergo.io') {
+            if (chainId !== 'testnet.aergo.io' && chainId !== 'main.aergo.io') {
                 return next({ account, blockno, limit });
             }
             const address = new Address(account.data.spec.address);
