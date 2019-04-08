@@ -6,7 +6,7 @@
         <label>
           Message
 
-          <textarea class="text-input" v-model="message" style="height: 80px"></textarea>
+          <textarea class="text-input" v-model="message" style="height: 80px" placeholder="Enter hex string (0x...) or text"></textarea>
         </label>
       </div>
 

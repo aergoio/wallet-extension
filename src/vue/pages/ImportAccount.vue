@@ -170,7 +170,7 @@ export default {
       reader.readAsArrayBuffer(this.file);
     },
     gotoAccount () {
-      const id = encodeURIComponent(`${this.network}/${this.importedAddress}`);
+      const id = encodeURIComponent(`${this.chainId}/${this.importedAddress}`);
       this.$router.push(`/account/${id}/`);
     },
     cancel () {

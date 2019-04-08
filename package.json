@@ -22,7 +22,7 @@
   "homepage": "https://github.com/aergoio/wallet-extension#readme",
   "dependencies": {
     "@herajs/client": "0.8.6",
-    "@herajs/wallet": "0.2.0",
+    "@herajs/wallet": "0.2.1",
     "@herajs/crypto": "0.4.1",
     "bs58": "^4.0.1",
     "bs58check": "^2.1.2",
