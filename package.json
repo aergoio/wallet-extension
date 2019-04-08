@@ -1,6 +1,6 @@
 {
   "name": "wallet-extension",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "title": "Aergo Wallet",
   "description": "Aergo Wallet Extension",
   "main": "index.js",
