@@ -11,7 +11,6 @@ import BackgroundController from './controllers/background';
 console.log('AERGO Wallet Background Script');
 console.log('Extension ID', extension.runtime.id);
 
-
 setupController();
 
 async function setupController() {
@@ -65,5 +64,6 @@ chrome.contextMenus.create({
     }
 });
 
-extension.tabs.create({url : "tab.html"});
-
+if (process.env.NODE_ENV === 'development') {
+    extension.tabs.create({url : "tab.html"});
+}

@@ -14,17 +14,30 @@
 
 <script>
 import Dialog from '../components/Dialog';
+import { promisifySimple } from '../../utils/promisify';
 export default {
   data () {
     return {
 
     }
   },
+  computed: {
+    address() {
+      return this.$route.params.address && this.$route.params.address.split('/')[1];
+    },
+    chainId() {
+      return this.$route.params.address && this.$route.params.address.split('/')[0];
+    }
+  },
   methods: {
     async remove() {
       const nativeCheck = confirm(`Are you really sure you want to remove the account ${this.$route.params.address} from this wallet?`);
       if (!nativeCheck) return;
-      // TODO
+      await promisifySimple(this.$background.removeAccount)({
+        chainId: this.chainId,
+        address: this.address
+      })
+      this.$router.push('/');
     }
   },
   components: {

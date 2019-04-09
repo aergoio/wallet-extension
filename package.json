@@ -1,5 +1,5 @@
 {
-  "name": "wallet-extension",
+  "name": "aergo-browser-wallet",
   "version": "0.0.6",
   "title": "Aergo Connect",
   "description": "Aergo Connect (Wallet Browser Extension)",
@@ -8,7 +8,7 @@
     "start": "NODE_ENV=development webpack --config config/webpack.config.js --watch",
     "start2": "NODE_ENV=development webpack-dev-server --hot --inline --config config/webpack.config.js",
     "build": "webpack -p --config config/webpack.config.js",
-    "package": "cd dist; zip -r ../extension.zip *"
+    "package": "cd dist; zip -r ../${npm_package_name}_${npm_package_version}.zip *"
   },
   "repository": {
     "type": "git",

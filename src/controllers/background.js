@@ -161,11 +161,7 @@ class BackgroundController extends EventEmitter {
                 send(this.wallet.unlocked);
             },
             reset: async (send) => {
-                await store.open();
-                await store.getIndex('accounts').clear();
-                await store.getIndex('transactions').clear();
-                await store.getIndex('settings').clear();
-                await store.getIndex('keys').clear();
+                await this.wallet.deleteAllData();
                 send();
             },
             addNetwork: async ({ chainId, nodeUrl }, send) => {
@@ -202,9 +198,17 @@ class BackgroundController extends EventEmitter {
             createAccount: async ({ chainId }, send) => {
                 this.keepUnlocked();
                 
-                const account = await this.wallet.accountManager.createAccount(chainId);
-                this.trackAccount(account);
-                send(account.data.spec);
+                try {
+                    const account = await this.wallet.accountManager.createAccount(chainId);
+                    this.trackAccount(account);
+                    send(account.data.spec);
+                } catch(e) {
+                    send({error: e});
+                }
+            },
+            removeAccount: async ({ chainId, address }, send) => {
+                await this.wallet.accountManager.removeAccount({ chainId, address });
+                send();
             },
             importAccount: async ({ privateKey, chainId }, send) => {
                 this.keepUnlocked();
@@ -227,18 +231,9 @@ class BackgroundController extends EventEmitter {
             exportAccount: async ({ address, chainId, password }, send) => {
                 this.keepUnlocked();
                 const account = await this.wallet.accountManager.getOrAddAccount({ address, chainId });
-                const key = await this.wallet.keyManager.getKey(account);
+                const key = await this.wallet.keyManager.getUnlockedKey(account);
                 console.log(account, key);
                 const privateKey = key.data.privateKey;
-                /*
-                let privateKey;
-                try {
-                    privateKey = await decryptPrivateKey(account.data.privateKey, this.masterPassword);
-                } catch (e) {
-                    console.error(e);
-                    send({ error: 'Could not decrypt private key. '+e });
-                    return;
-                }*/
                 const privkeyEncrypted = await encryptPrivateKey(privateKey, password);
                 send({privateKey: encodePrivateKey(privkeyEncrypted)});
             },
@@ -267,18 +262,24 @@ class BackgroundController extends EventEmitter {
                 if (!accountSpec.address) return send({});
                 const account = await this.wallet.accountManager.getOrAddAccount(accountSpec);
                 this.trackAccount(account, send);
-                /*const tracker = await this.wallet.accountManager.trackAccount(accountSpec);
-                tracker.once('update', account => {
-                    console.log('got new state', account);
-                    tracker.pause();
-                    send(account);
-                });*/
             },
             signMessage: async ({ address, chainId, message }, send) => {
                 this.keepUnlocked();
                 const account = await this.wallet.accountManager.getOrAddAccount({ address, chainId });
                 const signedMessage = await this.wallet.keyManager.signMessage(account, Buffer.from(message));
                 send({ signedMessage });
+            },
+            getStaking: async ({ address, chainId }, send) => {
+                this.keepUnlocked();
+                try {
+                    const result = await this.wallet.getClient(chainId).getStaking(address);
+                    send({
+                        amount: result.amount.toString(),
+                        when: result.when
+                    });
+                } catch(e) {
+                    send({ error: e });
+                }
             }
         })
         pump(

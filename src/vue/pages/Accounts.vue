@@ -13,35 +13,38 @@
               </div>
             </router-link>
           </li>
+
+          <template v-for="[chainId, accounts] in accountsByChainId">
+            <li :key="chainId" class="chainid-seperator"><span class="chain">{{chainId}}</span></li>
           
-          <li v-for="account in accounts" :key="account.key" v-on:mouseout.self="showAccountMenu(false)">
-            <router-link :to="`/account/${encodeURIComponent(account.key)}/`">
-              <div class="account-item">
-                <Identicon :text="account.data.spec.address" />
-                
-                <span>
-                  <span class="account-name">Account</span>
-                  <span class="account-balance" v-if="account && account.data">{{formatAmount(account.data.balance)}}</span><br />
-                  <span class="account-address-chain">
-                    <span class="address">{{ account.data.spec.address | shortAddress(18) }}</span>
-                    <span class="chain">{{ account.data.spec.chainId }}</span>
+            <li v-for="account in accounts" :key="account.key" v-on:mouseout.self="showAccountMenu(false)">
+              <router-link :to="`/account/${encodeURIComponent(account.key)}/`">
+                <div class="account-item">
+                  <Identicon :text="account.data.spec.address" />
+                  
+                  <span>
+                    <span class="account-name">Account</span>
+                    <span class="account-balance" v-if="account && account.data">{{formatAmount(account.data.balance)}}</span><br />
+                    <span class="account-address-chain">
+                      <span class="address">{{ account.data.spec.address | shortAddress(18) }}</span>
+                    </span>
                   </span>
-                </span>
 
-                <span class="btn-action tooltipped tooltipped-no-delay tooltipped-w" v-tooltip="'More actions'" v-on:click.stop.prevent="showAccountMenu" >
-                </span>
+                  <span class="btn-action tooltipped tooltipped-no-delay tooltipped-w" v-tooltip="'More actions'" v-on:click.stop.prevent="showAccountMenu" >
+                  </span>
 
-                <span class="account-menu" :class="{visible: accountMenuShown}">
-                  <ul class="account-menu-items">
-                    <li v-on:click.stop.prevent="gotoExplorer(account)">View in Aergoscan</li>
-                    <li v-on:click.stop.prevent="gotoExport(account)">Export</li>
-                    <li v-on:click.stop.prevent="gotoRemove(account)">Remove</li>
-                  </ul>
-                </span>
-                
-              </div>
-            </router-link>
-          </li>
+                  <span class="account-menu" :class="{visible: accountMenuShown}">
+                    <ul class="account-menu-items">
+                      <li v-on:click.stop.prevent="gotoExplorer(account)">View in Aergoscan</li>
+                      <li v-on:click.stop.prevent="gotoExport(account)">Export</li>
+                      <li v-on:click.stop.prevent="gotoRemove(account)">Remove</li>
+                    </ul>
+                  </span>
+                  
+                </div>
+              </router-link>
+            </li>
+          </template>
         </ul>
       </div>
     </div>
@@ -54,6 +57,20 @@ import { DEFAULT_CHAIN, chainProvider } from '../../controllers/chain-provider';
 import Identicon from '../components/Identicon';
 import { Amount } from '@herajs/client';
 
+function groupBy(list, props) {
+  let propsFn = props;
+  if (typeof props === 'string') {
+    propsFn = (item) => item[props];
+  }
+  const map = new Map();
+  for (const item of list) {
+    const key = propsFn(item);
+    if (!map.has(key)) map.set(key, []);
+    map.get(key).push(item);
+  }
+  return map;
+}
+
 export default {
   data () {
     return {
@@ -65,13 +82,20 @@ export default {
   },
   beforeDestroy () {
   },
-  computed: mapState({
-    accounts: state => {
-      const items = state.accounts.addresses.map(address => state.accounts.accounts[address]);
-      items.sort((a, b) => !a.data ? 0 : - (new Amount(a.data.balance)).compare((new Amount(b.data.balance))));
-      return items;
+  computed: {
+    ...mapState({
+      accounts: state => {
+        const items = state.accounts.addresses.map(address => state.accounts.accounts[address]);
+        items.sort((a, b) => !a.data ? 0 : - (new Amount(a.data.balance)).compare((new Amount(b.data.balance))));
+        return items;
+      },
+    }),
+    accountsByChainId() {
+      console.log('group by', this.accounts);
+      const result = groupBy(this.accounts, item => !item.data ? '' : item.data.spec.chainId);
+      return Array.from(result);
     }
-  }),
+  },
   methods: {
     gotoExplorer(account) {
       window.open(chainProvider(account.data.spec.chainId).explorerUrl(`/account/${account.data.spec.address}`));
@@ -127,6 +151,15 @@ export default {
       background-color: #f7f7f7;
     }
 
+    &.chainid-seperator {
+        padding: 4px 15px;
+        font-size: .95em;
+        font-weight: 500;
+        &:hover {
+          background-color: transparent;
+          cursor: default;
+        }
+      }
   }
 }
 .account-item .btn-action {
@@ -208,4 +241,6 @@ export default {
     transform: translateY(-.15em);
   }
 }
+
+
 </style>

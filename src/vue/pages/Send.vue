@@ -87,6 +87,16 @@
 
       <div class="form-line" v-if="payloadFormState == 'system'">
         <label>
+          Currently staked amount
+
+          <span>
+              {{stakedAmount}}
+          </span>
+        </label>
+      </div>
+
+      <div class="form-line" v-if="payloadFormState == 'system'">
+        <label>
           Action
 
           <select v-model="payload.action">
@@ -154,8 +164,8 @@
             <input type="number" class="text-input" :disabled="amountFixed" v-model="transaction.amount">
             <select v-model="transaction.amountUnit" :disabled="amountFixed" >
               <option>aergo</option>
-              <option>aer</option>
               <option>gaer</option>
+              <option>aer</option>
             </select>
           </span>
         </label>
@@ -187,7 +197,7 @@
 import { CommitStatus } from '@herajs/client';
 import { promisifySimple } from '../../utils/promisify';
 import Identicon from '../components/Identicon';
-import { Address } from '@herajs/client';
+import { Address, Amount } from '@herajs/client';
 import bs58 from 'bs58';
 import { timedAsync } from 'timed-async';
 import Spinner from '../components/Spinner';
@@ -213,7 +223,8 @@ const defaultData = {
     bpIds: ""
   },
   slowQuery: false,
-  amountFixed: false
+  amountFixed: false,
+  stakedAmount: '...'
 };
 export default {
   data () {
@@ -224,6 +235,12 @@ export default {
   beforeDestroy () {
   },
   computed: {
+    address() {
+      return this.$route.params.address && this.$route.params.address.split('/')[1];
+    },
+    chainId() {
+      return this.$route.params.address && this.$route.params.address.split('/')[0];
+    }
   },
   watch: {
     'transaction.to': function(to) {
@@ -234,6 +251,16 @@ export default {
         this.amountFixed = true;
       } else if (to === 'aergo.system') {
         this.payloadFormState = 'system';
+        if (this.stakedAmount === '...') {
+          promisifySimple(this.$background.getStaking)({
+            chainId: this.chainId,
+            address: this.address
+          }).then(result => {
+            if (result.amount) {
+              this.stakedAmount = new Amount(result.amount).toUnit('aergo').toString();
+            }
+          });
+        }
       } else if (this.payloadFormState === 'system' || this.payloadFormState === 'name') {
         this.payloadFormState = 'hidden';
       }
@@ -278,7 +305,6 @@ export default {
       }
 
       this.error = '';
-      const from = this.$route.params.address;
       const amount = this.transaction.amount.replace(/[^\d\.]/g, '');
       let payload = Buffer.from(this.transaction.payload);
       let type = 0;
@@ -294,7 +320,6 @@ export default {
             Name: 'v1updateName',
             Args: [this.payload.name, this.payload.newOwner]
           });
-          //payload = Buffer.concat([payload, Buffer.from(','), Address.decode(this.payload.newOwner)]);
         }
         type = 1;
       }
@@ -318,20 +343,13 @@ export default {
           });
         }
 
-        /*
-        payload = Buffer.from(this.payload.action);
-        if (this.payload.action == 'v') {
-          const bpids = this.payload.bpIds.split(',').map(id => bs58.decode(id));
-          payload = Buffer.concat([payload, ...bpids]);
-        }
-        */
         type = 1;
       }
       payload = Array.from(payload);
       const tx = {
-          chainId: from.split('/')[0],
-          from: from.split('/')[1],
-          fromAdr: from.split('/')[1],
+          chainId: this.chainId,
+          from: this.address,
+          fromAdr: this.address,
           to: this.transaction.to,
           amount: `${amount} ${this.transaction.amountUnit}`,
           payload,

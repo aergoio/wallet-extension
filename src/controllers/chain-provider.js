@@ -13,7 +13,7 @@ export const CHAINS = {
     }
 };
 
-export const DEFAULT_CHAIN = 'testnet.aergo.io';
+export const DEFAULT_CHAIN = 'main.aergo.io';
 
 export function chainProvider(chainId) {
     let chainConfig = CHAINS[chainId];
