@@ -11,6 +11,7 @@
       </div>
 
       <div class="form-actions">
+        <p v-if="error" class="error">{{error}}</p>
         <Button text="Sign" primary="true" v-on:click.native="sign" />
         <Button text="Cancel" class="secondary" v-on:click.native="cancel" />
       </div>
@@ -43,7 +44,8 @@ export default {
   data () {
     return {
       message: '',
-      signedMessage: ''
+      signedMessage: '',
+      error: ''
     };
   },
   created () {
@@ -62,16 +64,27 @@ export default {
   methods: {
     async sign () {
       this.status = 'sending';
+      this.signedMessage = '';
+      this.error = '';
       let buf = Buffer.from(this.message);
       if (this.message.substr(0, 2) === '0x') {
-        buf = Buffer.from(this.message.substr(2), "hex");
+        try {
+          buf = Buffer.from(this.message.substr(2), "hex");
+        } catch (e) {
+          this.error = '' + e;
+          return;
+        }
       }
       const result = await promisifySimple(this.$background.signMessage)({
         address: this.address,
         chainId: this.chainId,
         message: Array.from(Uint8Array.from(buf))
       });
-      this.signedMessage = '0x' + result.signedMessage;
+      if (result.error) {
+        this.error = result.error;
+      } else {
+        this.signedMessage = '0x' + result.signedMessage;
+      }
     },
     cancel () {
       this.message = '';

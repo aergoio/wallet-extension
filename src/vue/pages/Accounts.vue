@@ -92,7 +92,7 @@ export default {
     }),
     accountsByChainId() {
       console.log('group by', this.accounts);
-      const result = groupBy(this.accounts, item => !item.data ? '' : item.data.spec.chainId);
+      const result = groupBy(this.accounts, item => (!item || !item.data) ? '' : item.data.spec.chainId);
       return Array.from(result);
     }
   },

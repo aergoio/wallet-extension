@@ -10,7 +10,7 @@ module.exports = (env, argv) => {
   const devMode = argv.mode !== 'production';
 
   const plugins = [
-    new webpack.EnvironmentPlugin(['NODE_ENV', 'DEBUG']),
+    new webpack.EnvironmentPlugin(['NODE_ENV']),
     // vue-loader requirement
     new VueLoaderPlugin(),
     // extract css into files

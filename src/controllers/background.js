@@ -264,10 +264,15 @@ class BackgroundController extends EventEmitter {
                 this.trackAccount(account, send);
             },
             signMessage: async ({ address, chainId, message }, send) => {
-                this.keepUnlocked();
-                const account = await this.wallet.accountManager.getOrAddAccount({ address, chainId });
-                const signedMessage = await this.wallet.keyManager.signMessage(account, Buffer.from(message));
-                send({ signedMessage });
+                this.keepUnlocked(); 
+                try {
+                    const account = await this.wallet.accountManager.getOrAddAccount({ address, chainId });
+                    const signedMessage = await this.wallet.keyManager.signMessage(account, Buffer.from(message));
+                    send({ signedMessage });
+                } catch (e) {
+                    console.error(e);
+                    send({ error: e });
+                }
             },
             getStaking: async ({ address, chainId }, send) => {
                 this.keepUnlocked();

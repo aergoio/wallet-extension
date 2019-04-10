@@ -137,12 +137,16 @@ export default {
         }
       }
 
-      const account = await this.$store.dispatch('accounts/importAccount', {
+      const result = await this.$store.dispatch('accounts/importAccount', {
         identity: this.identity,
         network: this.chainId
       });
-      console.log('created account', account);
-      this.importedAddress = account.address;
+      if (result.error) {
+        this.error = '' + result.error;
+        return;
+      }
+      console.log('created account', result);
+      this.importedAddress = result.address;
     },
     validateKey () {
       try {
