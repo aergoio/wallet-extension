@@ -186,6 +186,10 @@ p{line-height:1.25
 }
 .account-list>li:hover{background-color:#f7f7f7
 }
+.account-list>li.chainid-seperator{padding:4px 15px;font-size:.95em;font-weight:500
+}
+.account-list>li.chainid-seperator:hover{background-color:transparent;cursor:default
+}
 .account-item .btn-action{visibility:hidden;float:right;width:25px;height:32px;background:url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNiIgaGVpZ2h0PSIyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSguNSAuNSkiIGZpbGw9IiM5QzlDOUMiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PGNpcmNsZSBjeD0iMi41IiBjeT0iMi41IiByPSIyLjUiLz48Y2lyY2xlIGN4PSIyLjUiIGN5PSI5LjUiIHI9IjIuNSIvPjxjaXJjbGUgY3g9IjIuNSIgY3k9IjE2LjUiIHI9IjIuNSIvPjwvZz48L3N2Zz4=) 50% 50%;background-repeat:no-repeat;background-size:5px auto
 }
 .account-item .btn-action:hover{background-image:url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNiIgaGVpZ2h0PSIyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSguNSAuNSkiIGZpbGw9IiNGOTEyNjMiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PGNpcmNsZSBjeD0iMi41IiBjeT0iMi41IiByPSIyLjUiLz48Y2lyY2xlIGN4PSIyLjUiIGN5PSI5LjUiIHI9IjIuNSIvPjxjaXJjbGUgY3g9IjIuNSIgY3k9IjE2LjUiIHI9IjIuNSIvPjwvZz48L3N2Zz4=)
@@ -369,9 +373,9 @@ p{line-height:1.25
 }
 
 
-.icon-export[data-v-ae651e6a]{display:block;margin:20px auto
+.icon-export[data-v-2d984dd4]{display:block;margin:20px auto
 }
-.wallet-password[data-v-ae651e6a]{display:block;margin:0 0 25px;border-radius:3px;border:1px solid #aaa;font-size:125%;padding:5px;width:100%;max-width:200px
+.wallet-password[data-v-2d984dd4]{display:block;margin:0 0 25px;border-radius:3px;border:1px solid #aaa;font-size:125%;padding:5px;width:100%;max-width:200px
 }
 
 
