@@ -87,11 +87,11 @@ export default {
       accounts: state => {
         const items = state.accounts.addresses.map(address => state.accounts.accounts[address]);
         items.sort((a, b) => !a.data ? 0 : - (new Amount(a.data.balance)).compare((new Amount(b.data.balance))));
+        items.sort((a, b) => !a.data ? 0 : a.data.spec.chainId.localeCompare(b.data.spec.chainId) );
         return items;
       },
     }),
     accountsByChainId() {
-      console.log('group by', this.accounts);
       const result = groupBy(this.accounts, item => (!item || !item.data) ? '' : item.data.spec.chainId);
       return Array.from(result);
     }

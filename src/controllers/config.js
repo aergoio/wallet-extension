@@ -9,6 +9,10 @@ export default {
             nodeUrl: 'https://mainnet-api.aergo.io'
         },
         {
+            chainId: 'aergo.io',
+            nodeUrl: 'https://mainnet-api.aergo.io'
+        },
+        {
             chainId: 'sqltestnet.aergo.io',
             nodeUrl: 'http://sqltestnet.aergo.io:7845'
         },
