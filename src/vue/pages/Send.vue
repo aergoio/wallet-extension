@@ -202,37 +202,43 @@ import bs58 from 'bs58';
 import { timedAsync } from 'timed-async';
 import Spinner from '../components/Spinner';
 
-const defaultData = {
-  transaction: {
-    to: '',
-    amount: '0',
-    nonce: 1,
-    amountUnit: 'aergo',
-    payload: '',
-    uiType: ''
-  },
-  signedTx: null,
-  error: '',
-  status: 'initial',
-  lastTxHash: null,
-  payloadFormState: 'hidden',
-  payload: {
-    action: "",
-    name: "",
-    newOwner: "",
-    bpIds: ""
-  },
-  slowQuery: false,
-  amountFixed: false,
-  stakedAmount: '...'
-};
+function getDefaultData() {
+  return {
+    transaction: {
+      to: '',
+      amount: '0',
+      nonce: 1,
+      amountUnit: 'aergo',
+      payload: '',
+      uiType: ''
+    },
+    signedTx: null,
+    error: '',
+    status: 'initial',
+    lastTxHash: null,
+    payloadFormState: 'hidden',
+    payload: {
+      action: "",
+      name: "",
+      newOwner: "",
+      bpIds: ""
+    },
+    slowQuery: false,
+    amountFixed: false,
+    stakedAmount: '...'
+  };
+}
 export default {
   data () {
-    return {...defaultData};
+    return getDefaultData();
   },
   created () {
   },
+  mounted () {
+    this.cancel();
+  },
   beforeDestroy () {
+    this.cancel();
   },
   computed: {
     address() {
@@ -380,12 +386,7 @@ export default {
       }
     },
     cancel () {
-      this.transaction.to = defaultData.transaction.to;
-      this.transaction.amount = defaultData.transaction.amount;
-      this.transaction.uiType = '';
-      this.payloadFormState = 'hidden';
-      this.status = 'initial';
-      this.error = '';
+      Object.assign(this.$data, getDefaultData())
     }
   },
   components: {

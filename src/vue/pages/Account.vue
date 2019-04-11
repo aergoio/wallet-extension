@@ -73,9 +73,9 @@ export default {
       }
     },
     async reloadState() {
+      if (!this.account) return;
       await this.$db.open();
       this.account = await this.$store.dispatch('accounts/loadAccount', this.account.data.spec);
-      console.log('loaded account from bg', this.account);
     }
   },
   components: {
