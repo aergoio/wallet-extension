@@ -6,11 +6,11 @@ export default {
         },
         {
             chainId: 'main.aergo.io',
-            nodeUrl: 'https://mainnet-api.aergo.io'
+            nodeUrl: 'https://mainnet-api-http.aergo.io'
         },
         {
             chainId: 'aergo.io',
-            nodeUrl: 'https://mainnet-api.aergo.io'
+            nodeUrl: 'https://mainnet-api-http.aergo.io'
         },
         {
             chainId: 'sqltestnet.aergo.io',
