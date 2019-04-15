@@ -11,8 +11,8 @@
 	"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 
 	"icons": {
-		"17": "27c8b3a52ec7ff171a36ab5196bb477c.png",
-		"102": "964e16ccf5411f734082f56b4c027b45.png"
+		"17": "b1b4347e132bb1e43353395f2c55af5c.png",
+		"102": "450dd34960f600f51b44083379e5e15c.png"
 	},
 	
 	"background": {
@@ -22,8 +22,8 @@
 
 	"browser_action": {
 		"default_icon": {
-		  "17": "27c8b3a52ec7ff171a36ab5196bb477c.png",
-		  "34": "e38302ac8e3c86895a755c6be89aa407.png"
+		  "17": "b1b4347e132bb1e43353395f2c55af5c.png",
+		  "34": "af42eedd17675e28cab3c1167508668b.png"
 		},
 		"default_title": "Aergo Connect",
 		"default_popup": "popup.html"
