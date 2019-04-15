@@ -1,8 +1,8 @@
 export const CHAINS = {
     'aergo.io': {
         apiUrl: 'https://api.aergoscan.io/main',
-        explorerUrl: 'https://mainnet-74909.aergoscan.io',
-        nodeUrl: 'http://main.aergo.io:7845'
+        explorerUrl: 'https://mainnet.aergoscan.io',
+        nodeUrl: 'https://mainnet-api.aergo.io'
     },
     'testnet.aergo.io': {
         apiUrl: 'https://api.aergoscan.io/testnet',
