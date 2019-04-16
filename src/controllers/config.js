@@ -14,7 +14,7 @@ export default {
         },
         {
             chainId: 'sqltestnet.aergo.io',
-            nodeUrl: 'http://sqltestnet.aergo.io:7845'
+            nodeUrl: 'https://sqltestnet-api-http.aergo.io'
         },
         {
             chainId: 'dev.chain',

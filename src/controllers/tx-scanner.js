@@ -10,13 +10,20 @@ export class AergoscanTransactionScanner {
     fetchAccountTransactionsAfter(wallet) {
         return (next) => async ({ account, blockno, limit }) => {
             const chainId = account.data.spec.chainId
-            if (chainId !== 'testnet.aergo.io' && chainId !== 'main.aergo.io') {
+            if (chainId !== 'testnet.aergo.io' && chainId !== 'aergo.io') {
                 return next({ account, blockno, limit });
+            }
+            let baseUrl;
+            if (chainId == 'testnet.aergo.io') {
+                baseUrl = 'https://api.aergoscan.io/testnet';
+            }
+            if (chainId == 'aergo.io') {
+                baseUrl = 'https://api.aergoscan.io/main';
             }
             const address = new Address(account.data.spec.address);
             console.log(`[track account] Fetching txs for ${address} on ${chainId} since ${blockno}...`);
             const q = encodeURIComponent(`(from:${address} OR to:${address}) AND blockno:>${blockno}`);
-            const baseUrl = 'https://api.aergoscan.io/testnet';
+            
             const size = 1000;
             const offset = 0;
             const url = `${baseUrl}/transactions?q=${q}&sort=blockno:desc&size=${size}&from=${offset}`;
