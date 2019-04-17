@@ -68,12 +68,11 @@ export default {
           this.loadState();
         }, 10*1000);
       } catch(e) {
-        console.log('not found, go back to the start');
         this.$router.push(`/`);
       }
     },
     async reloadState() {
-      if (!this.account) return;
+      if (!this.account || !this.account.data) return;
       await this.$db.open();
       this.account = await this.$store.dispatch('accounts/loadAccount', this.account.data.spec);
     }

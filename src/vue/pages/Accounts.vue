@@ -56,6 +56,7 @@ import { mapState, mapActions } from 'vuex'
 import { DEFAULT_CHAIN, chainProvider } from '../../controllers/chain-provider';
 import Identicon from '../components/Identicon';
 import { Amount } from '@herajs/client';
+import { promisifySimple } from '../../utils/promisify';
 
 function groupBy(list, props) {
   let propsFn = props;
@@ -79,6 +80,13 @@ export default {
   },
   created () {
     this.$store.dispatch('accounts/getAccounts');
+    promisifySimple(this.$background.isUnlocked)().then(unlocked => {
+      console.log('unlocked', unlocked);
+      this.unlocked = unlocked;
+      if (!this.unlocked) {
+        this.$router.push('/locked');
+      }
+    });
   },
   beforeDestroy () {
   },

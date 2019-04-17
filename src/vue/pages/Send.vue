@@ -315,6 +315,10 @@ export default {
       let payload = Buffer.from(this.transaction.payload);
       let type = 0;
       if (this.payloadFormState === 'name') {
+        if (this.payload.name.length != 12) {
+          this.error = `Name has to be 12 alphanumeric characters (currently ${this.payload.name.length})`;
+          return;
+        }
         if (this.payload.action == 'c') {
           payload = jsonPayload({
             Name: 'v1createName',
