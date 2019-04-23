@@ -75,7 +75,15 @@ export default {
     'selection': async function(network) {
       if (network === 'other') {
         const chainId = prompt('Please enter the Chain ID');
+        if (!chainId) {
+          this.selection = DEFAULT_CHAIN;
+          return;
+        };
         const nodeUrl = prompt('Please enter the node URL (e.g. http://127.0.0.1:7845)');
+        if (!nodeUrl) {
+          this.selection = DEFAULT_CHAIN;
+          return;
+        };
         await this.$store.dispatch('accounts/addNetwork', {
           chainId, nodeUrl
         });
