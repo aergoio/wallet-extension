@@ -1,12 +1,18 @@
 # Aergo Connect (wallet browser extension)
 
-**Beta release: use at your own risk**
+**Public beta release: there may be bugs**
 
 This is the source code for the official Aergo Wallet browser extension. It's developed and tested with Chrome.
 
 ## Install
 
 [View in Chrome Webstore](https://chrome.google.com/webstore/detail/iopigoikekfcpcapjlkcdlokheickhpc)
+
+## Issues and Security
+
+Please post any issues or suggestions to the Github issues page.
+
+For security related reports, please contact us at security@aergo.io
 
 ## Development
 
@@ -33,9 +39,3 @@ This is the source code for the official Aergo Wallet browser extension. It's de
 3. Add the extension to Chrome following to the Install development version steps above.
 
 4. `npm run build` builds everything for distribution. Please do commit the `dist` directory to the repository, that way people can test the extension without building it by themself.
-
-## Issues and Security
-
-Please post any issues or suggestions to the Github issues page.
-
-For security related reports, please contact us at security@aergo.io
