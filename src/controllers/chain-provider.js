@@ -13,10 +13,12 @@ export const DEFAULT_CHAIN = 'aergo.io';
 
 export function chainProvider(chainId) {
     let chainConfig = CHAINS[chainId];
-    if (typeof chainConfig === 'undefined') chainConfig = CHAINS[DEFAULT_CHAIN];
+    if (typeof chainConfig === 'undefined') return {
+        apiUrl: () => '',
+        explorerUrl: () => ''
+    };
     return {
         apiUrl: path => `${chainConfig.apiUrl}${path}`,
-        explorerUrl: path => `${chainConfig.explorerUrl}${path}`,
-        nodeUrl: chainConfig.nodeUrl,
+        explorerUrl: path => `${chainConfig.explorerUrl}${path}`
     };
 };

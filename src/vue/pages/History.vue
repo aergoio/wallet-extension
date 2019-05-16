@@ -17,7 +17,7 @@
             <span class="amount" v-html="$options.filters.formatToken(tx.data.amount)"></span>
           </span>
         </td>
-        <td><a :href="explorerLink(tx)" target="_blank" class="icon icon-view">view</a></td>
+        <td><a :href="explorerLink(tx)" target="_blank" class="icon icon-view" v-if="explorerLink(tx)">view</a></td>
       </tr>
     </table>
   </div>
@@ -58,8 +58,7 @@ export default {
   methods: {
     moment,
     explorerLink(tx) {
-      const chainId = tx.data.chainId || DEFAULT_CHAIN;
-      return chainProvider(chainId).explorerUrl(`/transaction/${tx.data.hash}`);
+      return chainProvider(tx.data.chainId).explorerUrl(`/transaction/${tx.data.hash}`);
     },
     async reload() {
       console.log('Loading txs');

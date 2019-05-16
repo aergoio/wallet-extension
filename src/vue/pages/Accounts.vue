@@ -35,7 +35,7 @@
 
                   <span class="account-menu" :class="{visible: accountMenuShown}">
                     <ul class="account-menu-items">
-                      <li v-on:click.stop.prevent="gotoExplorer(account)">View in Aergoscan</li>
+                      <li v-on:click.stop.prevent="gotoExplorer(account)" v-if="explorerUrl(account)">View in Aergoscan</li>
                       <li v-on:click.stop.prevent="gotoExport(account)">Export</li>
                       <li v-on:click.stop.prevent="gotoRemove(account)">Remove</li>
                     </ul>
@@ -102,11 +102,14 @@ export default {
     accountsByChainId() {
       const result = groupBy(this.accounts, item => (!item || !item.data) ? '' : item.data.spec.chainId);
       return Array.from(result);
-    }
+    },
   },
   methods: {
+    explorerUrl(account) {
+      return chainProvider(account.data.spec.chainId).explorerUrl(`/account/${account.data.spec.address}`)
+    },
     gotoExplorer(account) {
-      window.open(chainProvider(account.data.spec.chainId).explorerUrl(`/account/${account.data.spec.address}`));
+      window.open(this.explorerUrl(account));
     },
     gotoExport(account) {
       this.$router.push(`/account/${encodeURIComponent(account.key)}/export`);
