@@ -180,11 +180,11 @@ class BackgroundController extends EventEmitter {
                 });
                 send({});
             },
-            getBlockchainStatus: async (send) => {
-                const status = await this.wallet.getClient().blockchain();
+            getBlockchainStatus: async ({ chainId }, send) => {
+                const status = await this.wallet.getClient(chainId).blockchain();
                 send({
                     blockHeight: status.bestHeight,
-                    chainId: this.wallet.defaultChainId
+                    chainId
                 });
             },
             getAccounts: async (send) => {

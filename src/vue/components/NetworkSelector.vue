@@ -8,6 +8,9 @@
 
 <script>
 import { promisifySimple } from '../../utils/promisify';
+import { mapState, mapActions } from 'vuex'
+
+let readTimeout = null;
 
 export default {
   data () {
@@ -23,6 +26,9 @@ export default {
   beforeDestroy () {
   },
   computed: {
+    ...mapState({
+      activeChainId: state => state.navigation.activeAccount.chainId
+    }),
     networkStatusClass () {
       return `network-${this.status}`;
     },
@@ -34,21 +40,29 @@ export default {
       }[this.status];
     }
   },
+  watch: {
+    'activeChainId': function() {
+      this.status = 'load';
+      this.updateStatus();
+    }
+  },
+    
   methods: {
     updateStatus () {
-      promisifySimple(this.$background.getBlockchainStatus)().then(status => {
+      if (readTimeout) clearTimeout(readTimeout);
+      promisifySimple(this.$background.getBlockchainStatus)({ chainId: this.activeChainId }).then(status => {
         this.status = 'ok';
         this.blockHeight = status.blockHeight;
         this.chainId = status.chainId;
 
-        setTimeout(() => {
+        readTimeout = setTimeout(() => {
           this.updateStatus();
         }, 5000);
       }).catch(error => {
         this.status = 'fail';
         console.error('Could not connect to blockchain.', error);
 
-        setTimeout(() => {
+        readTimeout = setTimeout(() => {
           this.updateStatus();
         }, 30000); // Retry after 30s
       });

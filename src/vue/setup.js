@@ -28,6 +28,14 @@ const createRouter = (routes, store) => {
                 return;
             }
         }
+        if (to.params.address) {
+            try {
+                const [chainId, address] = to.params.address.split('/');
+                store.dispatch('navigation/setActiveAccount', { chainId, address });
+            } catch (e) {
+                console.error(e);
+            }
+        }
         if (to.fullPath != '/locked') {
             store.dispatch('navigation/setCurrentRoute', to);
         }
