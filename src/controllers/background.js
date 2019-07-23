@@ -106,6 +106,12 @@ class BackgroundController extends EventEmitter {
         this.keepUnlocked();
     }
 
+    async getActiveAccount() {
+        const accounts = await this.wallet.accountManager.getAccounts();
+        if (!accounts) return null;
+        return accounts[0];
+    }
+
     keepUnlocked() {
         if (this._lockTimeout) {
             clearTimeout(this._lockTimeout);
