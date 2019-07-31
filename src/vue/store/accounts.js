@@ -40,6 +40,7 @@ const actions = {
     });
   },
   async loadAccount ({}, { address, chainId }) {
+    promisifySimple(this._vm.$background.setActiveAccount)({ address, chainId });
     return await promisifySimple(this._vm.$background.syncAccountState)({ address, chainId });
   },
   async getAccountTx ({ commit }, { address, chainId }) {

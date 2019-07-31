@@ -28,6 +28,7 @@ export function decodeTxHash(bs58string) {
 }
 
 const AUTO_LOCK_TIMEOUT = 60*1000;
+let notifId = 0;
 
 class BackgroundController extends EventEmitter {
     constructor() {
@@ -106,10 +107,17 @@ class BackgroundController extends EventEmitter {
         this.keepUnlocked();
     }
 
+    async setActiveAccount({ chainId, address }) {
+        const account = await this.wallet.accountManager.getOrAddAccount({ address, chainId });
+        this.activeAccount = account;
+        console.log('Active account is now', { chainId, address });
+    }
+
     async getActiveAccount() {
-        const accounts = await this.wallet.accountManager.getAccounts();
-        if (!accounts) return null;
-        return accounts[0];
+        //const accounts = await this.wallet.accountManager.getAccounts();
+        //if (!accounts) return null;
+        //return accounts[0];
+        return this.activeAccount;
     }
 
     keepUnlocked() {
@@ -140,6 +148,41 @@ class BackgroundController extends EventEmitter {
                 }
             });
         });
+    }
+
+    permissionRequest(text, callback) {
+        const confirmed = confirm(text);
+        if (confirmed) {
+            callback();
+        }
+        /*
+        const thisNotifId = `${notifId++}`;
+        extension.notifications.create(
+            thisNotifId,
+            {
+                type: 'basic',
+                title: 'Aergo Connect',
+                iconUrl: extension.extension.getURL('450dd34960f600f51b44083379e5e15c.png'),
+                message: text,
+                priority: 2,
+                requireInteraction: true,
+                buttons: [
+                    { title: 'Confirm' },
+                ]
+            }
+        );
+        chrome.notifications.onButtonClicked.addListener(function(id) {
+            if (id === thisNotifId) {
+                callback();
+            }
+        });
+        */
+    }
+
+    async signMessage ({ address, chainId, message }) {
+        this.keepUnlocked(); 
+        const account = await this.wallet.accountManager.getOrAddAccount({ address, chainId });
+        return await this.wallet.keyManager.signMessage(account, Buffer.from(message));
     }
 
     setupCommunication (outStream) {
@@ -216,6 +259,10 @@ class BackgroundController extends EventEmitter {
                 await this.wallet.accountManager.removeAccount({ chainId, address });
                 send();
             },
+            setActiveAccount: async ({ chainId, address }, send) => {
+                await this.setActiveAccount({ chainId, address });
+                send();
+            },
             importAccount: async ({ privateKey, chainId }, send) => {
                 this.keepUnlocked();
                 const identity = identifyFromPrivateKey(privateKey);
@@ -270,10 +317,8 @@ class BackgroundController extends EventEmitter {
                 this.trackAccount(account, send);
             },
             signMessage: async ({ address, chainId, message }, send) => {
-                this.keepUnlocked(); 
                 try {
-                    const account = await this.wallet.accountManager.getOrAddAccount({ address, chainId });
-                    const signedMessage = await this.wallet.keyManager.signMessage(account, Buffer.from(message));
+                    const signedMessage = await this.signMessage({ address, chainId, message });
                     send({ signedMessage });
                 } catch (e) {
                     console.error(e);

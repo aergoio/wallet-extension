@@ -28,31 +28,53 @@ async function setupController() {
                 console.log('received message', msg, port.sender.url);
                 const action = msg.action || '';
                 if (action === 'ACTIVE_ACCOUNT') {
-                    const activeAccountAddress = await controller.getActiveAccount();
-                    const confirmed = confirm(`Do you want to grant the website at ${port.sender.url} access to your active account address ${activeAccountAddress.key}?`);
-                    if (confirmed) {
+                    const activeAccount = await controller.getActiveAccount();
+                    if (!activeAccount) {
+                        const text = `The website at\n\n${port.sender.url}\n\n` +
+                            `asks for permission to access your active account.\n\n`+
+                            `You have no active account. Make sure to select an account inside Aergo Connect.`;
+                        alert(text);
+                        return;
+                    }
+                    const text = `The website at\n\n${port.sender.url}\n\nasks for permission to access your active account\n\n${activeAccount.key}`;
+                    controller.permissionRequest(text, function() {
                         port.postMessage({
                             type: 'AERGO_RESPONSE',
                             eventName: 'AERGO_ACTIVE_ACCOUNT',
                             result: {
-                                account: activeAccountAddress.data.spec
+                                account: activeAccount.data.spec
                             }
                         });
-                    }
+                    })
                 }
                 if (action === 'SIGN') {
-                    const activeAccountAddress = await controller.getActiveAccount();
-                    const confirmed = confirm(`The website at ${port.sender.url} asks for permission to sign the message x with your account ${activeAccountAddress.key}.`);
-                    if (confirmed) {
+                    const activeAccount = await controller.getActiveAccount();
+                    const input = msg.data.hash;
+                    const text = `The website at\n\n${port.sender.url}\n\nasks for permission to sign the message\n\n${input}\n\nwith your account\n\n${activeAccount.key}`;
+                    let signMessage = input;
+                    if (input.substr(0, 2) === '0x') {
+                        try {
+                            signMessage = Buffer.from(input.substr(2), "hex");
+                        } catch (e) {
+                            console.error(e);
+                            return;
+                        }
+                    }
+
+                    controller.permissionRequest(text, async function() {
                         port.postMessage({
                             type: 'AERGO_RESPONSE',
                             eventName: 'AERGO_SIGN_RESULT',
                             result: {
-                                account: activeAccountAddress.data.spec,
-                                signature: 'xxx'
+                                account: activeAccount.data.spec,
+                                signature: await controller.signMessage({
+                                    address: activeAccount.data.spec.address,
+                                    chainId: activeAccount.data.spec.chainId,
+                                    message: signMessage,
+                                })
                             }
                         });
-                    }
+                    });
                 }
             });
         } else {
