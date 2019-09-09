@@ -27,7 +27,7 @@ export function decodeTxHash(bs58string) {
     return bs58.decode(bs58string);
 }
 
-const AUTO_LOCK_TIMEOUT = 60*1000;
+const AUTO_LOCK_TIMEOUT = 60*1000 * 10;
 let notifId = 0;
 
 class BackgroundController extends EventEmitter {
@@ -185,6 +185,23 @@ class BackgroundController extends EventEmitter {
         return await this.wallet.keyManager.signMessage(account, Buffer.from(message));
     }
 
+    async signTransaction ({ address, chainId, txData }) {
+        this.keepUnlocked(); 
+        const account = await this.wallet.accountManager.getOrAddAccount({ address, chainId });
+        const preparedTxData = await this.wallet.accountManager.prepareTransaction(account, txData);
+        return await this.wallet.keyManager.signTransaction(account, preparedTxData);
+    }
+
+    async sendTransaction ({ txBody, chainId }) {
+        this.keepUnlocked();
+        const txTracker = await this.wallet.sendTransaction({
+            address: txBody.from,
+            chainId: chainId
+        }, txBody);
+        console.log(txTracker, txTracker.transaction.txBody);
+        return txTracker.transaction.txBody;
+    }
+
     setupCommunication (outStream) {
         // Setup async rpc stream to UI
         const dnode = Dnode({
@@ -291,14 +308,9 @@ class BackgroundController extends EventEmitter {
                 send({privateKey: encodePrivateKey(privkeyEncrypted)});
             },
             sendTransaction: async (tx, chainId, send) => {
-                this.keepUnlocked();
                 try {
-                    const txTracker = await this.wallet.sendTransaction({
-                        address: tx.from,
-                        chainId: chainId
-                    }, tx);
-                    console.log(txTracker, txTracker.transaction.txBody);
-                    send({ tx: txTracker.transaction.txBody });
+                    const txBody = await this.sendTransaction({ tx, chainId });
+                    send({ txBody });
                 } catch(e) {
                     console.error(e);
                     send({ error: e.message || ''+e });

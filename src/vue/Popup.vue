@@ -51,6 +51,7 @@ export default {
     .page-container {
       display: flex;
       flex-direction: column;
+      max-height: calc(100% - 24px);
     }
 
     > div {
