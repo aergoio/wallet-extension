@@ -20,9 +20,7 @@
 
       <p v-if="signedTx">
         <strong>Hash: {{lastTxHash}}</strong><br>
-        From: {{signedTx.fromAdr}}<br>
-        To: {{signedTx.to}}<br>
-        Amount: {{signedTx.amount}}
+        <a :href="explorerLink" target="_blank" v-if="explorerLink">Open in Aergoscan</a>
       </p>
 
       <div class="form-actions">
@@ -43,13 +41,27 @@
     </div>
 
     <div class="overlay-dialog" :class="{visible: status=='confirm'}">
-      <h2>Please confirm this transaction.</h2>
+      <h2>Do you confirm this transaction?</h2>
 
-      <p v-if="signedTx" class="tx-verify">
-        From: <Identicon :text="signedTx.fromAdr" /> {{signedTx.fromAdr}}<br>
-        To: <Identicon :text="signedTx.to" /> {{signedTx.to}}<br>
-        Amount: {{signedTx.amount}}
-      </p>
+      <div v-if="signedTx" class="tx-verify">
+        <span class="confirm-account">
+          <Identicon :text="signedTx.fromAdr" />
+          <span class="address">{{signedTx.fromAdr}}</span>
+        </span>
+
+        <span class="icon-fromto"></span>
+          <br>
+        <span class="confirm-account">
+          <Identicon :text="signedTx.to" />
+          <span class="address">{{signedTx.to}}</span>
+        </span><br>
+        Amount: <strong>{{signedTx.amount}}</strong>
+        <div v-if="stringPayload && stringPayload.length">
+          Data:
+          <br>
+          <pre class="dataConfirm">{{stringPayload}}</pre>
+        </div>
+      </div>
 
       <div class="form-actions">
         <p v-if="error" class="error">{{error}}</p>
@@ -201,6 +213,7 @@ import { Address, Amount } from '@herajs/client';
 import bs58 from 'bs58';
 import { timedAsync } from 'timed-async';
 import Spinner from '../components/Spinner';
+import { chainProvider } from '../../controllers/chain-provider';
 
 function getDefaultData() {
   return {
@@ -225,7 +238,8 @@ function getDefaultData() {
     },
     slowQuery: false,
     amountFixed: false,
-    stakedAmount: '...'
+    stakedAmount: '...',
+    stringPayload: '',
   };
 }
 export default {
@@ -246,7 +260,10 @@ export default {
     },
     chainId() {
       return this.$route.params.address && this.$route.params.address.split('/')[0];
-    }
+    },
+    explorerLink() {
+      return chainProvider(this.signedTx.chainId).explorerUrl(`/transaction/${this.lastTxHash}`);
+    },
   },
   watch: {
     'transaction.to': function(to) {
@@ -312,6 +329,7 @@ export default {
 
       this.error = '';
       const amount = this.transaction.amount.replace(/[^\d\.]/g, '');
+      let stringPayload = this.transaction.payload;
       let payload = Buffer.from(this.transaction.payload);
       let type = 0;
       if (this.payloadFormState === 'name') {
@@ -319,39 +337,48 @@ export default {
           this.error = `Name has to be 12 alphanumeric characters (currently ${this.payload.name.length})`;
           return;
         }
+        let jsonData;
         if (this.payload.action == 'c') {
-          payload = jsonPayload({
+          jsonData = {
             Name: 'v1createName',
             Args: [this.payload.name]
-          });
+          };
+          payload = jsonPayload(jsonData);
         }
         if (this.payload.action == 'u') {
-          payload = jsonPayload({
+          jsonData = {
             Name: 'v1updateName',
             Args: [this.payload.name, this.payload.newOwner]
-          });
+          };
+          payload = jsonPayload(jsonData);
         }
+        stringPayload = JSON.stringify(jsonData, undefined, 2);
         type = 1;
       }
       else if (this.payloadFormState === 'system') {
+        let jsonData;
         if (this.payload.action == 's') {
-          payload = jsonPayload({
+          jsonData = {
             Name: 'v1stake',
             Args: []
-          });
+          };
+          payload = jsonPayload(jsonData);
         }
         if (this.payload.action == 'u') {
-          payload = jsonPayload({
+          jsonData = {
             Name: 'v1unstake',
             Args: []
-          });
+          };
+          payload = jsonPayload(jsonData);
         }
         if (this.payload.action == 'v') {
-          payload = jsonPayload({
+          jsonData = {
             Name: 'v1voteBP',
             Args: this.payload.bpIds.split(',')
-          });
+          };
+          payload = jsonPayload(jsonData);
         }
+        stringPayload = JSON.stringify(jsonData, undefined, 2);
 
         type = 1;
       }
@@ -366,6 +393,7 @@ export default {
           type
       };
       this.signedTx = tx;
+      this.stringPayload = stringPayload;
       console.log(tx);
       this.status = 'confirm';
     },
@@ -386,6 +414,7 @@ export default {
         this.status = 'error';
         console.error('failed to send tx', error);
       } else {
+        this.status = 'error';
         console.log(result);
       }
     },
@@ -406,7 +435,11 @@ export default {
 }
 
 .tx-verify {
-  .identicon svg {
+  .identicon {
+    margin-right: 5px;
+    line-height: 1;
+  }
+  .identicon, .identicon svg {
     width: 40px;
     height: 40px;
   }
@@ -420,5 +453,38 @@ export default {
 .action-hint {
   text-align: center;
   color: #666;
+}
+
+.overlay-dialog {
+  h2 {
+    margin: 0 0 .5em;
+  }
+}
+
+.confirm-account {
+  display: flex;
+  align-items: center;
+
+  .identicon {
+
+  }
+  .address {
+    flex: 1;
+    text-align: left;
+  }
+}
+
+.dataConfirm {
+  text-align: left;
+  margin: 0 auto;
+  display: inline-block;
+}
+
+.icon-fromto {
+  display: inline-block;
+  background: url(~@assets/img/icon-fromto-to.svg);
+  width: 24px;
+  height: 24px;
+  background-size: 100%;
 }
 </style>

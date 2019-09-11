@@ -25,7 +25,7 @@
 
 <script>
 import { Amount } from '@herajs/client';
-import { DEFAULT_CHAIN, chainProvider } from '../../controllers/chain-provider';
+import { chainProvider } from '../../controllers/chain-provider';
 import moment from 'moment';
 import Spinner from '../components/Spinner';
 import { timedAsync } from 'timed-async';

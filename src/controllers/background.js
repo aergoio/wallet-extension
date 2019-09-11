@@ -309,8 +309,8 @@ class BackgroundController extends EventEmitter {
             },
             sendTransaction: async (tx, chainId, send) => {
                 try {
-                    const txBody = await this.sendTransaction({ tx, chainId });
-                    send({ txBody });
+                    const txBody = await this.sendTransaction({ txBody: tx, chainId });
+                    send({ tx: txBody });
                 } catch(e) {
                     console.error(e);
                     send({ error: e.message || ''+e });
