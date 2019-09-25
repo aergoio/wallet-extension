@@ -114,28 +114,29 @@
         The specified amount will be unstaked. 
       </div>
       <div class="form-line action-hint" v-if="payloadFormState == 'system' && payload.action == 'v'">
-        Your vote (weighted by previously staked amount)<br>will be cast for the specified BPs.
+        Your vote (weighted by previously staked amount)<br>will be cast for the specified BPs or parameter.
         <label>
           Action
 
           <select v-model="payload.subAction">
             <option value="b">BP</option>
-            <option value="p">Proposal</option>
+            <option value="bpcount">BPCOUNT</option>
+            <option value="stakingmin">STAKINGMIN</option>
+            <option value="gasprice">GASPRICE</option>
+            <option value="nameprice">NAMEPRICE</option>
           </select>
         </label>
       </div>
-      <div class="form-line" v-if="payloadFormState == 'system' && payload.action == 'v' && payload.subAction == 'b'">
-        <label>
+      <div class="form-line" v-if="payloadFormState == 'system' && payload.action == 'v'">
+        <label v-if="payload.subAction == 'b'">
           BP ids
 
           <input type="text" class="text-input input-field" placeholder="Comma-seperated peer ids" v-model="payload.voteTo">
         </label>
-      </div>
-      <div class="form-line" v-if="payloadFormState == 'system' && payload.action == 'v' && payload.subAction == 'p'">
-        <label>
+        <label v-else>
           Vote to
 
-          <input type="text" class="text-input input-field" placeholder="Comma-seperated id and candidates" v-model="payload.voteTo">
+          <input type="text" class="text-input input-field" placeholder="Value of parameter" v-model="payload.voteTo">
         </label>
       </div>
 
@@ -362,19 +363,20 @@ export default {
             Args: []
           });
         }
-        if (this.payload.action == 'v' && this.payload.subAction == 'b') {
-          payload = jsonPayload({
+        if (this.payload.action == 'v') {
+          if (this.payload.subAction == 'b') {
+            payload = jsonPayload({
             Name: 'v1voteBP',
             Args: this.payload.voteTo.split(',')
-          });
-        }
-        if (this.payload.action == 'v' && this.payload.subAction == 'p') {
-          payload = jsonPayload({
+            });
+          }
+          else {
+            payload = jsonPayload({
             Name: 'v1voteProposal',
-            Args: this.payload.voteTo.replace(/\s+/g, '').split(',')
-          });
+            Args: [this.payload.subAction, this.payload.voteTo]
+            });
+          }
         }
-
         type = 1;
       }
       payload = Array.from(payload);
