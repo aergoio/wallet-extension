@@ -50,8 +50,9 @@ export default {
 
     .page-container {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       max-height: calc(100% - 24px);
+      position: relative;
     }
 
     > div {
@@ -83,7 +84,7 @@ export default {
   display: flex;
   flex-direction: column;
 
-  flex: 100% 0 0;
+  flex: 0 0 100%;
 
   > * {
     flex: 0 0 auto;
@@ -95,6 +96,11 @@ export default {
     overflow: hidden;
 
     word-break: break-all;
+    position: relative;
+
+    > .scroll-view {
+      flex: 0 0 100%;
+    }
   }
 }
 
@@ -230,7 +236,7 @@ p {
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

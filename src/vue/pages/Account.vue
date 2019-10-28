@@ -2,23 +2,24 @@
   <div class="page">
     <div class="seperator top"></div>
     <div class="account-header">
+
+      <router-link :to="`/`" class="menu-link"></router-link>
+
       <div class="account-item">
         <Identicon :text="account.data.spec.address" v-if="account && account.data" />
         <span>
-          <span class="account-name">Account</span>
+          <span class="account-name" v-if="$route.params.address && $route.params.address !== 'none'">Account</span>
+          <span class="account-name" v-if="$route.params.address === 'none'">No account selected</span>
           <span class="account-balance" v-if="account && account.data">{{formatAmount(account.data.balance)}}</span><br />
           <span v-if="account && account.data" class="account-address-chain">
-            <span class="address">{{ account.data.spec.address | shortAddress(18) }}</span>
+            <span class="address">{{ account.data.spec.address | shortAddress(16) }}</span>
             <span class="chain">{{ account.data.spec.chainId }}</span>
           </span>
         </span>
       </div>
-
-      <router-link :to="`/`" class="menu-link"></router-link>
-
     </div>
     <div class="seperator"></div>
-    <ul class="account-nav">
+    <ul class="account-nav" v-if="!requestType">
       <li><router-link :to="`./`"><span>Deposit</span></router-link></li>
       <li><router-link :to="`send`"><span>Send</span></router-link></li>
       <li><router-link :to="`sign`"><span>Sign</span></router-link></li>
@@ -35,9 +36,8 @@
 <script>
 import TransitionPage from '../components/TransitionPage';
 import Identicon from '../components/Identicon';
-import { mapState } from 'vuex'
 import { Amount } from '@herajs/client';
-
+import { mapState } from 'vuex';
 
 export default {
   data () {
@@ -55,11 +55,25 @@ export default {
   beforeDestroy () {
     clearTimeout(this.timeout);
   },
+  watch: {
+    '$route.params.address'() {
+      this.loadState();
+    },
+  },
+  computed: {
+    ...mapState({
+      requestType: state => state.navigation.activeRequest && state.navigation.activeRequest.request ? state.navigation.activeRequest.request.type : '',
+    }),
+  },
   methods: {
     formatAmount(amount) {
       return (new Amount(amount)).toUnit('aergo').toString();
     },
     async loadState() {
+      if (this.$route.params.address === 'none') {
+        this.account = {};
+        return;
+      }
       await this.$db.open();
       try {
         this.account = await this.$db.getIndex('accounts').get(this.$route.params.address)
@@ -126,12 +140,20 @@ export default {
 }
 
 .menu-link {
-  width: 24px;
-  height: 24px;
-  background: url(~@assets/img/list.svg);
-  background-size: 16px 14px;
+  width: 28px;
+  height: 28px;
+  margin: 0 10px 0 -4px;
+  /*background: url(~@assets/img/list.svg);*/
+  background: url(~@assets/img/icon-arrow-left.svg);
+  background-size: 24px;
   background-repeat: no-repeat;
   background-position: center center;
+
+  border-radius: 100%;
+
+  &:hover {
+    background-color: #f4f4f4;
+  }
 }
 
 .account-name {
@@ -148,8 +170,7 @@ export default {
 
   .identicon {
     padding: 2px;
-    border: 1px solid #aaa;
-    border-radius: 8px;
+    border: 1px solid #eee;
     margin-right: 7px;
 
     svg {

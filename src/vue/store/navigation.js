@@ -1,7 +1,8 @@
 const state = {
     currentPath: '',
     previousPath: '',
-    activeAccount: {}
+    activeAccount: {},
+    activeRequest: null,
 };
 
 const getters = {
@@ -14,6 +15,9 @@ const actions = {
     setActiveAccount ({ commit }, address) {
         commit('setActiveAccount', address);
     },
+    setActiveRequest ({ commit }, { requestId, request }) {
+        commit('setActiveRequest', { requestId, request });
+    },
 };
 
 const mutations = {
@@ -24,6 +28,9 @@ const mutations = {
     setActiveAccount (state, address) {
         if (address === state.activeAccount) return;
         state.activeAccount = address;
+    },
+    setActiveRequest (state, request) {
+        state.activeRequest = request;
     },
 };
 

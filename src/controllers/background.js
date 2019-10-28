@@ -27,14 +27,16 @@ export function decodeTxHash(bs58string) {
     return bs58.decode(bs58string);
 }
 
-const AUTO_LOCK_TIMEOUT = 60*1000 * 10;
-let notifId = 0;
+const AUTO_LOCK_TIMEOUT = 60*1000 * 2;
 
 class BackgroundController extends EventEmitter {
     constructor() {
         super();
 
         this.id = extension.runtime.id;
+
+        this.requests = {};
+        this.lastRequestId = 0;
 
         this.uiState = {
             popupOpen: false
@@ -150,33 +152,31 @@ class BackgroundController extends EventEmitter {
         });
     }
 
-    permissionRequest(text, callback) {
-        const confirmed = confirm(text);
-        if (confirmed) {
-            callback();
-        }
-        /*
-        const thisNotifId = `${notifId++}`;
-        extension.notifications.create(
-            thisNotifId,
-            {
-                type: 'basic',
-                title: 'Aergo Connect',
-                iconUrl: extension.extension.getURL('450dd34960f600f51b44083379e5e15c.png'),
-                message: text,
-                priority: 2,
-                requireInteraction: true,
-                buttons: [
-                    { title: 'Confirm' },
-                ]
-            }
-        );
-        chrome.notifications.onButtonClicked.addListener(function(id) {
-            if (id === thisNotifId) {
-                callback();
-            }
+    permissionRequest(type, data, senderURL, callback) {
+        const requestId = this.lastRequestId++;
+        this.requests[requestId] = {
+            type,
+            data,
+            senderURL,
+            callback,
+        };
+        extension.windows.getCurrent((window) => {
+            const left = Math.max(0, window.left + window.width - 330);
+            extension.windows.create({
+                url: chrome.runtime.getURL(`popup.html?request=${requestId}`),
+                type: "popup",
+                width: 330,
+                height: 425,
+                top: window.top,
+                left,
+            });
         });
-        */
+    }
+
+    respondToPermissionRequest (requestId, result) {
+        const request = this.requests[requestId];
+        if (!request) return;
+        request.callback(result);
     }
 
     async signMessage ({ address, chainId, message }) {
@@ -280,6 +280,10 @@ class BackgroundController extends EventEmitter {
                 await this.setActiveAccount({ chainId, address });
                 send();
             },
+            getActiveAccount: async (send) => {
+                const account = await this.getActiveAccount();
+                send(account);
+            },
             importAccount: async ({ privateKey, chainId }, send) => {
                 this.keepUnlocked();
                 const identity = identifyFromPrivateKey(privateKey);
@@ -348,6 +352,19 @@ class BackgroundController extends EventEmitter {
                 } catch(e) {
                     send({ error: e });
                 }
+            },
+            getPermissionRequestData: async (requestId, send) => {
+                send(this.requests[requestId]);
+            },
+            respondToPermissionRequest: async ({ requestId, result }, send) =>{
+                this.respondToPermissionRequest(requestId, result);
+                send();
+            },
+            denyPermissionRequest: async (requestId, send) => {
+                if (this.requests[requestId]) {
+                    delete this.requests[requestId];
+                }
+                send();
             }
         })
         pump(

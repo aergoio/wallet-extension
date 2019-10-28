@@ -11,18 +11,23 @@ import { formatNumber } from './filters/format-number';
 import BackgroundConnector from './utils/background-connector';
 import IndexedDb from './utils/indexed-db';
 import { tooltip } from './directives/tooltip';
+import { promisifySimple } from '../utils/promisify';
 
-
-const createRouter = (routes, store) => {
+const createRouter = (routes, store, gotoRoute) => {
     let initialLoad = true;
     const router = new VueRouter({
         routes
     });
     router.beforeEach((to, from, next) => {
         // Load persisted route on initial load
-        if (to.fullPath == '/' && initialLoad) {
+        // or whenever selecting account during permission request
+        if (to.fullPath == '/' && initialLoad || to.name == 'deposit' && gotoRoute) {
             initialLoad = false;
-            const savedPath = store.state.navigation.currentPath;
+            // Update address of request route
+            if (gotoRoute && to.params && to.params.address) {
+                gotoRoute.params.address = to.params.address;
+            }
+            const savedPath = gotoRoute || store.state.navigation.currentPath;
             if (savedPath && savedPath != to.fullPath) {
                 next(savedPath);
                 return;
@@ -36,12 +41,46 @@ const createRouter = (routes, store) => {
                 console.error(e);
             }
         }
-        if (to.fullPath != '/locked') {
+        if (to.fullPath != '/locked' && (!to.meta || to.meta.donottrack !== true)) {
             store.dispatch('navigation/setCurrentRoute', to);
         }
         next();
     });
     return router;
+}
+
+function getRequestId() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const requestId = urlParams.get('request');
+    return requestId;
+}
+
+async function handlePermissionRequest(background) {
+    const activeAccount = await promisifySimple(background.getActiveAccount)();
+    const requestId = getRequestId();
+    let name = ''; // route name
+    if (requestId) {
+        console.log('have a request, getting data from background');
+        const request = await promisifySimple(background.getPermissionRequestData)(requestId);
+        console.log(request);
+        store.dispatch('navigation/setActiveRequest', { requestId, request });
+        const requestTypeToRoute = {
+            'ACTIVE_ACCOUNT': 'account_public',
+            'SIGN': 'sign',
+            'SIGN_TX': 'tx_sign',
+            'SEND_TX': 'tx_send',
+        };
+        name = requestTypeToRoute[request.type];
+        if (!name) return;
+    } else {
+        store.dispatch('navigation/setActiveRequest', {});
+        return null;
+    }
+    if (activeAccount) {
+        return { name, params: { address: activeAccount.key } };
+    } else {
+        return { name, params: { address: 'none' } };
+    }
 }
 
 export default async function setup(opts) {
@@ -55,7 +94,9 @@ export default async function setup(opts) {
     Vue.filter('formatNumber', formatNumber);
     Vue.directive('tooltip', tooltip);
 
-    const router = createRouter(routes, store);
+    const gotoRoute = await handlePermissionRequest(opts.background);
+
+    const router = createRouter(routes, store, gotoRoute);
 
     const vue = new Vue({
         el: "#app",

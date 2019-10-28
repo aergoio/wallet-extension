@@ -11,22 +11,24 @@ import ImportAccount from '../vue/pages/ImportAccount.vue';
 import Reset from '../vue/pages/Reset.vue';
 import ExportAccount from '../vue/pages/ExportAccount.vue';
 import RemoveAccount from '../vue/pages/RemoveAccount.vue';
+import GetPublic from '../vue/pages/GetPublic.vue';
 
 export default [
     { path: '/locked', component: Lockscreen, meta: { transitionName: 'fade' }, },
     { path: '/reset', component: Reset, meta: { transitionName: 'fade' }, },
-    { path: '/', component: Accounts, meta: { transitionName: 'slide-vertical' }, },
+    { path: '/', component: Accounts, meta: { transitionName: 'slide' }, },
     { path: '/add-account/', component: AddAccount, meta: { transitionName: 'slide-vertical' }, },
     { path: '/add-account/create/', component: CreateAccount, meta: { transitionName: 'slide-vertical' }, },
     { path: '/add-account/import/', component: ImportAccount, meta: { transitionName: 'slide-vertical' }, },
-    { path: '/account/:address/', component: Account, meta: { transitionName: 'slide-vertical' },
+    { path: '/account/:address/', component: Account, meta: { transitionName: 'slide' },
         children: [
-            { path: '', component: Deposit, meta: { transitionName: 'slide', index: 1 } },
-            { path: 'send', component: Send, meta: { transitionName: 'slide', index: 2 } },
-            { path: 'sign', component: Sign, meta: { transitionName: 'sign', index: 3 } },
+            { path: '', name: 'deposit', component: Deposit, meta: { transitionName: 'slide', index: 1 } },
+            { path: 'send', name: 'tx_send', component: Send, meta: { transitionName: 'slide', index: 2 } },
+            { path: 'sign', name: 'sign', component: Sign, meta: { transitionName: 'slide', index: 3 } },
             { path: 'history', component: History, meta: { transitionName: 'slide', index: 4 } },
-            { path: 'export', component: ExportAccount, meta: { transitionName: 'slide' } },
-            { path: 'remove', component: RemoveAccount, meta: { transitionName: 'slide' } },
+            { path: 'public', name: 'account_public', component: GetPublic, meta: { transitionName: 'slide', donottrack: true } },
+            { path: 'export', component: ExportAccount, meta: { transitionName: 'slide', donottrack: true } },
+            { path: 'remove', component: RemoveAccount, meta: { transitionName: 'slide', donottrack: true } },
         ]
     },
 ];

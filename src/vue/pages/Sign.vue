@@ -1,12 +1,15 @@
 <template>
   <div class="scroll-view">
-    <form class="form" autocomplete="off">
- 
+    <PermissionRequest v-if="request.request" :url="request.request.senderURL" action="sign" object="a message" />
+
+    <form class="form sign-form" autocomplete="off">
       <div class="form-line vertical">
         <label>
           Message
 
-          <textarea class="text-input" v-model="message" style="height: 80px" placeholder="Enter hex string (0x...) or text"></textarea>
+          <textarea v-if="!request || !request.request" class="text-input" v-model="message" style="height: 80px" placeholder="Enter hex string (0x...) or text"></textarea>
+
+          <textarea v-if="request.request" class="text-input" style="height: 80px" v-model="request.request.data.hash" readonly></textarea>
         </label>
       </div>
 
@@ -28,7 +31,6 @@
         A signature is a cryptographic proof that a message is authorized by an account.
         Signatures can be used to perform certain actions on your behalf.  
       </p>
-
     </form>
   </div>
 </template>
@@ -39,6 +41,8 @@ import { Address } from '@herajs/client';
 import bs58 from 'bs58';
 import { timedAsync } from 'timed-async';
 import Spinner from '../components/Spinner';
+import PermissionRequest from '../components/PermissionRequest';
+import { mapState } from 'vuex';
 
 export default {
   data () {
@@ -53,6 +57,9 @@ export default {
   beforeDestroy () {
   },
   computed: {
+    ...mapState({
+      request: state => state.navigation.activeRequest ? state.navigation.activeRequest : {},
+    }),
     address() {
       return this.$route.params.address && this.$route.params.address.split('/')[1];
     },
@@ -61,15 +68,26 @@ export default {
     }
   },
 
+  watch: {
+    request() {
+      console.log('r', this.request);
+      this.message = this.request.request;
+    },
+  },
+
   methods: {
     async sign () {
       this.status = 'sending';
       this.signedMessage = '';
       this.error = '';
-      let buf = Buffer.from(this.message);
-      if (this.message.substr(0, 2) === '0x') {
+      let message = this.message;
+      if (this.request && this.request.requestId) {
+        message = this.request.request.data.hash;
+      }
+      let buf = Buffer.from(message);
+      if (message.substr(0, 2) === '0x') {
         try {
-          buf = Buffer.from(this.message.substr(2), "hex");
+          buf = Buffer.from(message.substr(2), "hex");
         } catch (e) {
           this.error = '' + e;
           return;
@@ -85,16 +103,35 @@ export default {
       } else {
         this.signedMessage = '0x' + result.signedMessage;
       }
+
+      if (this.request && this.request.requestId) {
+        await promisifySimple(this.$background.respondToPermissionRequest)({ requestId: this.request.requestId, result: {
+          account: {
+            address: this.address,
+            chainId: this.chainId,
+          },
+          signature: result.signedMessage,
+        }});
+        window.close();
+      }
     },
-    cancel () {
+    async cancel () {
       this.message = '';
       this.signedMessage = '';
+      if (this.request && this.request.requestId) {
+        await promisifySimple(this.$background.denyPermissionRequest)(this.request.requestId);
+        window.close();
+      }
     }
   },
   components: {
+    PermissionRequest,
   }
 };
 </script>
 
 <style lang="scss">
+.sign-form .form-line {
+  border-bottom: 0;
+}
 </style>

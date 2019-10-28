@@ -27,28 +27,28 @@ async function setupController() {
                 if (msg.type !== 'AERGO_REQUEST') return;
                 console.log('received message', msg, port.sender.url);
 
-                const activeAccount = await controller.getActiveAccount();
-                if (!activeAccount) {
-                    const text = `The website at\n\n${port.sender.url}\n\n` +
-                        `asks for permission to access your active account.\n\n`+
-                        `You have no active account. Make sure to select an account inside Aergo Connect.`;
-                    alert(text);
-                    return;
+                const actions = ['ACTIVE_ACCOUNT', 'SIGN', 'SIGN_TX', 'SEND_TX'];
+                const actionsToEventName = {
+                    'ACTIVE_ACCOUNT': 'AERGO_ACTIVE_ACCOUNT',
+                    'SIGN': 'AERGO_SIGN_RESULT',
+                    'SIGN_TX': 'AERGO_SIGN_TX_RESULT',
+                    'SEND_TX': 'AERGO_SEND_TX_RESULT',
                 }
-                
                 const action = msg.action || '';
-                if (action === 'ACTIVE_ACCOUNT') {
-                    const text = `The website at\n\n${port.sender.url}\n\nasks for permission to access your active account's address\n\n${activeAccount.key}`;
-                    controller.permissionRequest(text, function() {
-                        port.postMessage({
-                            type: 'AERGO_RESPONSE',
-                            eventName: 'AERGO_ACTIVE_ACCOUNT',
-                            result: {
-                                account: activeAccount.data.spec
-                            }
-                        });
-                    })
+                if (actions.indexOf(action) === -1) {
+                    console.log('message with invalid action type', action);
                 }
+                controller.permissionRequest(action, msg.data, port.sender.url, (result) => {
+                    port.postMessage({
+                        type: 'AERGO_RESPONSE',
+                        eventName: actionsToEventName[action],
+                        result
+                    });
+                });
+
+                return;
+
+
                 if (action === 'SIGN') {
                     //const activeAccount = await controller.getActiveAccount();
                     const input = msg.data.hash;
@@ -63,7 +63,7 @@ async function setupController() {
                         }
                     }
 
-                    controller.permissionRequest(text, async function() {
+                    controller.permissionRequest('sign', text, async function() {
                         port.postMessage({
                             type: 'AERGO_RESPONSE',
                             eventName: 'AERGO_SIGN_RESULT',
@@ -91,7 +91,7 @@ async function setupController() {
                     } else if (txData.payload) {
                         txData.payload = Buffer.from(txData.payload_json, 'base64')
                     }
-                    controller.permissionRequest(text, async function() {
+                    controller.permissionRequest('tx_sign', text, async function() {
                         try {
                             const signedTx = await controller.signTransaction({
                                 address: activeAccount.data.spec.address,
@@ -121,7 +121,7 @@ async function setupController() {
                     } else if (txBody.payload) {
                         txBody.payload = Buffer.from(txBody.payload_json, 'base64')
                     }
-                    controller.permissionRequest(text, async function() {
+                    controller.permissionRequest('tx_send', text, async function() {
                         try {
                             const sentTx = await controller.sendTransaction({
                                 address: activeAccount.data.spec.address,
