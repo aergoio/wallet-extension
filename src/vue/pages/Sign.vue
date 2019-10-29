@@ -64,9 +64,10 @@ export default {
       return this.$route.params.address && this.$route.params.address.split('/').pop();
     },
     chainId() {
+      if (!this.$route.params.address) return '';
       const split = this.$route.params.address.split('/');
       split.pop();
-      return this.$route.params.address && split.join('/');
+      return split.join('/');
     },
   },
 
