@@ -1,6 +1,6 @@
 <template>
   <div class="scroll-view">
-    <PermissionRequest v-if="request.request" :url="request.request.senderURL" action="sign" object="a message" />
+    <PermissionRequest v-if="request.request" :url="request.request.senderURL" action="" object="sign a message" />
 
     <form class="form sign-form" autocomplete="off">
       <div class="form-line vertical">

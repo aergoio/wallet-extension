@@ -24,6 +24,7 @@ module.exports = (env, argv) => {
     //new BundleAnalyzerPlugin(),
     // create HTML files
     new HtmlWebpackPlugin({filename: 'popup.html', template: 'src/assets/html/popup.html', chunks: ['popup', 'vendor']}),
+    new HtmlWebpackPlugin({filename: 'popup-request.html', template: 'src/assets/html/popup-request.html', chunks: ['popup', 'vendor']}),
     new HtmlWebpackPlugin({filename: 'tab.html', template: 'src/assets/html/tab.html', chunks: ['popup', 'vendor']}),
     new HtmlWebpackPlugin({filename: 'background.html', template: 'src/assets/html/background.html', chunks: ['background', 'vendor']}),
   ];

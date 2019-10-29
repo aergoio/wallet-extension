@@ -152,30 +152,35 @@ class BackgroundController extends EventEmitter {
         });
     }
 
-    permissionRequest(type, data, senderURL, callback) {
+    permissionRequest(type, data, senderURL, callback, cancelCallback) {
         const requestId = this.lastRequestId++;
         this.requests[requestId] = {
             type,
             data,
             senderURL,
             callback,
+            cancelCallback,
         };
         extension.windows.getCurrent((window) => {
             const left = Math.max(0, window.left + window.width - 330);
             extension.windows.create({
-                url: chrome.runtime.getURL(`popup.html?request=${requestId}`),
+                url: chrome.runtime.getURL(`popup-request.html?request=${requestId}`),
                 type: "popup",
                 width: 330,
-                height: 425,
+                height: 525,
                 top: window.top,
                 left,
             });
         });
     }
 
-    respondToPermissionRequest (requestId, result) {
+    respondToPermissionRequest (requestId, result, respondCancel = false) {
         const request = this.requests[requestId];
         if (!request) return;
+        if (respondCancel) {
+            request.cancelCallback();
+            return;
+        }
         request.callback(result);
     }
 
@@ -320,6 +325,15 @@ class BackgroundController extends EventEmitter {
                     send({ error: e.message || ''+e });
                 }
             },
+            signTransaction: async (tx, chainId, send) => {
+                try {
+                    const txBody = await this.signTransaction({ txData: tx, address: tx.from, chainId });
+                    send({ tx: txBody });
+                } catch(e) {
+                    console.error(e);
+                    send({ error: e.message || ''+e });
+                }
+            },
             getAccountTx: async (accountSpec, send) => {
                 console.log('getAccountTx', accountSpec);
                 if (!accountSpec.address) return send({});
@@ -362,6 +376,7 @@ class BackgroundController extends EventEmitter {
             },
             denyPermissionRequest: async (requestId, send) => {
                 if (this.requests[requestId]) {
+                    this.respondToPermissionRequest(requestId, null, true);
                     delete this.requests[requestId];
                 }
                 send();

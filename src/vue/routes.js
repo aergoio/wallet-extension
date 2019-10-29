@@ -4,6 +4,8 @@ import Account from '../vue/pages/Account.vue';
 import Deposit from '../vue/pages/Deposit.vue';
 import Send from '../vue/pages/Send.vue';
 import Sign from '../vue/pages/Sign.vue';
+import ApiTxSend from '../vue/pages/ApiTxSend.vue';
+import ApiTxSign from '../vue/pages/ApiTxSign.vue';
 import History from '../vue/pages/History.vue';
 import AddAccount from '../vue/pages/AddAccount.vue';
 import CreateAccount from '../vue/pages/CreateAccount.vue';
@@ -23,10 +25,12 @@ export default [
     { path: '/account/:address/', component: Account, meta: { transitionName: 'slide' },
         children: [
             { path: '', name: 'deposit', component: Deposit, meta: { transitionName: 'slide', index: 1 } },
-            { path: 'send', name: 'tx_send', component: Send, meta: { transitionName: 'slide', index: 2 } },
+            { path: 'send', component: Send, meta: { transitionName: 'slide', index: 2 } },
+            { path: 'api-tx-send', name: 'tx_send', component: ApiTxSend, meta: { transitionName: 'slide', index: 2 } },
+            { path: 'api-tx-sign', name: 'tx_sign', component: ApiTxSign, meta: { transitionName: 'slide', index: 2 } },
             { path: 'sign', name: 'sign', component: Sign, meta: { transitionName: 'slide', index: 3 } },
             { path: 'history', component: History, meta: { transitionName: 'slide', index: 4 } },
-            { path: 'public', name: 'account_public', component: GetPublic, meta: { transitionName: 'slide', donottrack: true } },
+            { path: 'api-public', name: 'account_public', component: GetPublic, meta: { transitionName: 'slide', donottrack: true } },
             { path: 'export', component: ExportAccount, meta: { transitionName: 'slide', donottrack: true } },
             { path: 'remove', component: RemoveAccount, meta: { transitionName: 'slide', donottrack: true } },
         ]

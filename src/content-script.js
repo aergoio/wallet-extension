@@ -12,8 +12,10 @@ window.addEventListener("message", (event) => {
 });
 
 port.onMessage.addListener((msg) => {
-    if (msg.type !== 'AERGO_RESPONSE') return;
+    if (msg.type !== 'AERGO_RESPONSE' && msg.type !== 'AERGO_CANCEL') return;
     console.log('[Contentscript] Received message from extension', msg);
-    const event = new CustomEvent(msg.eventName, { detail: msg.result });
+    let eventName = msg.eventName;
+    if (msg.type === 'AERGO_CANCEL') eventName = eventName + '_CANCEL';
+    const event = new CustomEvent(eventName, { detail: msg.result });
     window.dispatchEvent(event);
 });

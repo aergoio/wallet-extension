@@ -71,7 +71,10 @@ async function handlePermissionRequest(background) {
             'SEND_TX': 'tx_send',
         };
         name = requestTypeToRoute[request.type];
-        if (!name) return;
+        if (!name) {
+            console.log('invalid request type', request.type);
+            return;
+        };
     } else {
         store.dispatch('navigation/setActiveRequest', {});
         return null;
