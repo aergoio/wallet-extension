@@ -41,7 +41,7 @@ const createRouter = (routes, store, gotoRoute) => {
                 console.error(e);
             }
         }
-        if (to.fullPath != '/locked' && (!to.meta || to.meta.donottrack !== true)) {
+        if (!gotoRoute && to.fullPath != '/locked' && (!to.meta || to.meta.donottrack !== true)) {
             store.dispatch('navigation/setCurrentRoute', to);
         }
         next();

@@ -256,10 +256,12 @@ export default {
   },
   computed: {
     address() {
-      return this.$route.params.address && this.$route.params.address.split('/')[1];
+      return this.$route.params.address && this.$route.params.address.split('/').pop();
     },
     chainId() {
-      return this.$route.params.address && this.$route.params.address.split('/')[0];
+      const split = this.$route.params.address.split('/');
+      split.pop();
+      return this.$route.params.address && split.join('/');
     },
     explorerLink() {
       return chainProvider(this.signedTx.chainId).explorerUrl(`/transaction/${this.lastTxHash}`);
