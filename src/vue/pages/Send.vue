@@ -119,6 +119,16 @@
           </select>
         </label>
       </div>
+      <div class="form-line" v-if="payloadFormState == 'system' && payload.action == 'v'">
+        <label>
+          Vote type
+
+          <select v-model="payload.subAction">
+            <option value="b">BP</option>
+            <option value="p">Proposal</option>
+          </select>
+        </label>
+      </div>
       <div class="form-line action-hint" v-if="payloadFormState == 'system' && payload.action == 's'">
         The specified amount will be staked. 
       </div>
@@ -126,13 +136,20 @@
         The specified amount will be unstaked. 
       </div>
       <div class="form-line action-hint" v-if="payloadFormState == 'system' && payload.action == 'v'">
-        Your vote (weighted by previously staked amount)<br>will be cast for the specified BPs. 
+        Your vote (weighted by previously staked amount)<br>will be cast for the specified {{payload.subAction == 'b' ? 'BPs' : 'proposal'}}.
       </div>
-      <div class="form-line" v-if="payloadFormState == 'system' && payload.action == 'v'">
+      <div class="form-line" v-if="payloadFormState == 'system' && payload.action == 'v' && payload.subAction == 'b'">
         <label>
           BP ids
 
-          <input type="text" class="text-input input-field" placeholder="Comma-seperated peer ids" v-model="payload.bpIds">
+          <input type="text" class="text-input input-field" placeholder="Comma-seperated peer ids" v-model="payload.voteTo">
+        </label>
+      </div>
+      <div class="form-line" v-if="payloadFormState == 'system' && payload.action == 'v' && payload.subAction == 'p'">
+        <label>
+          Vote for
+
+          <input type="text" class="text-input input-field" placeholder="Comma-seperated id and candidates" v-model="payload.voteTo">
         </label>
       </div>
 
@@ -232,9 +249,10 @@ function getDefaultData() {
     payloadFormState: 'hidden',
     payload: {
       action: "",
+      subAction: "b",
       name: "",
       newOwner: "",
-      bpIds: ""
+      voteTo: ""
     },
     slowQuery: false,
     amountFixed: false,
@@ -374,10 +392,17 @@ export default {
           };
           payload = jsonPayload(jsonData);
         }
-        if (this.payload.action == 'v') {
+        if (this.payload.action == 'v' && this.payload.subAction == 'b') {
           jsonData = {
             Name: 'v1voteBP',
-            Args: this.payload.bpIds.split(',')
+            Args: this.payload.voteTo.split(',')
+          };
+          payload = jsonPayload(jsonData);
+        }
+        if (this.payload.action == 'v' && this.payload.subAction == 'p') {
+          jsonData = {
+            Name: 'v1voteProposal',
+            Args: this.payload.voteTo.replace(/\s+/g, '').split(',')
           };
           payload = jsonPayload(jsonData);
         }
