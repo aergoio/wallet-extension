@@ -72,7 +72,6 @@ export default {
     },
     enter(element) {
       const { height, width } = getComputedStyle(element);
-      console.log('enter', this.prevWidth);
       // eslint-disable-next-line no-param-reassign
       element.style.height = this.prevHeight;
       element.style.width = this.prevWidth;

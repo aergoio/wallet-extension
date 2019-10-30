@@ -109,8 +109,7 @@ export default async function setup(opts) {
     });
 
     vue.$background.on('update', function(state) {
-        console.log('there is an update from the background');
-        console.log(state);
+        console.log('there is an update from the background', state);
         //store.commit('')
         if (state.hasOwnProperty('unlocked') && !state.unlocked) {
             router.push('/locked');

@@ -53,7 +53,7 @@
           <br>
         <span class="confirm-account">
           <Identicon :text="signedTx.to" />
-          <span class="address">{{signedTx.to}}</span>
+          <span class="address">{{signedTx.to || '(Create Contract)'}}</span>
         </span><br>
         Amount: <strong>{{signedTx.amount}}</strong>
         <div v-if="stringPayload && stringPayload.length">
@@ -237,7 +237,6 @@ function getDefaultData() {
     transaction: {
       to: '',
       amount: '0',
-      nonce: 1,
       amountUnit: 'aergo',
       payload: '',
       uiType: ''
@@ -440,7 +439,7 @@ export default {
       } else if ('error' in result) {
         this.error = result.error;
         this.status = 'error';
-        console.error('failed to send tx', error);
+        console.error('failed to send tx', result.error);
       } else {
         this.status = 'error';
         console.log(result);
