@@ -13,7 +13,12 @@
           <span class="account-balance" v-if="account && account.data">{{formatAmount(account.data.balance)}}</span><br />
           <span v-if="account && account.data" class="account-address-chain">
             <span class="address">{{ account.data.spec.address | shortAddress(16) }}</span>
-            <span class="chain">{{ account.data.spec.chainId }}</span>
+            <span class="chain" v-if="!explorerUrl">{{ account.data.spec.chainId }}</span>
+            <span class="tooltipped tooltipped-no-delay tooltipped-s" v-tooltip="'Open in Explorer'" v-if="explorerUrl">
+              <a class="external-link" :href="explorerUrl" target="_blank">
+                <span class="chain">{{ account.data.spec.chainId }}</span>
+              </a>
+            </span>
           </span>
         </span>
       </div>
@@ -38,6 +43,7 @@ import TransitionPage from '../components/TransitionPage';
 import Identicon from '../components/Identicon';
 import { Amount } from '@herajs/client';
 import { mapState } from 'vuex';
+import { chainProvider } from '../../controllers/chain-provider';
 
 export default {
   data () {
@@ -64,6 +70,10 @@ export default {
     ...mapState({
       requestType: state => state.navigation.activeRequest && state.navigation.activeRequest.request ? state.navigation.activeRequest.request.type : '',
     }),
+    explorerUrl() {
+      if (!this.account) return '';
+      return chainProvider(this.account.data.spec.chainId).explorerUrl(`/account/${this.account.data.spec.address}`)
+    },
   },
   methods: {
     formatAmount(amount) {
@@ -129,7 +139,6 @@ export default {
 }
 
 .account-header {
-  overflow: auto;
   padding: 12px 15px;
   display: flex;
   align-items: center;
@@ -179,6 +188,15 @@ export default {
       height: 26px;
     }
   }
+}
+
+.external-link {
+  text-decoration: none;
+  padding-right: 20px;
+  background: url(~@assets/img/icon-link.svg);
+  background-size: 16px;
+  background-repeat: no-repeat;
+  background-position: 100% 0;
 }
 
 </style>

@@ -53,7 +53,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { DEFAULT_CHAIN, chainProvider } from '../../controllers/chain-provider';
+import { chainProvider } from '../../controllers/chain-provider';
 import Identicon from '../components/Identicon';
 import { Amount } from '@herajs/client';
 import { promisifySimple } from '../../utils/promisify';
