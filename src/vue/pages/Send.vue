@@ -120,7 +120,7 @@
 
           <select v-model="payload.subAction">
             <option value="b">BP</option>
-            <option value="p">Proposal</option>
+            <option value="p">DAO</option>
           </select>
         </label>
       </div>
@@ -370,7 +370,7 @@ export default {
         }
         if (this.payload.action == 'v' && this.payload.subAction == 'p') {
           payload = jsonPayload({
-            Name: 'v1voteProposal',
+            Name: 'v1voteDAO',
             Args: this.payload.voteTo.replace(/\s+/g, '').split(',')
           });
         }
