@@ -22,11 +22,11 @@
                 <div class="account-item">
                   <Identicon :text="account.data.spec.address" />
                   
-                  <span>
+                  <span style="flex: 1;">
                     <span class="account-name">Account</span>
                     <span class="account-balance" v-if="account && account.data">{{formatAmount(account.data.balance)}}</span><br />
                     <span class="account-address-chain">
-                      <span class="address">{{ account.data.spec.address | shortAddress(18) }}</span>
+                      <span class="address">{{ account.data.spec.address | shortAddress(28) }}</span>
                     </span>
                   </span>
 

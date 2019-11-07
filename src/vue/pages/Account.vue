@@ -7,12 +7,15 @@
 
       <div class="account-item">
         <Identicon :text="account.data.spec.address" v-if="account && account.data" />
-        <span>
-          <span class="account-name" v-if="$route.params.address && $route.params.address !== 'none'">Account</span>
-          <span class="account-name" v-if="$route.params.address === 'none'">No account selected</span>
-          <span class="account-balance" v-if="account && account.data">{{formatAmount(account.data.balance)}}</span><br />
+        <span class="account-item-text">
+          <span class="account-name-balance">
+            <span class="account-name" v-if="$route.params.address && $route.params.address !== 'none'">Account</span>
+            <span class="account-name" v-if="$route.params.address === 'none'">No account selected</span>
+            <span class="account-balance" v-if="account && account.data">{{formatAmount(account.data.balance)}}</span>
+          </span>
+
           <span v-if="account && account.data" class="account-address-chain">
-            <span class="address">{{ account.data.spec.address | shortAddress(16) }}</span>
+            <span class="address">{{ account.data.spec.address }}</span>
             <span class="chain" v-if="!explorerUrl">{{ account.data.spec.chainId }}</span>
             <span class="tooltipped tooltipped-no-delay tooltipped-s" v-tooltip="'Open in Explorer'" v-if="explorerUrl">
               <a class="external-link" :href="explorerUrl" target="_blank">
@@ -149,10 +152,10 @@ export default {
 }
 
 .menu-link {
+  flex: 28px 0 0;
   width: 28px;
   height: 28px;
-  margin: 0 10px 0 -4px;
-  /*background: url(~@assets/img/list.svg);*/
+  margin: 0 8px 0 -6px;
   background: url(~@assets/img/icon-arrow-left.svg);
   background-size: 24px;
   background-repeat: no-repeat;
@@ -173,8 +176,22 @@ export default {
   line-height: 15px;
   display: flex;
 
-  > :nth-child(2) {
+  .account-item-text {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .account-address-chain {
+      white-space: nowrap;
+      display: flex;
+      max-width: 230px;
+
+      .address {
+        flex: 1;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
   }
 
   .identicon {
@@ -189,6 +206,8 @@ export default {
     }
   }
 }
+
+
 
 .external-link {
   text-decoration: none;

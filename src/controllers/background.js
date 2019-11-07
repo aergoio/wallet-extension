@@ -27,7 +27,7 @@ export function decodeTxHash(bs58string) {
     return bs58.decode(bs58string);
 }
 
-const AUTO_LOCK_TIMEOUT = 60*1000 * 2;
+const AUTO_LOCK_TIMEOUT = 60*1000;
 
 class BackgroundController extends EventEmitter {
     constructor() {
