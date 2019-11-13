@@ -505,6 +505,7 @@ export default {
   text-align: left;
   margin: 0 auto;
   display: inline-block;
+  white-space: pre-wrap;
 }
 
 .icon-fromto {
