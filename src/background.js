@@ -44,10 +44,11 @@ async function setupController() {
                         eventName: actionsToEventName[action],
                         result
                     });
-                }, () => {
+                }, (result) => {
                     port.postMessage({
                         type: 'AERGO_CANCEL',
                         eventName: actionsToEventName[action],
+                        result,
                     });
                 });
             });

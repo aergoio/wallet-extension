@@ -178,7 +178,9 @@ class BackgroundController extends EventEmitter {
         const request = this.requests[requestId];
         if (!request) return;
         if (respondCancel) {
-            request.cancelCallback();
+            request.cancelCallback({
+                error: 'user cancelled request',
+            });
             return;
         }
         request.callback(result);
