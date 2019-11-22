@@ -38,7 +38,8 @@ async function setupController() {
                 if (actions.indexOf(action) === -1) {
                     console.log('message with invalid action type', action);
                 }
-                controller.permissionRequest(action, msg.data, port.sender.url, (result) => {
+                const origin = (new URL(port.sender.url)).origin;
+                controller.permissionRequest(action, msg.data, origin, (result) => {
                     port.postMessage({
                         type: 'AERGO_RESPONSE',
                         eventName: actionsToEventName[action],

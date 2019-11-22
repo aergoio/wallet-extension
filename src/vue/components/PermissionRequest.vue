@@ -1,7 +1,6 @@
 <template>
   <div class="permission-request">
-    The website at
-    <span class="url">{{url}}</span> wants to {{action}}
+    The website at <span class="url">{{url}}</span> wants to {{action}}
     <span class="object">{{object}}</span>
   </div>
 </template>
@@ -17,9 +16,6 @@ export default {
   padding: 10px;
   background-color: #f0f0f0;
 
-  .url {
-    display: block;
-  }
   .object {
     display: block;
     font-weight: bold;
