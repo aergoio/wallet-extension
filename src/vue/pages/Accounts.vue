@@ -22,11 +22,11 @@
                 <div class="account-item">
                   <Identicon :text="account.data.spec.address" />
                   
-                  <span>
+                  <span style="flex: 1;">
                     <span class="account-name">Account</span>
                     <span class="account-balance" v-if="account && account.data">{{formatAmount(account.data.balance)}}</span><br />
                     <span class="account-address-chain">
-                      <span class="address">{{ account.data.spec.address | shortAddress(18) }}</span>
+                      <span class="address">{{ account.data.spec.address | shortAddress(28) }}</span>
                     </span>
                   </span>
 
@@ -53,7 +53,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { DEFAULT_CHAIN, chainProvider } from '../../controllers/chain-provider';
+import { chainProvider } from '../../controllers/chain-provider';
 import Identicon from '../components/Identicon';
 import { Amount } from '@herajs/client';
 import { promisifySimple } from '../../utils/promisify';

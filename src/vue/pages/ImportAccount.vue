@@ -36,15 +36,7 @@
 
           <div class="form-line">
             <label>
-              Select file
-
-              <input type="file" accept=".key" ref="files" v-on:change="selectedFile" style="width: 180px;">
-            </label>
-          </div>
-          
-          <div class="form-line">
-            <label>
-              OR Paste exported key
+              Paste exported key
 
               <input type="text" class="text-input" v-model="key">
             </label>
@@ -79,7 +71,6 @@ import { CHAINS, DEFAULT_CHAIN } from '../../controllers/chain-provider';
 export default {
   data () {
     return {
-      file: null,
       password: '',
       key: '',
       identity: null,
@@ -102,7 +93,7 @@ export default {
   mounted () {
   },
   watch: {
-    key: function (key) {
+    key() {
       this.validateKey();
     },
     selection: async function(network) {
@@ -130,7 +121,7 @@ export default {
         this.chainId = this.selection;
       }
       if (!this.keyType) {
-        this.error = 'Need to select either key file or paste text.';
+        this.error = 'Need to paste exported key.';
         return;
       }
       if (this.keyType === 'encrypted') {
@@ -169,17 +160,6 @@ export default {
         this.error = 'Invalid key format';
         this.keyType = '';
       }
-    },
-    selectedFile () {
-      this.file = this.$refs.files.files[0];
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const buffer = e.target.result;
-        const bytes = new Uint8Array(buffer);
-        this.identity = identifyFromPrivateKey(bytes);
-        this.keyType = 'file';
-      };
-      reader.readAsArrayBuffer(this.file);
     },
     gotoAccount () {
       const id = encodeURIComponent(`${this.chainId}/${this.importedAddress}`);

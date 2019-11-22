@@ -20,6 +20,7 @@ export default {
   data() {
     return {
       prevHeight: 0,
+      prevWidth: 0,
       transitionName: DEFAULT_TRANSITION,
       transitionMode: DEFAULT_TRANSITION_MODE,
       transitionEnterActiveClass: ``,
@@ -40,7 +41,7 @@ export default {
 
       if (transitionName === `slide`) {
         transitionName = indexDiff < 0 || depthDiff > 0 ? `slide-right` : `slide-left`;
-        //this.transitionMode = ``;
+        this.transitionMode = ``;
       }
       if (transitionName === `slide-vertical`) {
         transitionName = depthDiff > 0 ? `slide-vertical-down` : `slide-vertical-up`;
@@ -63,20 +64,27 @@ export default {
   },
   methods: {
     beforeLeave(element) {
-      this.prevHeight = getComputedStyle(element).height;
+      const style = getComputedStyle(element);
+      this.prevHeight = style.height;
+      this.prevWidth = style.width;
+      element.style.height = this.prevHeight;
+      element.style.width = this.prevWidth;
     },
     enter(element) {
-      const { height } = getComputedStyle(element);
+      const { height, width } = getComputedStyle(element);
       // eslint-disable-next-line no-param-reassign
       element.style.height = this.prevHeight;
+      element.style.width = this.prevWidth;
       setTimeout(() => {
         // eslint-disable-next-line no-param-reassign
-        element.style.height = height;
+        //element.style.height = height;
+        //element.style.width = width;
       });
     },
     afterEnter(element) {
       // eslint-disable-next-line no-param-reassign
       element.style.height = `auto`;
+      element.style.width = `auto`;
       if (element.className == 'page') {
         element.style.height = `100%`;
       }
@@ -102,20 +110,37 @@ export default {
 .slide-left-leave-active,
 .slide-right-enter-active,
 .slide-right-leave-active {
-  transition-duration: 0.4s;
+  transition-duration: .4s;
   transition-property: height, opacity, transform;
   transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
   overflow: hidden;
+  position: absolute !important;
+  top: 0;
+  left: 0;
 }
-.slide-left-enter,
-.slide-right-leave-active {
-  opacity: 0;
-  transform: translate(2em, 0);
-}
-.slide-left-leave-active,
 .slide-right-enter {
+  transform: translate(-100%, 0);
+}
+.slide-left-enter {
+  transform: translate(100%, 0);
+}
+.slide-right-leave-active,
+.slide-left-leave-active,
+.slide-left-enter-to {
+  transform: translate(0%, 0);
+}
+.slide-left-leave-to {
+  transform: translate(-100%, 0);
+}
+.slide-right-leave-to {
+  transform: translate(100%, 0);
+}
+.slide-right-enter-to {
+  transform: translate(0%, 0);
+}
+.slide-right-leave-to,
+.slide-left-leave-to {
   opacity: 0;
-  transform: translate(-2em, 0);
 }
 
 .slide-vertical-up-enter-active,
