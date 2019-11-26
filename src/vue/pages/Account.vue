@@ -68,6 +68,10 @@ export default {
     '$route.params.address'() {
       this.loadState();
     },
+    account() {
+      if (!this.account) return '';
+      this.$store.dispatch('accounts/getChainInfo', { chainId: this.account.data.spec.chainId });
+    },
   },
   computed: {
     ...mapState({

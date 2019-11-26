@@ -4,6 +4,7 @@ const state = {
   addresses: [],
   accounts: {},
   txs: {},
+  chainInfo: {},
 }
 
 const getters = {
@@ -11,6 +12,12 @@ const getters = {
 }
 
 const actions = {
+  async getChainInfo ({ commit }, { chainId }) {
+    const result = await promisifySimple(this._vm.$background.getChainInfo)({ chainId });
+    const chainInfo = result.chainInfo;
+    commit('setChainInfo', { chainId, chainInfo });
+    return chainInfo;
+  },
   async getAccounts ({ commit }) {
     const accounts = await promisifySimple(this._vm.$background.getAccounts)();
     console.log('got accounts', accounts);
@@ -69,6 +76,9 @@ const mutations = {
     },
     setAccountTxs (state, { address, txs }) {
         state.txs[address] = txs;
+    },
+    setChainInfo (state, { chainId, chainInfo }) {
+        state.chainInfo[chainId] = chainInfo;
     }
 }
 

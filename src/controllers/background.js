@@ -382,7 +382,11 @@ class BackgroundController extends EventEmitter {
                     delete this.requests[requestId];
                 }
                 send();
-            }
+            },
+            getChainInfo: async ({ chainId }, send) => {
+                const chainInfo = await this.wallet.getClient(chainId).getChainInfo();
+                send({ chainInfo: JSON.parse(JSON.stringify(chainInfo)) });
+            },
         })
         pump(
             outStream,

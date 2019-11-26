@@ -1,6 +1,5 @@
 <template>
   <div class="scroll-view">
-
     <div class="overlay-dialog" :class="{visible: status=='sending'}">
       <div class="loading-wrap">
         <Spinner size=30 />
@@ -149,7 +148,7 @@
         <label>
           Vote for
 
-          <input type="text" class="text-input input-field" placeholder="Comma-seperated id and candidates" v-model="payload.voteTo">
+          <input type="text" class="text-input input-field" placeholder="vote id,candidate1,candidate2,..." v-model="payload.voteTo">
         </label>
       </div>
 
@@ -231,6 +230,7 @@ import bs58 from 'bs58';
 import { timedAsync } from 'timed-async';
 import Spinner from '../components/Spinner';
 import { chainProvider } from '../../controllers/chain-provider';
+import { mapState } from 'vuex';
 
 function getDefaultData() {
   return {
@@ -272,6 +272,9 @@ export default {
     this.cancel();
   },
   computed: {
+    ...mapState({
+      chainInfo: state => state.accounts.chainInfo,
+    }),
     address() {
       return this.$route.params.address && this.$route.params.address.split('/').pop();
     },
@@ -284,13 +287,20 @@ export default {
     explorerLink() {
       return chainProvider(this.signedTx.chainId).explorerUrl(`/transaction/${this.lastTxHash}`);
     },
+    namePrice() {
+      try {
+        return new Amount(this.chainInfo[this.chainId].nameprice);
+      } catch(e) {
+        return new Amount('1 aergo');
+      }
+    },
   },
   watch: {
     'transaction.to': function(to) {
        this.amountFixed = false;
       if (to === 'aergo.name') {
         this.payloadFormState = 'name';
-        this.transaction.amount = '1';
+        this.transaction.amount = this.namePrice.toUnit('aergo').formatNumber();
         this.amountFixed = true;
       } else if (to === 'aergo.system') {
         this.payloadFormState = 'system';
