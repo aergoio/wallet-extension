@@ -7,11 +7,18 @@
       <div class="scroll-view">
 
         <div class="overlay-dialog create-result" :class="{visible: state=='success'}">
-          <span class="icon icon-success"></span>
+          <span class="icon icon-success" style="margin-bottom: 5px;"></span>
 
           <h2>A new account has been created.</h2>
 
-          <p>You can identify your account by its address or picture.</p>
+          <p class="backup-advice">
+            If you plan on storing significant value in this account,<br>
+            <span class="backup-warning">make a backup</span> by
+            exporting it now!
+          </p>
+          <div class="form-actions" style="margin-bottom: 20px">
+            <Button text="Export account" primary="true" v-on:click.native="gotoExportAccount" />
+          </div>
 
           <Identicon :text="newAccount.address" />
 
@@ -69,7 +76,7 @@ export default {
   computed: {
     networkOptions() {
       return Object.keys(CHAINS);
-    }
+    },
   },
   watch: {
     'selection': async function(network) {
@@ -109,6 +116,10 @@ export default {
       const id = encodeURIComponent(`${this.chainId}/${this.newAccount.address}`);
       this.$router.push(`/account/${id}/`);
     },
+    gotoExportAccount () {
+      const id = `${this.chainId}/${this.newAccount.address}`;
+      this.$router.push({name: 'account-export', params: { address: id }});
+    },
     cancel () {
       this.$router.push('/');
     }
@@ -126,5 +137,11 @@ export default {
     height: 80px;
   }
 }
-
+.backup-advice {
+  background-color: rgba(#FF36AD, 0.1);
+  padding: 10px;
+}
+.backup-warning {
+  font-weight: 500;
+}
 </style>

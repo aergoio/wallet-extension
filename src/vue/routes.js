@@ -26,12 +26,12 @@ export default [
         children: [
             { path: '', name: 'deposit', component: Deposit, meta: { transitionName: 'slide', index: 1 } },
             { path: 'send', component: Send, meta: { transitionName: 'slide', index: 2 } },
-            { path: 'api-tx-send', name: 'tx_send', component: ApiTxSend, meta: { transitionName: 'slide', index: 2 } },
-            { path: 'api-tx-sign', name: 'tx_sign', component: ApiTxSign, meta: { transitionName: 'slide', index: 2 } },
+            { path: 'api-tx-send', name: 'tx_send', component: ApiTxSend, meta: { transitionName: 'slide', index: 2, donottrack: true } },
+            { path: 'api-tx-sign', name: 'tx_sign', component: ApiTxSign, meta: { transitionName: 'slide', index: 2, donottrack: true } },
             { path: 'sign', name: 'sign', component: Sign, meta: { transitionName: 'slide', index: 3 } },
             { path: 'history', component: History, meta: { transitionName: 'slide', index: 4 } },
             { path: 'api-public', name: 'account_public', component: GetPublic, meta: { transitionName: 'slide', donottrack: true } },
-            { path: 'export', component: ExportAccount, meta: { transitionName: 'slide', donottrack: true } },
+            { path: 'export', name: 'account-export', component: ExportAccount, meta: { transitionName: 'slide', donottrack: true } },
             { path: 'remove', component: RemoveAccount, meta: { transitionName: 'slide', donottrack: true } },
         ]
     },
