@@ -9,6 +9,7 @@ import ApiTxSign from '../vue/pages/ApiTxSign.vue';
 import History from '../vue/pages/History.vue';
 import AddAccount from '../vue/pages/AddAccount.vue';
 import CreateAccount from '../vue/pages/CreateAccount.vue';
+import CreatedAccount from '../vue/pages/CreatedAccount.vue';
 import ImportAccount from '../vue/pages/ImportAccount.vue';
 import Reset from '../vue/pages/Reset.vue';
 import ExportAccount from '../vue/pages/ExportAccount.vue';
@@ -21,6 +22,7 @@ export default [
     { path: '/', component: Accounts, meta: { transitionName: 'slide' }, },
     { path: '/add-account/', component: AddAccount, meta: { transitionName: 'slide-vertical' }, },
     { path: '/add-account/create/', component: CreateAccount, meta: { transitionName: 'slide-vertical' }, },
+    { path: '/add-account/created/:address/', name: 'account-created', component: CreatedAccount, meta: { transitionName: 'slide-vertical' }, },
     { path: '/add-account/import/', component: ImportAccount, meta: { transitionName: 'slide-vertical' }, },
     { path: '/account/:address/', component: Account, meta: { transitionName: 'slide' },
         children: [

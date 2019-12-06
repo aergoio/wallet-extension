@@ -5,31 +5,7 @@
       <div class="account-list-header">Create Account</div>
 
       <div class="scroll-view">
-
-        <div class="overlay-dialog create-result" :class="{visible: state=='success'}">
-          <span class="icon icon-success" style="margin-bottom: 5px;"></span>
-
-          <h2>A new account has been created.</h2>
-
-          <p class="backup-advice">
-            If you plan on storing significant value in this account, 
-            <span class="backup-warning">make a backup</span> by
-            exporting it now!
-          </p>
-          <div class="form-actions" style="margin-bottom: 20px">
-            <Button text="Export account" primary="true" v-on:click.native="gotoExportAccount" />
-          </div>
-
-          <Identicon :text="newAccount.address" />
-
-          <p>{{newAccount.address}}</p>
-
-          <div class="form-actions">
-            <Button text="View account" primary="true" v-on:click.native="gotoAccount" />
-          </div>
-        </div>
-
-        <form class="form" autocomplete="off" v-if="state == 'initial'">
+        <form class="form" autocomplete="off">
 
           <div class="form-line">
             <label>
@@ -48,9 +24,7 @@
             <Button text="Cancel" class="secondary" v-on:click.native="cancel" />
           </div>
         </form>
-      
       </div>
-      
     </div>
   </transition>
 </template>
@@ -64,8 +38,6 @@ export default {
     return {
       selection: DEFAULT_CHAIN,
       chainId: '',
-      state: 'initial',
-      newAccount: {},
       error: ''
     }
   },
@@ -105,20 +77,17 @@ export default {
       if (this.selection !== 'other') {
         this.chainId = this.selection;
       }
-      this.newAccount = await this.$store.dispatch('accounts/createAccount', {
-        network: this.chainId
-      });
-      console.log('created account', this.newAccount, this.chainId);
-
-      this.state = 'success';
-    },
-    gotoAccount () {
-      const id = encodeURIComponent(`${this.chainId}/${this.newAccount.address}`);
-      this.$router.push(`/account/${id}/`);
-    },
-    gotoExportAccount () {
-      const id = `${this.chainId}/${this.newAccount.address}`;
-      this.$router.push({name: 'account-export', params: { address: id }});
+      try {
+        this.error = null;
+        const newAccount = await this.$store.dispatch('accounts/createAccount', {
+          network: this.chainId
+        });
+        console.log('created account', newAccount, this.chainId);
+        const id = `${this.chainId}/${newAccount.address}`;
+        this.$router.push({name: 'account-created', params: { address: id }});
+      } catch (e) {
+        this.error = e;
+      }
     },
     cancel () {
       this.$router.push('/');
@@ -129,19 +98,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-.create-result {
-  .identicon svg {
-    width: 80px;
-    height: 80px;
-  }
-}
-.backup-advice {
-  background-color: rgba(#FF36AD, 0.1);
-  padding: 10px;
-}
-.backup-warning {
-  font-weight: 500;
-}
-</style>
