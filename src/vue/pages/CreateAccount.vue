@@ -12,7 +12,7 @@
           <h2>A new account has been created.</h2>
 
           <p class="backup-advice">
-            If you plan on storing significant value in this account,<br>
+            If you plan on storing significant value in this account, 
             <span class="backup-warning">make a backup</span> by
             exporting it now!
           </p>
