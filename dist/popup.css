@@ -439,7 +439,13 @@ p{line-height:1.25
 }
 
 
+.create-result{text-align:center;padding:20px
+}
 .create-result .identicon svg{width:80px;height:80px
+}
+.backup-advice{background-color:rgba(255,54,173,0.1);padding:10px
+}
+.backup-warning{font-weight:500
 }
 
 
