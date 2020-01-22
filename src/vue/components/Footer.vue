@@ -17,17 +17,6 @@ export default {
     return {
     }
   },
-  created () {
-  },
-  beforeDestroy () {
-  },
-  computed: {
-  },
-  methods: {
-    openPopup() {
-      chrome.tabs.create({url : "popup.html"});
-    }
-  },
   components: {
     NetworkSelector,
   }

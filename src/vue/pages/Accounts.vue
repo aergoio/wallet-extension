@@ -79,14 +79,15 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('accounts/getAccounts');
     promisifySimple(this.$background.isUnlocked)().then(unlocked => {
-      console.log('unlocked', unlocked);
       this.unlocked = unlocked;
       if (!this.unlocked) {
         this.$router.push('/locked');
       }
     });
+  },
+  mounted () {
+    this.$store.dispatch('accounts/getAccounts');
   },
   beforeDestroy () {
   },
@@ -119,9 +120,6 @@ export default {
     },
     showAccountMenu(state=true) {
       this.accountMenuShown = state;
-    },
-    openPopup() {
-      chrome.tabs.create({url : "popup.html"});
     },
     formatAmount(amount) {
       if (!amount) return '0 aergo';
