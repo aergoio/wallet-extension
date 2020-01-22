@@ -1,7 +1,7 @@
 {
   "name": "aergo-browser-wallet",
-  "version": "0.2.2",
-  "version_name": "0.2.2",
+  "version": "0.2.3",
+  "version_name": "0.2.3",
   "title": "Aergo Connect",
   "description": "Aergo Connect (Wallet Browser Extension)",
   "main": "index.js",
