@@ -18,7 +18,7 @@ import GetPublic from '../vue/pages/GetPublic.vue';
 
 export default [
     { path: '/locked', component: Lockscreen, meta: { transitionName: 'fade' }, },
-    { path: '/reset', component: Reset, meta: { transitionName: 'fade' }, },
+    { path: '/reset', component: Reset, meta: { transitionName: 'fade', donottrack: true }, },
     { path: '/', component: Accounts, meta: { transitionName: 'slide' }, },
     { path: '/add-account/', component: AddAccount, meta: { transitionName: 'slide-vertical' }, },
     { path: '/add-account/create/', component: CreateAccount, meta: { transitionName: 'slide-vertical' }, },
