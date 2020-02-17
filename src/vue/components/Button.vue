@@ -29,6 +29,8 @@ export default {
   text-align: center;
   padding: 0 5em;
   cursor: pointer;
+  text-decoration: none;
+  color: inherit;
 
   &:focus {
     outline: none;

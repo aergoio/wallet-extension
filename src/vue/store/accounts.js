@@ -39,11 +39,12 @@ const actions = {
     commit('addAccount', account);
     return account;
   },
-  async exportAccount ({}, { chainId, address, password }) {
+  async exportAccount ({}, { chainId, address, password, format }) {
     return await promisifySimple(this._vm.$background.exportAccount)({
       address,
       chainId,
-      password
+      password,
+      format,
     });
   },
   async loadAccount ({}, { address, chainId }) {
