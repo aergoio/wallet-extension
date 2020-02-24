@@ -1,8 +1,8 @@
 {
 	"manifest_version": 2,
 	"name": "Aergo Connect",
-	"version": "0.2.3",
-	"version_name": "0.2.3",
+	"version": "0.3.0",
+	"version_name": "0.3.0",
 	"description": "Aergo Connect (Wallet Browser Extension)",
 	"author": "Aergo team and contributors",
 	"homepage_url": "https://github.com/aergoio/wallet-extension#readme",

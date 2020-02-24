@@ -449,6 +449,11 @@ p{line-height:1.25
 }
 
 
+.choice-btn{border:1px solid #ccc;border-radius:4px;padding:0 1.5em;line-height:2.5em;font-size:1.1em;cursor:pointer
+}
+.choice-btn:hover{border-color:#FF36AD
+}
+
 
 .icon-warning[data-v-64dac0ae]{display:block;margin:20px auto
 }
@@ -456,11 +461,15 @@ p{line-height:1.25
 }
 
 
-.icon-export[data-v-387ed6c3]{display:block;margin:20px auto
+.icon-export[data-v-cea56e22]{display:block;margin:20px auto
 }
-.wallet-password[data-v-387ed6c3]{display:block;margin:0 0 25px;border-radius:3px;border:1px solid #aaa;font-size:125%;padding:5px;width:100%;max-width:200px
+.wallet-password[data-v-cea56e22]{display:block;margin:0 0 25px;border-radius:3px;border:1px solid #aaa;font-size:125%;padding:5px;width:100%;max-width:200px
 }
-.export[data-v-387ed6c3]{max-width:20em;margin:0 auto;background:#eaeaea;padding:0.45em
+.export[data-v-cea56e22]{max-width:20em;margin:0 auto;background:#eaeaea;padding:0.45em
+}
+.choice-btn[data-v-cea56e22]{border:1px solid #ccc;border-radius:4px;padding:0 1.5em;line-height:2.5em;font-size:1.1em;cursor:pointer
+}
+.choice-btn[data-v-cea56e22]:hover{border-color:#FF36AD
 }
 
 
@@ -475,7 +484,7 @@ p{line-height:1.25
 
 
 
-.btn{border:1px solid #aaa;line-height:22px;border-radius:100px;font-weight:500;font-size:.91667em;text-align:center;padding:0 5em;cursor:pointer
+.btn{border:1px solid #aaa;line-height:22px;border-radius:100px;font-weight:500;font-size:.91667em;text-align:center;padding:0 5em;cursor:pointer;text-decoration:none;color:inherit
 }
 .btn:focus{outline:none;box-shadow:#F8105F 0 0 6px
 }
