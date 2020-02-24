@@ -11,7 +11,8 @@ import { AergoscanTransactionScanner } from './tx-scanner';
 import {
     identifyFromPrivateKey,
     encryptPrivateKey,
-    encodePrivateKey
+    encodePrivateKey,
+    keystoreFromPrivateKey,
 } from '@herajs/crypto';
 import State from './state';
 import 'whatwg-fetch';
@@ -309,14 +310,19 @@ class BackgroundController extends EventEmitter {
                     send({ error: 'Could not import account. '+e });
                 }
             },
-            exportAccount: async ({ address, chainId, password }, send) => {
+            exportAccount: async ({ address, chainId, password, format }, send) => {
                 this.keepUnlocked();
                 const account = await this.wallet.accountManager.getOrAddAccount({ address, chainId });
                 const key = await this.wallet.keyManager.getUnlockedKey(account);
                 console.log(account, key);
                 const privateKey = key.data.privateKey;
-                const privkeyEncrypted = await encryptPrivateKey(privateKey, password);
-                send({privateKey: encodePrivateKey(privkeyEncrypted)});
+                let privkeyEncrypted;
+                if (format === "wif") {
+                    privkeyEncrypted = encodePrivateKey(await encryptPrivateKey(privateKey, password));
+                } else {
+                    privkeyEncrypted = JSON.stringify(await keystoreFromPrivateKey(Buffer.from(privateKey), password));
+                }
+                send({privateKey: privkeyEncrypted});
             },
             sendTransaction: async (tx, chainId, send) => {
                 try {
