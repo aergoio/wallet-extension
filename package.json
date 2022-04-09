@@ -35,7 +35,7 @@
     "grpc-web-client": "^0.6.2",
     "idb": "^4.0.0",
     "jdenticon": "^2.1.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "primer-tooltips": "^1.5.10",
     "pump": "^3.0.0",
     "qrcode": "^1.2.2",
